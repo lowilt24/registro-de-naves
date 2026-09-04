@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Configuración local de cada desarrollador
+src/main/resources/application-local.properties
+data/
