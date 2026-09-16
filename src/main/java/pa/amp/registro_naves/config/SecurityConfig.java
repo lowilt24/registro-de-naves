@@ -37,9 +37,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index.html", "/login.html",
-                                 "/registro-usuario.html", "/naves.html",
-                                 "/css/**", "/js/**", "/favicon.ico").permitAll()
+                    .requestMatchers("/", "/index.html", "/login.html",
+                            "/registro-usuario.html", "/naves.html",
+                            "/css/**", "/js/**", "/favicon.ico",
+                            "/actuator/health").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/auth/registro", "/api/auth/sesion").permitAll()
                 // Durante el Sprint 2 los endpoints de nave quedan abiertos para
