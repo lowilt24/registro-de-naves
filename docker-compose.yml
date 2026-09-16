@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:17
+    container_name: amp-db
+    environment:
+      POSTGRES_DB: registro_naves
+      POSTGRES_USER: registro
+      POSTGRES_PASSWORD: registro
+    ports: ["5432:5432"]
+    volumes: [amp-data:/var/lib/postgresql/data]
+volumes:
+  amp-data:
