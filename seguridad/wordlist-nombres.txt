@@ -1,0 +1,16 @@
+Estrella del Istmo
+estrella del istmo
+ESTRELLA DEL ISTMO
+  Estrella   del   Istmo  
+' OR '1'='1
+' OR 1=1--
+'; DROP TABLE nave;--
+" OR ""="
+1' UNION SELECT NULL,NULL,NULL--
+admin'--
+<script>alert(1)</script>
+<img src=x onerror=alert(1)>
+../../../../etc/passwd
+%00
+{{7*7}}
+${jndi:ldap://127.0.0.1/x}

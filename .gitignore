@@ -35,3 +35,5 @@ build/
 # Configuración local de cada desarrollador
 src/main/resources/application-local.properties
 data/
+data/
+seguridad/reportes/

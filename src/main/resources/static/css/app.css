@@ -1,0 +1,150 @@
+/* Navesitas — hoja de estilos comun de las pantallas del Sprint 2.
+   La referencia visual es un formulario de registro maritimo: denso,
+   legible y con las cifras alineadas en monoespaciada. */
+
+:root {
+  --tinta:        #0f2438;
+  --tinta-suave:  #40566d;
+  --papel:        #eceff3;
+  --superficie:   #ffffff;
+  --linea:        #c9d2dc;
+  --marea:        #14627a;
+  --marea-clara:  #e4eff3;
+  --via-libre:    #0d6b4b;
+  --bloqueo:      #a02b25;
+  --bloqueo-tenue:#fbeceb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.cifra, input[type="number"] {
+  font-family: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- estructura --- */
+.barra {
+  background: var(--tinta);
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.barra h1 { font-size: 1.05rem; margin: 0; font-weight: 600; letter-spacing: .01em; }
+.barra span { color: #9db2c6; font-size: .875rem; }
+.barra .derecha { margin-left: auto; }
+.barra a { color: #9db2c6; }
+
+main { max-width: 900px; margin: 0 auto; padding: 32px 24px 72px; }
+
+h2 { font-size: 1.5rem; margin: 0 0 6px; font-weight: 600; }
+.sumario { color: var(--tinta-suave); margin: 0 0 28px; max-width: 62ch; }
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+fieldset {
+  border: 0;
+  border-top: 1px solid var(--linea);
+  padding: 20px 0 4px;
+  margin: 0;
+}
+fieldset:first-of-type { border-top: 0; padding-top: 0; }
+legend { font-weight: 600; font-size: .95rem; padding: 0 8px 0 0; }
+
+.rejilla { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.rejilla.tres { grid-template-columns: repeat(3, 1fr); }
+.ancho-total { grid-column: 1 / -1; }
+
+label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: 5px; }
+.pista { font-weight: 400; color: var(--tinta-suave); }
+
+input, select {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--linea);
+  border-radius: 3px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: .95rem;
+}
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 2px solid var(--marea);
+  outline-offset: 1px;
+}
+input:disabled, select:disabled { background: #f4f6f8; color: #8a97a5; }
+
+button {
+  font: inherit;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 3px;
+  border: 1px solid var(--tinta);
+  background: var(--tinta);
+  color: #fff;
+  cursor: pointer;
+}
+button.secundario { background: #fff; color: var(--tinta); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+/* --- compuerta de nombre (HU-04) --- */
+.compuerta { border-left: 4px solid var(--marea); background: var(--marea-clara); }
+.compuerta .fila { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.compuerta .fila > div { flex: 1 1 320px; }
+
+.veredicto {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 3px;
+  border-left: 4px solid;
+  font-size: .95rem;
+  display: none;
+}
+.veredicto[data-estado="libre"]     { display: block; border-color: var(--via-libre); background: #e8f4ef; color: var(--via-libre); }
+.veredicto[data-estado="ocupado"]   { display: block; border-color: var(--bloqueo);  background: var(--bloqueo-tenue); color: var(--bloqueo); }
+.veredicto[data-estado="neutro"]    { display: block; border-color: var(--tinta-suave); background: #eef1f4; color: var(--tinta-suave); }
+
+/* --- bloque de resultado del registro --- */
+#resultado { display: none; }
+#resultado[data-visible="si"] { display: block; }
+
+.error-campo { color: var(--bloqueo); font-size: .8rem; margin-top: 4px; display: block; }
+
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linea); }
+th { color: var(--tinta-suave); font-weight: 600; }
+
+.estado-etiqueta {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--via-libre);
+  color: var(--via-libre);
+  border-radius: 2px;
+  font-size: .78rem;
+}
+
+@media (max-width: 640px) {
+  .rejilla, .rejilla.tres { grid-template-columns: 1fr; }
+  main { padding: 24px 16px 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

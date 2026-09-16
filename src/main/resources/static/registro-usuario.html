@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crear cuenta — Navesitas</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Registro de naves comerciales &middot; DGMM</span>
+</header>
+
+<main style="max-width:480px;">
+  <h2>Crear cuenta</h2>
+  <p class="sumario">La cuenta de agente naviero permite registrar naves y darles seguimiento.</p>
+
+  <form class="tarjeta" id="form-registro" novalidate>
+    <div style="margin-bottom:16px;">
+      <label for="nombreCompleto">Nombre completo</label>
+      <input type="text" id="nombreCompleto" name="nombreCompleto" maxlength="150">
+      <span class="error-campo" data-error="nombreCompleto"></span>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" name="correo" maxlength="120" autocomplete="username">
+      <span class="error-campo" data-error="correo"></span>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label for="password">Contrasena <span class="pista">(minimo 8 caracteres)</span></label>
+      <input type="password" id="password" name="password" autocomplete="new-password">
+      <span class="error-campo" data-error="password"></span>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label for="rol">Rol</label>
+      <select id="rol" name="rol">
+        <option value="AGENTE_NAVIERO">Agente naviero</option>
+        <option value="FUNCIONARIO_DGMM">Funcionario DGMM</option>
+      </select>
+    </div>
+    <button type="submit" id="btn-crear">Crear cuenta</button>
+    <p class="veredicto" id="aviso-registro" role="status" aria-live="polite"></p>
+  </form>
+</main>
+
+<script>
+document.getElementById('form-registro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.querySelectorAll('[data-error]').forEach(s => s.textContent = '');
+  const aviso = document.getElementById('aviso-registro');
+
+  const cuerpo = {
+    nombreCompleto: document.getElementById('nombreCompleto').value.trim(),
+    correo:         document.getElementById('correo').value.trim(),
+    password:       document.getElementById('password').value,
+    rol:            document.getElementById('rol').value
+  };
+
+  try {
+    const r = await fetch('/api/auth/registro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cuerpo)
+    });
+    const datos = await r.json();
+
+    if (r.status === 201) {
+      location.href = '/login.html?creado=1';
+      return;
+    }
+    if (datos.campos) {
+      Object.entries(datos.campos).forEach(([campo, mensaje]) => {
+        const destino = document.querySelector('[data-error="' + campo + '"]');
+        if (destino) destino.textContent = mensaje;
+      });
+    }
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = datos.mensaje || 'No se pudo crear la cuenta.';
+  } catch (err) {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'No se pudo contactar el servidor. Intente de nuevo.';
+  }
+});
+</script>
+</body>
+</html>
