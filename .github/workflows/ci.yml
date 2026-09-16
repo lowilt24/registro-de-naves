@@ -9,6 +9,18 @@ jobs:
   build:
     name: Build y pruebas
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: registro_naves
+          POSTGRES_USER: registro
+          POSTGRES_PASSWORD: registro
+        ports: [ "5432:5432" ]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -17,9 +29,12 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-
       - name: Compilar y correr pruebas
         run: ./mvnw -B verify
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/registro_naves
+          SPRING_DATASOURCE_USERNAME: registro
+          SPRING_DATASOURCE_PASSWORD: registro
 
       # Sube el reporte de Surefire aunque las pruebas fallen: es la evidencia
       # que ponemos en la lamina de calidad del Sprint Review.

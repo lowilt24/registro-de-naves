@@ -1,0 +1,13 @@
+actuator
+actuator/env
+actuator/beans
+actuator/health
+admin
+api
+config
+solicitudes
+certificados
+naves
+.env
+.git
+backup
