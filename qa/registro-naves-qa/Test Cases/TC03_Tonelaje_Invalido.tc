@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC03_Tonelaje_Invalido</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>7b6e1541-9bb0-4801-bb5f-0113a1ce7618</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC02_Registrar_Nave_Valida</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>d4d8facf-36b3-4532-b962-ee65e22f2ab4</testCaseGuid>
+</TestCaseEntity>
