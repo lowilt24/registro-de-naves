@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU02_01_Login_Correcto</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>bbb3210f-bc40-4048-ad92-5f537ede468c</testCaseGuid>
+</TestCaseEntity>
