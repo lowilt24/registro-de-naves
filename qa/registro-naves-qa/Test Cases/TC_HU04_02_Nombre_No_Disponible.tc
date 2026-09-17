@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestCaseEntity>
    <description></description>
-   <name>TC02_Registrar_Nave_Valida</name>
+   <name>TC_HU04_02_Nombre_No_Disponible</name>
    <tag></tag>
    <comment></comment>
    <recordOption>OTHER</recordOption>
-   <testCaseGuid>d4d8facf-36b3-4532-b962-ee65e22f2ab4</testCaseGuid>
+   <testCaseGuid>c0a9581e-146c-454e-80c2-6236dbae2055</testCaseGuid>
 </TestCaseEntity>
