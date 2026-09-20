@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU04_02_Nombre_No_Disponible</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>c0a9581e-146c-454e-80c2-6236dbae2055</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iniciar sesion — Navesitas</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Registro de naves comerciales &middot; DGMM</span>
+</header>
+
+<main style="max-width:440px;">
+  <h2>Iniciar sesion</h2>
+  <p class="sumario">Acceso para agentes navieros y funcionarios de la DGMM.</p>
+
+  <form class="tarjeta" method="post" action="/api/auth/login" id="form-login">
+    <div style="margin-bottom:16px;">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" name="correo" required autocomplete="username">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label for="password">Contrasena</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password">
+    </div>
+    <button type="submit" id="btn-entrar">Entrar</button>
+    <p class="veredicto" id="aviso-login" role="status"></p>
+  </form>
+
+  <p style="font-size:.9rem; color:var(--tinta-suave);">
+    &iquest;No tiene cuenta? <a href="/registro-usuario.html">Registrarse</a>
+  </p>
+</main>
+
+<script>
+  const parametros = new URLSearchParams(location.search);
+  const aviso = document.getElementById('aviso-login');
+  if (parametros.has('error')) {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'Correo o contrasena incorrectos.';
+  } else if (parametros.has('creado')) {
+    aviso.dataset.estado = 'libre';
+    aviso.textContent = 'Cuenta creada. Ya puede iniciar sesion.';
+  } else if (parametros.has('salida')) {
+    aviso.dataset.estado = 'neutro';
+    aviso.textContent = 'Sesion cerrada.';
+  }
+</script>
+</body>
+</html>

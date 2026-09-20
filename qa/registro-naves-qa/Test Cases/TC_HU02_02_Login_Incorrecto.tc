@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU02_02_Login_Incorrecto</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e3cbd5f4-de2b-4232-a1d0-a10894dba763</testCaseGuid>
+</TestCaseEntity>

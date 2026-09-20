@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registrar nave — Navesitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Registro de naves comerciales &middot; DGMM</span>
+  <span class="derecha" id="sesion"></span>
+</header>
+
+<main>
+  <h2>Registrar nave</h2>
+  <p class="sumario">
+    Primero se consulta si el nombre propuesto ya pertenece a otra nave.
+    El resto del formulario se habilita solo cuando el nombre esta libre.
+  </p>
+
+  <!-- ============ HU-04: compuerta de disponibilidad ============ -->
+  <section class="tarjeta compuerta">
+    <div class="fila">
+      <div>
+        <label for="nombre">Nombre propuesto de la nave</label>
+        <input type="text" id="nombre" name="nombre" maxlength="120"
+               autocomplete="off" placeholder="Ej. Estrella del Istmo">
+      </div>
+      <button type="button" id="btn-consultar">Consultar disponibilidad</button>
+    </div>
+    <p class="veredicto" id="veredicto" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- ============ HU-03: datos de la nave ============ -->
+  <form class="tarjeta" id="form-nave" novalidate>
+    <fieldset id="campos-nave" disabled>
+      <legend>Clasificacion</legend>
+      <div class="rejilla">
+        <div>
+          <label for="tipo">Tipo de nave</label>
+          <select id="tipo" name="tipo">
+            <option value="">Seleccione</option>
+            <option value="CARGA">Carga</option>
+            <option value="PASAJEROS">Pasajeros</option>
+            <option value="MIXTA">Mixta</option>
+            <option value="TANQUERO">Tanquero</option>
+            <option value="REMOLCADOR">Remolcador</option>
+            <option value="PESQUERA">Pesquera</option>
+          </select>
+          <span class="error-campo" data-error="tipo"></span>
+        </div>
+        <div>
+          <label for="servicio">Servicio</label>
+          <select id="servicio" name="servicio">
+            <option value="">Seleccione</option>
+            <option value="INTERNACIONAL">Internacional</option>
+            <option value="CABOTAJE">Cabotaje</option>
+            <option value="MIXTO">Mixto</option>
+          </select>
+          <span class="error-campo" data-error="servicio"></span>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Tonelaje</legend>
+        <div class="rejilla">
+          <div>
+            <label for="tonelajeBruto">Tonelaje bruto <span class="pista">(TRB)</span></label>
+            <input type="number" id="tonelajeBruto" name="tonelajeBruto" step="0.01" min="0.01">
+            <span class="error-campo" data-error="tonelajeBruto"></span>
+          </div>
+          <div>
+            <label for="tonelajeNeto">Tonelaje neto <span class="pista">(TRN)</span></label>
+            <input type="number" id="tonelajeNeto" name="tonelajeNeto" step="0.01" min="0.01">
+            <span class="error-campo" data-error="tonelajeNeto"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dimensiones</legend>
+        <div class="rejilla tres">
+          <div>
+            <label for="eslora">Eslora <span class="pista">(m)</span></label>
+            <input type="number" id="eslora" name="eslora" step="0.01" min="0.01">
+            <span class="error-campo" data-error="eslora"></span>
+          </div>
+          <div>
+            <label for="manga">Manga <span class="pista">(m)</span></label>
+            <input type="number" id="manga" name="manga" step="0.01" min="0.01">
+            <span class="error-campo" data-error="manga"></span>
+          </div>
+          <div>
+            <label for="puntal">Puntal <span class="pista">(m)</span></label>
+            <input type="number" id="puntal" name="puntal" step="0.01" min="0.01">
+            <span class="error-campo" data-error="puntal"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Construccion</legend>
+        <div class="rejilla tres">
+          <div>
+            <label for="anioConstruccion">Anio</label>
+            <input type="number" id="anioConstruccion" name="anioConstruccion" min="1900" max="2100" step="1">
+            <span class="error-campo" data-error="anioConstruccion"></span>
+          </div>
+          <div>
+            <label for="lugarConstruccion">Lugar o astillero</label>
+            <input type="text" id="lugarConstruccion" name="lugarConstruccion" maxlength="120">
+            <span class="error-campo" data-error="lugarConstruccion"></span>
+          </div>
+          <div>
+            <label for="materialCasco">Material del casco</label>
+            <input type="text" id="materialCasco" name="materialCasco" maxlength="60" placeholder="Acero">
+            <span class="error-campo" data-error="materialCasco"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Propulsion</legend>
+        <div class="rejilla">
+          <div>
+            <label for="tipoPropulsion">Tipo de propulsion</label>
+            <input type="text" id="tipoPropulsion" name="tipoPropulsion" maxlength="60"
+                   placeholder="Motor diesel de dos tiempos">
+            <span class="error-campo" data-error="tipoPropulsion"></span>
+          </div>
+          <div>
+            <label for="potenciaKw">Potencia <span class="pista">(kW)</span></label>
+            <input type="number" id="potenciaKw" name="potenciaKw" step="0.01" min="0.01">
+            <span class="error-campo" data-error="potenciaKw"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Partes vinculadas</legend>
+        <div class="rejilla">
+          <div>
+            <label for="propietarioId">Propietario</label>
+            <select id="propietarioId" name="propietarioId"><option value="">Cargando...</option></select>
+            <span class="error-campo" data-error="propietarioId"></span>
+          </div>
+          <div>
+            <label for="agenteResidenteId">Agente residente</label>
+            <select id="agenteResidenteId" name="agenteResidenteId"><option value="">Cargando...</option></select>
+            <span class="error-campo" data-error="agenteResidenteId"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="submit" id="btn-guardar">Guardar nave</button>
+        <button type="button" class="secundario" id="btn-limpiar">Limpiar formulario</button>
+      </div>
+    </fieldset>
+
+    <p class="veredicto" id="aviso-form" role="status" aria-live="polite"></p>
+  </form>
+
+  <!-- ============ Confirmacion ============ -->
+  <section class="tarjeta" id="resultado">
+    <h2 style="font-size:1.1rem;">Nave registrada</h2>
+    <table id="tabla-resultado"></table>
+  </section>
+
+  <!-- ============ Naves ya en el registro ============ -->
+  <section class="tarjeta">
+    <h2 style="font-size:1.1rem;">Naves en el registro</h2>
+    <table>
+      <thead>
+        <tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Estado</th></tr>
+      </thead>
+      <tbody id="lista-naves"></tbody>
+    </table>
+  </section>
+</main>
+
+<script src="/js/naves.js"></script>
+</body>
+</html>

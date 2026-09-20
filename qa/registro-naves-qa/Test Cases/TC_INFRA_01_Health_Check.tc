@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_INFRA_01_Health_Check</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e81d9407-54ab-4aab-bb21-ca73f32ea9e2</testCaseGuid>
+</TestCaseEntity>

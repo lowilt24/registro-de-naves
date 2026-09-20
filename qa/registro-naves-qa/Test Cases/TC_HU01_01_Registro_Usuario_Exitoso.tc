@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU01_01_Registro_Usuario_Exitoso</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>d34370d8-b073-44aa-978f-eb50922d7a7e</testCaseGuid>
+</TestCaseEntity>

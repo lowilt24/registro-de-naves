@@ -2,11 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'sprint-*' ]
   pull_request:
 
 jobs:
   build:
+    name: Build y pruebas
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -22,13 +23,34 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - run: ./mvnw -B verify
+      - name: Compilar y correr pruebas
+        run: ./mvnw -B verify
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/registro_naves
           SPRING_DATASOURCE_USERNAME: registro
           SPRING_DATASOURCE_PASSWORD: registro
+
+      # Sube el reporte de Surefire aunque las pruebas fallen: es la evidencia
+      # que ponemos en la lamina de calidad del Sprint Review.
+      - name: Publicar reporte de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-pruebas
+          path: target/surefire-reports/
+          if-no-files-found: ignore
+
+      - name: Empaquetar jar
+        run: ./mvnw -B -DskipTests package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: registro-naves-jar
+          path: target/*.jar
+          if-no-files-found: ignore
