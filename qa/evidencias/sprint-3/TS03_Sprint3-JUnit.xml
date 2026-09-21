@@ -1,0 +1,1926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TS03_Sprint3" time="6.133" tests="10" passed="10" failures="0" errors="0" incompleted="0" skipped="0">
+   <testsuite name="TS03_Sprint3" tests="10" passed="10" failures="0" errors="0" incompleted="0" skipped="0" time="6.133" timestamp="2026-09-21T03:29:47.378Z" hostname="lowilt - localhost" id="Test Suites/TS03_Sprint3" status="PASSED">
+      <properties>
+         <property name="deviceName" value=""/>
+         <property name="devicePlatform"/>
+         <property name="logFolder" value="/Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943"/>
+         <property name="logFiles" value="/Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/execution0.log, /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/console0.log"/>
+         <property name="attachments" value=""/>
+         <property name="executionBindingVariables" value="[]"/>
+         <property name="hostName" value="lowilt - localhost"/>
+         <property name="os" value="Mac OS X 64bit"/>
+         <property name="katalonVersion" value="11.5.0"/>
+         <property name="userFullName" value="Louis Wiltshire"/>
+         <property name="hostAddress" value="127.0.0.1"/>
+         <property name="projectName" value="registro-naves-qa"/>
+      </properties>
+      <testcase name="Test Cases/TC_HU05_01_Propietario_Juridico_Vinculado" time="2.417" classname="Test Cases/TC_HU05_01_Propietario_Juridico_Vinculado" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:47 - [TEST_CASE][PASSED] - Test Cases/TC_HU05_01_Propietario_Juridico_Vinculado: Test Cases/TC_HU05_01_Propietario_Juridico_Vinculado
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:48 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_0.har
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU05 $sufijo",
+  "tipo": "CARGA",
+  "servicio": "CABOTAJE",
+  "tonelajeBruto": 1200.00,
+  "tonelajeNeto": 800.00,
+  "eslora": 70.00,
+  "manga": 12.00,
+  "puntal": 6.00,
+  "anioConstruccion": 2019,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 1800.00
+}: null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_1.har
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU05 1789961389571","tipo":"CARGA","servicio":"CABOTAJE","tonelajeBruto":1200.0,"tonelajeNeto":800.0,"eslora":70.0,"manga":12.0,"puntal":6.0,"anioConstruccion":2019,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":1800.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=E98906D667509B15ADD9A68F10AC5279' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - println("Nave creada con id: " + naveId): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Naviera Ejemplo $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crear = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crear.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crear.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crear.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - crear.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - r = sendRequest(crear): Send request successfully
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_2.har
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Naviera Ejemplo 1789961389571 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-1789961389571","naveId":39}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=E98906D667509B15ADD9A68F10AC5279' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - println("Registro status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 201): Verify response status code successfully
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - creado = JsonSlurper().parseText(r.getResponseBodyContent()): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(tipo, "JURIDICA"): Actual object 'JURIDICA' and expected object 'JURIDICA' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object 'JURIDICA' and expected object 'JURIDICA' are equal
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(paisConstitucion, "Panama"): Actual object 'Panama' and expected object 'Panama' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object 'Panama' and expected object 'Panama' are equal
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(naveId, naveId): Actual object '39' and expected object '39' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object '39' and expected object '39' are equal
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(porcentaje, 100.00): Actual object '100' and expected object '100' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object '100' and expected object '100' are equal
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - listar = new com.kms.katalon.core.testobject.RequestObject(listarPropietarios): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - listar.setRestUrl(base + "/api/naves/" + naveId + "/propietarios"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - listar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - listar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - rLista = sendRequest(listar): Send request successfully
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_3.har
+
+20-09-2026T22:29:49 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=E98906D667509B15ADD9A68F10AC5279' \
+  'http://localhost:8080/api/naves/39/propietarios'
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - println("Listado: " + rLista.getResponseBodyContent()): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rLista, 200): Verify response status code successfully
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - lista = JsonSlurper().parseText(rLista.getResponseBodyContent()): null
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(lista.size(), 1): Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:49 - [TEST_STEP][PASSED] - verifyEqual(nombre, "Naviera Ejemplo " + sufijo + " S.A."): Actual object 'Naviera Ejemplo 1789961389571 S.A.' and expected object 'Naviera Ejemplo 1789961389571 S.A.' are equal
+
+20-09-2026T22:29:49 - [MESSAGE][PASSED] - Actual object 'Naviera Ejemplo 1789961389571 S.A.' and expected object 'Naviera Ejemplo 1789961389571 S.A.' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU05_02_Propietario_Natural_Sin_Pais" time="0.395" classname="Test Cases/TC_HU05_02_Propietario_Natural_Sin_Pais" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:49 - [TEST_CASE][PASSED] - Test Cases/TC_HU05_02_Propietario_Natural_Sin_Pais: Test Cases/TC_HU05_02_Propietario_Natural_Sin_Pais
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_4.har
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU05 Natural $sufijo",
+  "tipo": "PESQUERA",
+  "servicio": "CABOTAJE",
+  "tonelajeBruto": 300.00,
+  "tonelajeNeto": 180.00,
+  "eslora": 28.00,
+  "manga": 7.00,
+  "puntal": 3.50,
+  "anioConstruccion": 2016,
+  "lugarConstruccion": "Astillero Vacamonte",
+  "materialCasco": "Fibra",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 450.00
+}: null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_5.har
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU05 Natural 1789961390182","tipo":"PESQUERA","servicio":"CABOTAJE","tonelajeBruto":300.0,"tonelajeNeto":180.0,"eslora":28.0,"manga":7.0,"puntal":3.5,"anioConstruccion":2016,"lugarConstruccion":"Astillero Vacamonte","materialCasco":"Fibra","tipoPropulsion":"Diesel","potenciaKw":450.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=B937D7A8B38AE86ACA90B245C4D6A239' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Juan Perez $sufijo",
+  "tipo": "NATURAL",
+  "nacionalidad": "Panamena",
+  "domicilio": "Via Espana, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "8-888-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crear = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crear.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crear.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crear.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crear.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - r = sendRequest(crear): Send request successfully
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_6.har
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Juan Perez 1789961390182","tipo":"NATURAL","nacionalidad":"Panamena","domicilio":"Via Espana, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"8-888-1789961390182","naveId":40}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=B937D7A8B38AE86ACA90B245C4D6A239' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - println("Registro status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 201): Verify response status code successfully
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - creado = JsonSlurper().parseText(r.getResponseBodyContent()): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyEqual(tipo, "NATURAL"): Actual object 'NATURAL' and expected object 'NATURAL' are equal
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Actual object 'NATURAL' and expected object 'NATURAL' are equal
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyEqual(paisConstitucion, null): Actual object 'null' and expected object 'null' are equal
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Actual object 'null' and expected object 'null' are equal
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyEqual(naveId, naveId): Actual object '40' and expected object '40' are equal
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Actual object '40' and expected object '40' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU05_03_Juridica_Sin_Pais_Rechazada" time="0.786" classname="Test Cases/TC_HU05_03_Juridica_Sin_Pais_Rechazada" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:50 - [TEST_CASE][PASSED] - Test Cases/TC_HU05_03_Juridica_Sin_Pais_Rechazada: Test Cases/TC_HU05_03_Juridica_Sin_Pais_Rechazada
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_7.har
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU05 Sin Pais $sufijo",
+  "tipo": "CARGA",
+  "servicio": "INTERNACIONAL",
+  "tonelajeBruto": 2500.00,
+  "tonelajeNeto": 1300.00,
+  "eslora": 95.00,
+  "manga": 15.00,
+  "puntal": 8.00,
+  "anioConstruccion": 2021,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 3200.00
+}: null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_8.har
+
+20-09-2026T22:29:50 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU05 Sin Pais 1789961390942","tipo":"CARGA","servicio":"INTERNACIONAL","tonelajeBruto":2500.0,"tonelajeNeto":1300.0,"eslora":95.0,"manga":15.0,"puntal":8.0,"anioConstruccion":2021,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":3200.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=1FFC425DF5B2FE523A7772A74481E5FB' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:50 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:50 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Sociedad Incompleta $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Avenida Balboa, Ciudad de Panama",
+  "identificacion": "RUC-SP-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - r = sendRequest(crear): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_9.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Sociedad Incompleta 1789961390942 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Avenida Balboa, Ciudad de Panama","identificacion":"RUC-SP-1789961390942","naveId":41}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=1FFC425DF5B2FE523A7772A74481E5FB' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Registro status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 400): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyMatch(r.getResponseBodyContent(), ".*\"paisConstitucion\".*", true): Actual text '{"mensaje":"Hay campos obligatorios sin completar o con formato invalido.","campos":{"paisConstitucion":"El pais de constitucion es obligatorio para una persona juridica."}}' and expected text '.*"paisConstitucion".*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual text '{"mensaje":"Hay campos obligatorios sin completar o con formato invalido.","campos":{"paisConstitucion":"El pais de constitucion es obligatorio para una persona juridica."}}' and expected text '.*"paisConstitucion".*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - error = JsonSlurper().parseText(r.getResponseBodyContent()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyNotEqual(paisConstitucion, null): Actual object 'El pais de constitucion es obligatorio para una persona juridica.' and expected object 'null' are not equal
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual object 'El pais de constitucion es obligatorio para una persona juridica.' and expected object 'null' are not equal
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar = new com.kms.katalon.core.testobject.RequestObject(listarPropietarios): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestUrl(base + "/api/naves/" + naveId + "/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rLista = sendRequest(listar): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_10.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=1FFC425DF5B2FE523A7772A74481E5FB' \
+  'http://localhost:8080/api/naves/41/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rLista, 200): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyEqual(getResponseBodyContent()).size(), 0): Actual object '0' and expected object '0' are equal
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual object '0' and expected object '0' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU05_04_Participacion_Excede_100" time="0.502" classname="Test Cases/TC_HU05_04_Participacion_Excede_100" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:51 - [TEST_CASE][PASSED] - Test Cases/TC_HU05_04_Participacion_Excede_100: Test Cases/TC_HU05_04_Participacion_Excede_100
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_11.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU05 Cuotas $sufijo",
+  "tipo": "CARGA",
+  "servicio": "INTERNACIONAL",
+  "tonelajeBruto": 4000.00,
+  "tonelajeNeto": 2100.00,
+  "eslora": 110.00,
+  "manga": 18.00,
+  "puntal": 9.00,
+  "anioConstruccion": 2017,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 4500.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_12.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU05 Cuotas 1789961391506","tipo":"CARGA","servicio":"INTERNACIONAL","tonelajeBruto":4000.0,"tonelajeNeto":2100.0,"eslora":110.0,"manga":18.0,"puntal":9.0,"anioConstruccion":2017,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":4500.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=7E15DCEB8518DF104B031F04350CB48B' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - primero = {
+  "nombre": "Copropietario Uno $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-C1-$sufijo",
+  "naveId": $naveId,
+  "porcentaje": 60.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1 = new com.kms.katalon.core.testobject.RequestObject(primerCopropietario): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(primero)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - r1 = sendRequest(crear1): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_13.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Copropietario Uno 1789961391506 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-C1-1789961391506","naveId":42,"porcentaje":60.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=7E15DCEB8518DF104B031F04350CB48B' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Primero status: " + r1.getStatusCode()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r1, 201): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - segundo = {
+  "nombre": "Copropietario Dos $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Avenida Balboa, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-C2-$sufijo",
+  "naveId": $naveId,
+  "porcentaje": 60.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2 = new com.kms.katalon.core.testobject.RequestObject(segundoCopropietario): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(segundo)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - r2 = sendRequest(crear2): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_14.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Copropietario Dos 1789961391506 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Avenida Balboa, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-C2-1789961391506","naveId":42,"porcentaje":60.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=7E15DCEB8518DF104B031F04350CB48B' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Segundo status: " + r2.getStatusCode()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Respuesta: " + r2.getResponseBodyContent()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r2, 409): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyMatch(r2.getResponseBodyContent(), ".*[Pp]articipacion.*", true): Actual text '{"mensaje":"La participacion excede el 100% de la nave. Disponible: 40.00%."}' and expected text '.*[Pp]articipacion.*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual text '{"mensaje":"La participacion excede el 100% de la nave. Disponible: 40.00%."}' and expected text '.*[Pp]articipacion.*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar = new com.kms.katalon.core.testobject.RequestObject(listarPropietarios): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestUrl(base + "/api/naves/" + naveId + "/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rLista = sendRequest(listar): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_15.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=7E15DCEB8518DF104B031F04350CB48B' \
+  'http://localhost:8080/api/naves/42/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rLista, 200): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyEqual(getResponseBodyContent()).size(), 1): Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual object '1' and expected object '1' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU05_05_Identificacion_Duplicada" time="0.351" classname="Test Cases/TC_HU05_05_Identificacion_Duplicada" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:51 - [TEST_CASE][PASSED] - Test Cases/TC_HU05_05_Identificacion_Duplicada: Test Cases/TC_HU05_05_Identificacion_Duplicada
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_16.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - identificacion = RUC-DUP-$sufijo: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU05 Duplicada $sufijo",
+  "tipo": "CARGA",
+  "servicio": "CABOTAJE",
+  "tonelajeBruto": 1800.00,
+  "tonelajeNeto": 950.00,
+  "eslora": 75.00,
+  "manga": 13.00,
+  "puntal": 6.50,
+  "anioConstruccion": 2018,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 2100.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_17.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU05 Duplicada 1789961391880","tipo":"CARGA","servicio":"CABOTAJE","tonelajeBruto":1800.0,"tonelajeNeto":950.0,"eslora":75.0,"manga":13.0,"puntal":6.5,"anioConstruccion":2018,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":2100.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=35D5DE7FDDCCE83480095B489D1BDBB7' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - primero = {
+  "nombre": "Original $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "$identificacion",
+  "naveId": $naveId,
+  "porcentaje": 40.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1 = new com.kms.katalon.core.testobject.RequestObject(propietarioOriginal): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear1.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(primero)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - r1 = sendRequest(crear1): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_18.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Original 1789961391880 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-DUP-1789961391880","naveId":43,"porcentaje":40.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=35D5DE7FDDCCE83480095B489D1BDBB7' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Primero status: " + r1.getStatusCode()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r1, 201): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - segundo = {
+  "nombre": "Duplicado $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Avenida Balboa, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "$identificacion",
+  "naveId": $naveId,
+  "porcentaje": 40.00
+}: null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2 = new com.kms.katalon.core.testobject.RequestObject(propietarioDuplicado): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - crear2.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(segundo)): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - r2 = sendRequest(crear2): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_19.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Duplicado 1789961391880 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Avenida Balboa, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-DUP-1789961391880","naveId":43,"porcentaje":40.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=35D5DE7FDDCCE83480095B489D1BDBB7' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Segundo status: " + r2.getStatusCode()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - println("Respuesta: " + r2.getResponseBodyContent()): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r2, 409): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyMatch(r2.getResponseBodyContent(), ".*identificacion.*", true): Actual text '{"mensaje":"Ya existe un propietario registrado con esa identificacion."}' and expected text '.*identificacion.*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Actual text '{"mensaje":"Ya existe un propietario registrado con esa identificacion."}' and expected text '.*identificacion.*' are matched  using regular expression
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar = new com.kms.katalon.core.testobject.RequestObject(listarPropietarios): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestUrl(base + "/api/naves/" + naveId + "/propietarios"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - listar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - rLista = sendRequest(listar): Send request successfully
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_20.har
+
+20-09-2026T22:29:51 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=35D5DE7FDDCCE83480095B489D1BDBB7' \
+  'http://localhost:8080/api/naves/43/propietarios'
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:51 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rLista, 200): Verify response status code successfully
+
+20-09-2026T22:29:51 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(getResponseBodyContent()).size(), 1): Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object '1' and expected object '1' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU06_01_Designacion_Valida" time="0.434" classname="Test Cases/TC_HU06_01_Designacion_Valida" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:52 - [TEST_CASE][PASSED] - Test Cases/TC_HU06_01_Designacion_Valida: Test Cases/TC_HU06_01_Designacion_Valida
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_21.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU06 $sufijo",
+  "tipo": "CARGA",
+  "servicio": "INTERNACIONAL",
+  "tonelajeBruto": 3000.00,
+  "tonelajeNeto": 1600.00,
+  "eslora": 100.00,
+  "manga": 16.00,
+  "puntal": 8.50,
+  "anioConstruccion": 2020,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 3800.00
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_22.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU06 1789961392188","tipo":"CARGA","servicio":"INTERNACIONAL","tonelajeBruto":3000.0,"tonelajeNeto":1600.0,"eslora":100.0,"manga":16.0,"puntal":8.5,"anioConstruccion":2020,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":3800.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=5D2E3AC12E45578813F691F8F9A26304' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Naviera HU06 $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-A6-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(crearProp), 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_23.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Naviera HU06 1789961392188 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-A6-1789961392188","naveId":44}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=5D2E3AC12E45578813F691F8F9A26304' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoAgente = {
+  "nombre": "Bufete Maritimo $sufijo",
+  "idoneidad": "IDN-$sufijo",
+  "telefono": "+507 300-1234",
+  "correo": "contacto$sufijo@bufete.pa",
+  "poderNumero": "PODER-$sufijo",
+  "poderFecha": "2026-01-15",
+  "poderLugar": "Ciudad de Panama"
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar = new com.kms.katalon.core.testobject.RequestObject(designarAgente): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoAgente)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - r = sendRequest(designar): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_24.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Bufete Maritimo 1789961392188","idoneidad":"IDN-1789961392188","telefono":"+507 300-1234","correo":"contacto1789961392188@bufete.pa","poderNumero":"PODER-1789961392188","poderFecha":"2026-01-15","poderLugar":"Ciudad de Panama"}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=5D2E3AC12E45578813F691F8F9A26304' \
+  'http://localhost:8080/api/naves/44/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Designacion status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - creado = JsonSlurper().parseText(r.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(vigente, true): Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(naveId, naveId): Actual object '44' and expected object '44' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object '44' and expected object '44' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(nombre, "Bufete Maritimo " + sufijo): Actual object 'Bufete Maritimo 1789961392188' and expected object 'Bufete Maritimo 1789961392188' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'Bufete Maritimo 1789961392188' and expected object 'Bufete Maritimo 1789961392188' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(correo, "contacto" + sufijo + "@bufete.pa"): Actual object 'contacto1789961392188@bufete.pa' and expected object 'contacto1789961392188@bufete.pa' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'contacto1789961392188@bufete.pa' and expected object 'contacto1789961392188@bufete.pa' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar = new com.kms.katalon.core.testobject.RequestObject(consultarAgente): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rConsulta = sendRequest(consultar): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_25.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=5D2E3AC12E45578813F691F8F9A26304' \
+  'http://localhost:8080/api/naves/44/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Consulta: " + rConsulta.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rConsulta, 200): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - vigente = JsonSlurper().parseText(rConsulta.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(id, id): Actual object '10' and expected object '10' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object '10' and expected object '10' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(vigente, true): Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'true' and expected object 'true' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU06_02_Sin_Propietarios_Rechazada" time="0.208" classname="Test Cases/TC_HU06_02_Sin_Propietarios_Rechazada" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:52 - [TEST_CASE][PASSED] - Test Cases/TC_HU06_02_Sin_Propietarios_Rechazada: Test Cases/TC_HU06_02_Sin_Propietarios_Rechazada
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_26.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU06 Huerfana $sufijo",
+  "tipo": "REMOLCADOR",
+  "servicio": "CABOTAJE",
+  "tonelajeBruto": 500.00,
+  "tonelajeNeto": 260.00,
+  "eslora": 32.00,
+  "manga": 10.00,
+  "puntal": 4.50,
+  "anioConstruccion": 2015,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 2200.00
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_27.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU06 Huerfana 1789961392591","tipo":"REMOLCADOR","servicio":"CABOTAJE","tonelajeBruto":500.0,"tonelajeNeto":260.0,"eslora":32.0,"manga":10.0,"puntal":4.5,"anioConstruccion":2015,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":2200.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=36D31EEF4D95642E87AD474F0F86C281' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoAgente = {
+  "nombre": "Bufete Prematuro $sufijo",
+  "idoneidad": "IDN-P-$sufijo",
+  "telefono": "+507 300-9999",
+  "correo": "prematuro$sufijo@bufete.pa",
+  "poderNumero": "PODER-P-$sufijo",
+  "poderFecha": "2026-02-01",
+  "poderLugar": "Ciudad de Panama"
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar = new com.kms.katalon.core.testobject.RequestObject(designarAgente): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoAgente)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - r = sendRequest(designar): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_28.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Bufete Prematuro 1789961392591","idoneidad":"IDN-P-1789961392591","telefono":"+507 300-9999","correo":"prematuro1789961392591@bufete.pa","poderNumero":"PODER-P-1789961392591","poderFecha":"2026-02-01","poderLugar":"Ciudad de Panama"}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=36D31EEF4D95642E87AD474F0F86C281' \
+  'http://localhost:8080/api/naves/45/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Designacion status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 409): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyMatch(r.getResponseBodyContent(), ".*propietarios.*", true): Actual text '{"mensaje":"La nave no tiene propietarios vinculados. Registre al menos uno antes de designar agente residente."}' and expected text '.*propietarios.*' are matched  using regular expression
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual text '{"mensaje":"La nave no tiene propietarios vinculados. Registre al menos uno antes de designar agente residente."}' and expected text '.*propietarios.*' are matched  using regular expression
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar = new com.kms.katalon.core.testobject.RequestObject(consultarAgente): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(consultar), 404): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_29.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=36D31EEF4D95642E87AD474F0F86C281' \
+  'http://localhost:8080/api/naves/45/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU06_03_Reemplazo_Y_Historial" time="0.349" classname="Test Cases/TC_HU06_03_Reemplazo_Y_Historial" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:52 - [TEST_CASE][PASSED] - Test Cases/TC_HU06_03_Reemplazo_Y_Historial: Test Cases/TC_HU06_03_Reemplazo_Y_Historial
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_30.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU06 Relevo $sufijo",
+  "tipo": "TANQUERO",
+  "servicio": "INTERNACIONAL",
+  "tonelajeBruto": 8000.00,
+  "tonelajeNeto": 4200.00,
+  "eslora": 140.00,
+  "manga": 21.00,
+  "puntal": 11.00,
+  "anioConstruccion": 2014,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 7200.00
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_31.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU06 Relevo 1789961392842","tipo":"TANQUERO","servicio":"INTERNACIONAL","tonelajeBruto":8000.0,"tonelajeNeto":4200.0,"eslora":140.0,"manga":21.0,"puntal":11.0,"anioConstruccion":2014,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":7200.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Naviera Relevo $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-RL-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - crearProp.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(crearProp), 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_32.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Naviera Relevo 1789961392842 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-RL-1789961392842","naveId":46}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - primerAgente = {
+  "nombre": "Bufete Saliente $sufijo",
+  "idoneidad": "IDN-S-$sufijo",
+  "telefono": "+507 300-1111",
+  "correo": "saliente$sufijo@bufete.pa",
+  "poderNumero": "PODER-S-$sufijo",
+  "poderFecha": "2026-01-10",
+  "poderLugar": "Ciudad de Panama"
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar1 = new com.kms.katalon.core.testobject.RequestObject(designarPrimero): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar1.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar1.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar1.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar1.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(primerAgente)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - r1 = sendRequest(designar1): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_33.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Bufete Saliente 1789961392842","idoneidad":"IDN-S-1789961392842","telefono":"+507 300-1111","correo":"saliente1789961392842@bufete.pa","poderNumero":"PODER-S-1789961392842","poderFecha":"2026-01-10","poderLugar":"Ciudad de Panama"}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/naves/46/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Primer agente status: " + r1.getStatusCode()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r1, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - agenteAnterior = JsonSlurper().parseText(r1.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - segundoAgente = {
+  "nombre": "Bufete Entrante $sufijo",
+  "idoneidad": "IDN-E-$sufijo",
+  "telefono": "+507 300-2222",
+  "correo": "entrante$sufijo@bufete.pa",
+  "poderNumero": "PODER-E-$sufijo",
+  "poderFecha": "2026-03-20",
+  "poderLugar": "Ciudad de Panama"
+}: null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar2 = new com.kms.katalon.core.testobject.RequestObject(designarSegundo): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar2.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar2.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar2.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - designar2.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(segundoAgente)): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - r2 = sendRequest(designar2): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_34.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Bufete Entrante 1789961392842","idoneidad":"IDN-E-1789961392842","telefono":"+507 300-2222","correo":"entrante1789961392842@bufete.pa","poderNumero":"PODER-E-1789961392842","poderFecha":"2026-03-20","poderLugar":"Ciudad de Panama"}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/naves/46/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Segundo agente status: " + r2.getStatusCode()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Respuesta: " + r2.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r2, 201): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - agenteNuevo = JsonSlurper().parseText(r2.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(vigente, true): Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar = new com.kms.katalon.core.testobject.RequestObject(consultarAgente): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - consultar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rConsulta = sendRequest(consultar): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_35.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/naves/46/agente-residente'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rConsulta, 200): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - vigente = JsonSlurper().parseText(rConsulta.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(id, id): Actual object '12' and expected object '12' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object '12' and expected object '12' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(nombre, "Bufete Entrante " + sufijo): Actual object 'Bufete Entrante 1789961392842' and expected object 'Bufete Entrante 1789961392842' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object 'Bufete Entrante 1789961392842' and expected object 'Bufete Entrante 1789961392842' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - historial = new com.kms.katalon.core.testobject.RequestObject(historialAgentes): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - historial.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente/historial"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - historial.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - historial.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - rHistorial = sendRequest(historial): Send request successfully
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_36.har
+
+20-09-2026T22:29:52 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=919671BC27091BC6739D47A7C2C0D607' \
+  'http://localhost:8080/api/naves/46/agente-residente/historial'
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - println("Historial: " + rHistorial.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rHistorial, 200): Verify response status code successfully
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - lista = JsonSlurper().parseText(rHistorial.getResponseBodyContent()): null
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(lista.size(), 2): Actual object '2' and expected object '2' are equal
+
+20-09-2026T22:29:52 - [MESSAGE][PASSED] - Actual object '2' and expected object '2' are equal
+
+20-09-2026T22:29:52 - [TEST_STEP][PASSED] - verifyEqual(lista.count({ -> ... }), 1): Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object '1' and expected object '1' are equal
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyEqual(vigente, true): Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object 'true' and expected object 'true' are equal
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyEqual(vigente, false): Actual object 'false' and expected object 'false' are equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object 'false' and expected object 'false' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU06_04_Datos_Contacto_Invalidos" time="0.248" classname="Test Cases/TC_HU06_04_Datos_Contacto_Invalidos" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:53 - [TEST_CASE][PASSED] - Test Cases/TC_HU06_04_Datos_Contacto_Invalidos: Test Cases/TC_HU06_04_Datos_Contacto_Invalidos
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_37.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU06 Contacto $sufijo",
+  "tipo": "MIXTA",
+  "servicio": "MIXTO",
+  "tonelajeBruto": 2200.00,
+  "tonelajeNeto": 1100.00,
+  "eslora": 88.00,
+  "manga": 14.00,
+  "puntal": 7.00,
+  "anioConstruccion": 2013,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Acero",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 2600.00
+}: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_38.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU06 Contacto 1789961393179","tipo":"MIXTA","servicio":"MIXTO","tonelajeBruto":2200.0,"tonelajeNeto":1100.0,"eslora":88.0,"manga":14.0,"puntal":7.0,"anioConstruccion":2013,"lugarConstruccion":"Astillero Balboa","materialCasco":"Acero","tipoPropulsion":"Diesel","potenciaKw":2600.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=62CC63F73122A4655BB18B8E74611BDD' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Naviera Contacto $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-CT-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(crearProp), 201): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_39.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Naviera Contacto 1789961393179 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-CT-1789961393179","naveId":47}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=62CC63F73122A4655BB18B8E74611BDD' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cuerpoAgente = {
+  "nombre": "Bufete Contacto Malo $sufijo",
+  "idoneidad": "IDN-CM-$sufijo",
+  "telefono": "llamar al bufete",
+  "correo": "esto-no-es-un-correo",
+  "poderNumero": "PODER-CM-$sufijo",
+  "poderFecha": "2026-01-05",
+  "poderLugar": "Ciudad de Panama"
+}: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - designar = new com.kms.katalon.core.testobject.RequestObject(designarAgente): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - designar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - designar.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - designar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - designar.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoAgente)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - r = sendRequest(designar): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_40.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Bufete Contacto Malo 1789961393179","idoneidad":"IDN-CM-1789961393179","telefono":"llamar al bufete","correo":"esto-no-es-un-correo","poderNumero":"PODER-CM-1789961393179","poderFecha":"2026-01-05","poderLugar":"Ciudad de Panama"}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=62CC63F73122A4655BB18B8E74611BDD' \
+  'http://localhost:8080/api/naves/47/agente-residente'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - println("Designacion status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 400): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - error = JsonSlurper().parseText(r.getResponseBodyContent()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyNotEqual(telefono, null): Actual object 'El telefono solo admite numeros, espacios y los signos + ( ) . -' and expected object 'null' are not equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object 'El telefono solo admite numeros, espacios y los signos + ( ) . -' and expected object 'null' are not equal
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyNotEqual(correo, null): Actual object 'El correo no tiene un formato valido.' and expected object 'null' are not equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object 'El correo no tiene un formato valido.' and expected object 'null' are not equal
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar = new com.kms.katalon.core.testobject.RequestObject(consultarAgente): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(consultar), 404): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_41.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=62CC63F73122A4655BB18B8E74611BDD' \
+  'http://localhost:8080/api/naves/47/agente-residente'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <testcase name="Test Cases/TC_HU06_05_Consulta_Sin_Designacion" time="0.253" classname="Test Cases/TC_HU06_05_Consulta_Sin_Designacion" status="PASSED">
+         <system-out><![CDATA[20-09-2026T22:29:53 - [TEST_CASE][PASSED] - Test Cases/TC_HU06_05_Consulta_Sin_Designacion: Test Cases/TC_HU06_05_Consulta_Sin_Designacion
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - base = "http://localhost:8080": null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login = new com.kms.katalon.core.testobject.RequestObject(login): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setRestUrl(base + "/api/auth/login"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/x-www-form-urlencoded)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - login.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(correo=agente@navesitas.pa&password=***REDACTADO***)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - rLogin = sendRequest(login): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_42.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data-urlencode 'correo=agente@navesitas.pa&password=***REDACTADO***' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  'http://localhost:8080/api/auth/login'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cookie = split(";").getAt(0): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - sufijo = System.currentTimeMillis(): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cuerpoNave = {
+  "nombre": "Nave HU06 Sin Agente $sufijo",
+  "tipo": "PASAJEROS",
+  "servicio": "CABOTAJE",
+  "tonelajeBruto": 900.00,
+  "tonelajeNeto": 480.00,
+  "eslora": 45.00,
+  "manga": 11.00,
+  "puntal": 5.00,
+  "anioConstruccion": 2022,
+  "lugarConstruccion": "Astillero Balboa",
+  "materialCasco": "Aluminio",
+  "tipoPropulsion": "Diesel",
+  "potenciaKw": 1400.00
+}: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave = new com.kms.katalon.core.testobject.RequestObject(crearNave): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setRestUrl(base + "/api/naves"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearNave.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoNave)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - rNave = sendRequest(crearNave): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_43.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Nave HU06 Sin Agente 1789961393421","tipo":"PASAJEROS","servicio":"CABOTAJE","tonelajeBruto":900.0,"tonelajeNeto":480.0,"eslora":45.0,"manga":11.0,"puntal":5.0,"anioConstruccion":2022,"lugarConstruccion":"Astillero Balboa","materialCasco":"Aluminio","tipoPropulsion":"Diesel","potenciaKw":1400.0}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CA22597EC2A120A1D0A4735017C749A2' \
+  'http://localhost:8080/api/naves'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rNave, 201): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - naveId = id: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - cuerpoPropietario = {
+  "nombre": "Naviera Sin Agente $sufijo S.A.",
+  "tipo": "JURIDICA",
+  "nacionalidad": "Panamena",
+  "domicilio": "Calle 50, Ciudad de Panama",
+  "paisConstitucion": "Panama",
+  "identificacion": "RUC-SA-$sufijo",
+  "naveId": $naveId
+}: null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp = new com.kms.katalon.core.testobject.RequestObject(registrarPropietario): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setRestUrl(base + "/api/propietarios"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setRestRequestMethod("POST"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Content-Type, com.kms.katalon.core.testobject.ConditionType.EQUALS, application/json), new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - crearProp.setBodyContent(new com.kms.katalon.core.testobject.impl.HttpTextBodyContent(cuerpoPropietario)): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(sendRequest(crearProp), 201): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_44.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --request POST \
+  --data '{"nombre":"Naviera Sin Agente 1789961393421 S.A.","tipo":"JURIDICA","nacionalidad":"Panamena","domicilio":"Calle 50, Ciudad de Panama","paisConstitucion":"Panama","identificacion":"RUC-SA-1789961393421","naveId":48}' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CA22597EC2A120A1D0A4735017C749A2' \
+  'http://localhost:8080/api/propietarios'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar = new com.kms.katalon.core.testobject.RequestObject(consultarAgente): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - consultar.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - r = sendRequest(consultar): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_45.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=CA22597EC2A120A1D0A4735017C749A2' \
+  'http://localhost:8080/api/naves/48/agente-residente'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - println("Consulta status: " + r.getStatusCode()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - println("Respuesta: " + r.getResponseBodyContent()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(r, 404): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyMatch(r.getResponseBodyContent(), ".*\"mensaje\".*", true): Actual text '{"mensaje":"La nave no tiene agente residente designado."}' and expected text '.*"mensaje".*' are matched  using regular expression
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual text '{"mensaje":"La nave no tiene agente residente designado."}' and expected text '.*"mensaje".*' are matched  using regular expression
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - historial = new com.kms.katalon.core.testobject.RequestObject(historialAgentes): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - historial.setRestUrl(base + "/api/naves/" + naveId + "/agente-residente/historial"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - historial.setRestRequestMethod("GET"): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - historial.setHttpHeaderProperties([new com.kms.katalon.core.testobject.TestObjectProperty(Cookie, com.kms.katalon.core.testobject.ConditionType.EQUALS, cookie)]): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - rHistorial = sendRequest(historial): Send request successfully
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - HAR: /Users/lowilt/IdeaProjects/registro-naves/qa/registro-naves-qa/Reports/20260920_222943/TS03_Sprint3/20260920_222943/requests/main/null_46.har
+
+20-09-2026T22:29:53 - [MESSAGE][INFO] - cURL Command:
+curl \
+  --location \
+  --header 'Cookie: JSESSIONID=CA22597EC2A120A1D0A4735017C749A2' \
+  'http://localhost:8080/api/naves/48/agente-residente/historial'
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Send request successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - println("Historial: " + rHistorial.getResponseBodyContent()): null
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyResponseStatusCode(rHistorial, 200): Verify response status code successfully
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Verify response status code successfully
+
+20-09-2026T22:29:53 - [TEST_STEP][PASSED] - verifyEqual(getResponseBodyContent()).size(), 0): Actual object '0' and expected object '0' are equal
+
+20-09-2026T22:29:53 - [MESSAGE][PASSED] - Actual object '0' and expected object '0' are equal]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <system-out><![CDATA[20-09-2026T22:29:47 - [TEST_SUITE][PASSED] - TS03_Sprint3: null]]></system-out>
+      <system-err><![CDATA[]]></system-err>
+   </testsuite>
+</testsuites>

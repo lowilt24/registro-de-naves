@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU05_04_Participacion_Excede_100</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>59048cde-8e58-4c00-a967-bfc1198d903b</testCaseGuid>
+</TestCaseEntity>

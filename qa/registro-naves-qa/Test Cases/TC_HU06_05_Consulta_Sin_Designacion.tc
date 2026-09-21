@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU06_05_Consulta_Sin_Designacion</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e586b45d-9ba2-4141-92cc-da883f6e4749</testCaseGuid>
+</TestCaseEntity>

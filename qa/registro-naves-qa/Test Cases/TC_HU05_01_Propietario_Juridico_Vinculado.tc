@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU05_01_Propietario_Juridico_Vinculado</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>9c5bb175-db0c-4caa-8f7b-c54eccdc07d3</testCaseGuid>
+</TestCaseEntity>

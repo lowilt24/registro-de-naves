@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU06_02_Sin_Propietarios_Rechazada</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a0f64819-2b1d-40a6-b47c-c1d5249485ee</testCaseGuid>
+</TestCaseEntity>

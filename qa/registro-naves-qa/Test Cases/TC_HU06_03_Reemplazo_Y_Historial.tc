@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU06_03_Reemplazo_Y_Historial</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>7fb607a1-f06c-46c5-a020-d2de0adf9e5e</testCaseGuid>
+</TestCaseEntity>
