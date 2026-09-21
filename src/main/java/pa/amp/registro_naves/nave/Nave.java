@@ -1,8 +1,6 @@
 package pa.amp.registro_naves.nave;
 
 import jakarta.persistence.*;
-import pa.amp.registro_naves.persona.AgenteResidente;
-import pa.amp.registro_naves.persona.Propietario;
 import pa.amp.registro_naves.usuario.Usuario;
 
 import java.math.BigDecimal;
@@ -68,16 +66,15 @@ public class Nave {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "propietario_id", nullable = false)
-    private Propietario propietario;
+    /*
+     * Sprint 3: la nave ya no guarda propietario ni agente residente.
+     * Los propietarios viven en nave_propietario (HU-05) y el agente en
+     * agentes_residentes (HU-06), porque ambas son relaciones con
+     * historia y cardinalidad propia.
+     */
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "agente_residente_id", nullable = false)
-    private AgenteResidente agenteResidente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registrado_por_id")
+    @JoinColumn(name = "registrado_por_id", nullable = false)
     private Usuario registradoPor;
 
     /**
@@ -145,12 +142,6 @@ public class Nave {
 
     public LocalDateTime getFechaRegistro() { return fechaRegistro; }
     public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
-
-    public Propietario getPropietario() { return propietario; }
-    public void setPropietario(Propietario propietario) { this.propietario = propietario; }
-
-    public AgenteResidente getAgenteResidente() { return agenteResidente; }
-    public void setAgenteResidente(AgenteResidente agenteResidente) { this.agenteResidente = agenteResidente; }
 
     public Usuario getRegistradoPor() { return registradoPor; }
     public void setRegistradoPor(Usuario registradoPor) { this.registradoPor = registradoPor; }

@@ -19,9 +19,7 @@ public record NaveResponse(
         String tipoPropulsion,
         BigDecimal potenciaKw,
         String estado,
-        LocalDateTime fechaRegistro,
-        String propietario,
-        String agenteResidente
+        LocalDateTime fechaRegistro
 ) {
     public static NaveResponse de(Nave n) {
         return new NaveResponse(
@@ -40,8 +38,6 @@ public record NaveResponse(
                 n.getTipoPropulsion(),
                 n.getPotenciaKw(),
                 n.getEstado().name(),
-                n.getFechaRegistro(),
-                n.getPropietario().getNombre(),
-                n.getAgenteResidente().getNombre());
+                n.getFechaRegistro());
     }
 }
