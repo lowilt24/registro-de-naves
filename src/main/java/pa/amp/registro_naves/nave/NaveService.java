@@ -3,12 +3,8 @@ package pa.amp.registro_naves.nave;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
-import pa.amp.registro_naves.persona.AgenteResidente;
-import pa.amp.registro_naves.persona.AgenteResidenteRepository;
-import pa.amp.registro_naves.persona.Propietario;
-import pa.amp.registro_naves.persona.PropietarioRepository;
+import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.usuario.Usuario;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
@@ -18,18 +14,15 @@ import java.util.List;
 public class NaveService {
 
     private final NaveRepository naves;
-    private final PropietarioRepository propietarios;
-    private final AgenteResidenteRepository agentes;
     private final UsuarioRepository usuarios;
+    private final AccesoNave accesoNave;
 
     public NaveService(NaveRepository naves,
-                       PropietarioRepository propietarios,
-                       AgenteResidenteRepository agentes,
-                       UsuarioRepository usuarios) {
+                       UsuarioRepository usuarios,
+                       AccesoNave accesoNave) {
         this.naves = naves;
-        this.propietarios = propietarios;
-        this.agentes = agentes;
         this.usuarios = usuarios;
+        this.accesoNave = accesoNave;
     }
 
     /**
@@ -56,11 +49,16 @@ public class NaveService {
 
     /**
      * HU-03 — registro de nave, con el bloqueo de HU-04 aplicado en el servidor.
-     * La verificacion previa da un mensaje claro; la restriccion UNIQUE de la
-     * tabla cierra la carrera entre dos registros simultaneos.
+     *
+     * Sprint 3: el usuario autenticado queda registrado como dueno del
+     * expediente. De ahi depende el control de acceso de HU-05 y HU-06.
      */
     @Transactional
     public NaveResponse registrar(NaveRequest peticion, String correoUsuario) {
+
+        Usuario usuario = usuarios.findByCorreoIgnoreCase(correoUsuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se pudo identificar al usuario de la sesion."));
 
         if (naves.existsByNombreNormalizado(Nave.normalizar(peticion.nombre()))) {
             throw new ReglaDeNegocioException(
@@ -71,14 +69,6 @@ public class NaveService {
             throw new ReglaDeNegocioException(
                     "El tonelaje neto no puede ser mayor que el tonelaje bruto.");
         }
-
-        Propietario propietario = propietarios.findById(peticion.propietarioId())
-                .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "El propietario seleccionado no esta registrado."));
-
-        AgenteResidente agente = agentes.findById(peticion.agenteResidenteId())
-                .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "El agente residente seleccionado no esta registrado."));
 
         Nave nave = new Nave();
         nave.setNombre(peticion.nombre());
@@ -95,12 +85,7 @@ public class NaveService {
         nave.setTipoPropulsion(peticion.tipoPropulsion().trim());
         nave.setPotenciaKw(peticion.potenciaKw());
         nave.setEstado(EstadoNave.REGISTRADA);
-        nave.setPropietario(propietario);
-        nave.setAgenteResidente(agente);
-
-        if (correoUsuario != null) {
-            usuarios.findByCorreoIgnoreCase(correoUsuario).ifPresent(nave::setRegistradoPor);
-        }
+        nave.setRegistradoPor(usuario);
 
         try {
             return NaveResponse.de(naves.saveAndFlush(nave));
@@ -111,15 +96,16 @@ public class NaveService {
         }
     }
 
+    /** Solo las naves del usuario de la sesion. */
     @Transactional(readOnly = true)
-    public List<NaveResponse> listar() {
-        return naves.findAll().stream().map(NaveResponse::de).toList();
+    public List<NaveResponse> listarPropias(String correoUsuario) {
+        return naves.findByRegistradoPorCorreoIgnoreCaseOrderByIdAsc(correoUsuario).stream()
+                .map(NaveResponse::de)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public NaveResponse obtener(Long id) {
-        return naves.findById(id)
-                .map(NaveResponse::de)
-                .orElseThrow(() -> new RecursoNoEncontradoException("La nave solicitada no existe."));
+    public NaveResponse obtener(Long id, String correoUsuario) {
+        return NaveResponse.de(accesoNave.exigirPropia(id, correoUsuario));
     }
 }

@@ -148,3 +148,91 @@ th { color: var(--tinta-suave); font-weight: 600; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* =====================================================================
+   Sprint 3 — expediente de la nave: propietarios (HU-05) y agente
+   residente (HU-06).
+   ===================================================================== */
+
+.migas {
+  font-size: .875rem;
+  color: var(--tinta-suave);
+  margin-bottom: 10px;
+}
+.migas a { color: var(--marea); }
+
+.ficha-nave {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 20px;
+}
+.ficha-nave div span {
+  display: block;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--tinta-suave);
+  font-weight: 600;
+}
+.ficha-nave div b { font-weight: 500; }
+
+.encabezado-seccion {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.encabezado-seccion h2 { margin: 0; }
+.encabezado-seccion .contador {
+  margin-left: auto;
+  font-size: .85rem;
+  color: var(--tinta-suave);
+}
+
+.cuota {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--marea);
+  color: var(--marea);
+  border-radius: 2px;
+  font-size: .78rem;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.etiqueta-historial {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--linea);
+  color: var(--tinta-suave);
+  border-radius: 2px;
+  font-size: .78rem;
+}
+
+.vacio {
+  color: var(--tinta-suave);
+  font-style: italic;
+  padding: 10px 0;
+}
+
+.acciones { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+.oculto { display: none; }
+
+.bloqueado {
+  opacity: .5;
+  pointer-events: none;
+}
+
+.aviso-precondicion {
+  border-left: 3px solid var(--tinta-suave);
+  background: #eef1f4;
+  padding: 11px 14px;
+  border-radius: 0 3px 3px 0;
+  font-size: .92rem;
+  color: var(--tinta-suave);
+  margin-bottom: 16px;
+}
+
+table .enlace-fila { color: var(--marea); text-decoration: none; font-weight: 500; }
+table .enlace-fila:hover { text-decoration: underline; }

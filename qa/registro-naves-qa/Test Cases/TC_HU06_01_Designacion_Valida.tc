@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU06_01_Designacion_Valida</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>6026e83f-a04a-4fa3-b55c-3cfa8ef454a5</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expediente de la nave — Navesitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Registro de naves comerciales &middot; DGMM</span>
+  <span class="derecha" id="sesion"></span>
+</header>
+
+<main>
+  <p class="migas"><a href="/naves.html">&larr; Mis naves</a></p>
+
+  <h2 id="titulo-nave">Expediente</h2>
+  <p class="sumario">
+    Aqui se vinculan los propietarios de la nave y se designa al agente
+    residente que gestiona su tramite ante la DGMM.
+  </p>
+
+  <p class="veredicto" id="aviso-nave" role="status" aria-live="polite"></p>
+
+  <!-- ============ Ficha de la nave ============ -->
+  <section class="tarjeta" id="tarjeta-nave">
+    <div class="ficha-nave" id="ficha-nave"></div>
+  </section>
+
+  <!-- ============ HU-05: propietarios ============ -->
+  <section class="tarjeta" id="seccion-propietarios">
+    <div class="encabezado-seccion">
+      <h2 style="font-size:1.1rem;">Propietarios</h2>
+      <span class="contador" id="cuota-disponible"></span>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Nombre o razon social</th><th>Tipo</th><th>Nacionalidad</th><th>Participacion</th></tr>
+      </thead>
+      <tbody id="lista-propietarios"></tbody>
+    </table>
+
+    <form id="form-propietario" novalidate style="margin-top:22px;">
+      <fieldset>
+        <legend>Registrar un propietario</legend>
+
+        <div class="rejilla">
+          <div class="ancho-total">
+            <label for="p-nombre">Nombre o razon social</label>
+            <input type="text" id="p-nombre" maxlength="150">
+            <span class="error-campo" data-error="nombre"></span>
+          </div>
+
+          <div>
+            <label for="p-tipo">Tipo de persona</label>
+            <select id="p-tipo">
+              <option value="">Seleccione</option>
+              <option value="NATURAL">Natural</option>
+              <option value="JURIDICA">Juridica</option>
+            </select>
+            <span class="error-campo" data-error="tipo"></span>
+          </div>
+
+          <div>
+            <label for="p-nacionalidad">Nacionalidad</label>
+            <input type="text" id="p-nacionalidad" maxlength="80" placeholder="Panamena">
+            <span class="error-campo" data-error="nacionalidad"></span>
+          </div>
+
+          <div class="ancho-total">
+            <label for="p-domicilio">Domicilio</label>
+            <input type="text" id="p-domicilio" maxlength="250"
+                   placeholder="Calle 50, Ciudad de Panama">
+            <span class="error-campo" data-error="domicilio"></span>
+          </div>
+
+          <!-- Solo se muestra cuando el tipo es JURIDICA -->
+          <div id="caja-pais" class="oculto">
+            <label for="p-paisConstitucion">Pais de constitucion</label>
+            <input type="text" id="p-paisConstitucion" maxlength="80" placeholder="Panama">
+            <span class="error-campo" data-error="paisConstitucion"></span>
+          </div>
+
+          <div>
+            <label for="p-identificacion">Identificacion <span class="pista">(opcional)</span></label>
+            <input type="text" id="p-identificacion" maxlength="50"
+                   placeholder="Cedula, pasaporte o RUC">
+            <span class="error-campo" data-error="identificacion"></span>
+          </div>
+
+          <div>
+            <label for="p-porcentaje">Participacion <span class="pista">(%)</span></label>
+            <input type="number" id="p-porcentaje" step="0.01" min="0.01" max="100" placeholder="100">
+            <span class="error-campo" data-error="porcentaje"></span>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" id="btn-propietario">Registrar y vincular</button>
+        </div>
+      </fieldset>
+      <p class="veredicto" id="aviso-propietario" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- ============ HU-06: agente residente ============ -->
+  <section class="tarjeta" id="seccion-agente">
+    <div class="encabezado-seccion">
+      <h2 style="font-size:1.1rem;">Agente residente</h2>
+    </div>
+
+    <p class="aviso-precondicion oculto" id="precondicion-agente">
+      La nave necesita al menos un propietario vinculado antes de poder
+      designar agente residente.
+    </p>
+
+    <div id="agente-vigente"></div>
+
+    <form id="form-agente" novalidate style="margin-top:22px;">
+      <fieldset id="campos-agente">
+        <legend id="leyenda-agente">Designar agente residente</legend>
+
+        <div class="rejilla">
+          <div class="ancho-total">
+            <label for="a-nombre">Nombre del abogado o firma</label>
+            <input type="text" id="a-nombre" maxlength="150">
+            <span class="error-campo" data-error="nombre"></span>
+          </div>
+
+          <div>
+            <label for="a-idoneidad">Numero de idoneidad <span class="pista">(si es abogado)</span></label>
+            <input type="text" id="a-idoneidad" maxlength="50" placeholder="IDN-4521">
+            <span class="error-campo" data-error="idoneidad"></span>
+          </div>
+
+          <div>
+            <label for="a-telefono">Telefono</label>
+            <input type="text" id="a-telefono" maxlength="40" placeholder="+507 200-1234">
+            <span class="error-campo" data-error="telefono"></span>
+          </div>
+
+          <div class="ancho-total">
+            <label for="a-correo">Correo</label>
+            <input type="email" id="a-correo" maxlength="120" placeholder="contacto@bufete.com.pa">
+            <span class="error-campo" data-error="correo"></span>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>Poder <span class="pista">(referencia; el archivo se adjunta en HU-07)</span></legend>
+          <div class="rejilla tres">
+            <div>
+              <label for="a-poderNumero">Numero</label>
+              <input type="text" id="a-poderNumero" maxlength="60" placeholder="PG-2026-001">
+              <span class="error-campo" data-error="poderNumero"></span>
+            </div>
+            <div>
+              <label for="a-poderFecha">Fecha de otorgamiento</label>
+              <input type="date" id="a-poderFecha">
+              <span class="error-campo" data-error="poderFecha"></span>
+            </div>
+            <div>
+              <label for="a-poderLugar">Lugar <span class="pista">(notaria o consulado)</span></label>
+              <input type="text" id="a-poderLugar" maxlength="150"
+                     placeholder="Notaria Quinta del Circuito de Panama">
+              <span class="error-campo" data-error="poderLugar"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="acciones">
+          <button type="submit" id="btn-agente">Designar</button>
+        </div>
+      </fieldset>
+      <p class="veredicto" id="aviso-agente" role="status" aria-live="polite"></p>
+    </form>
+
+    <div id="caja-historial" class="oculto" style="margin-top:24px;">
+      <h3 style="font-size:.95rem; margin-bottom:8px;">Designaciones anteriores</h3>
+      <table>
+        <thead>
+          <tr><th>Nombre</th><th>Idoneidad</th><th>Designado</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="lista-historial"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="/js/comun.js"></script>
+<script src="/js/expediente.js"></script>
+</body>
+</html>

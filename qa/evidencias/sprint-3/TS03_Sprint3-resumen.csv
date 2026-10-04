@@ -1,0 +1,12 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS03_Sprint3,,Casos de calidad del Sprint 3: HU-05 (registro de propietario) y HU-06 (designacion de agente residente).,,20-09-2026 22:29:47,20-09-2026 22:29:53,6.163s,PASSED
+Test Cases/TC_HU05_01_Propietario_Juridico_Vinculado,,,,20-09-2026 22:29:47,20-09-2026 22:29:49,2.417s,PASSED
+Test Cases/TC_HU05_02_Propietario_Natural_Sin_Pais,,,,20-09-2026 22:29:49,20-09-2026 22:29:50,0.395s,PASSED
+Test Cases/TC_HU05_03_Juridica_Sin_Pais_Rechazada,,,,20-09-2026 22:29:50,20-09-2026 22:29:51,0.786s,PASSED
+Test Cases/TC_HU05_04_Participacion_Excede_100,,,,20-09-2026 22:29:51,20-09-2026 22:29:51,0.502s,PASSED
+Test Cases/TC_HU05_05_Identificacion_Duplicada,,,,20-09-2026 22:29:51,20-09-2026 22:29:52,0.351s,PASSED
+Test Cases/TC_HU06_01_Designacion_Valida,,,,20-09-2026 22:29:52,20-09-2026 22:29:52,0.434s,PASSED
+Test Cases/TC_HU06_02_Sin_Propietarios_Rechazada,,,,20-09-2026 22:29:52,20-09-2026 22:29:52,0.208s,PASSED
+Test Cases/TC_HU06_03_Reemplazo_Y_Historial,,,,20-09-2026 22:29:52,20-09-2026 22:29:53,0.349s,PASSED
+Test Cases/TC_HU06_04_Datos_Contacto_Invalidos,,,,20-09-2026 22:29:53,20-09-2026 22:29:53,0.248s,PASSED
+Test Cases/TC_HU06_05_Consulta_Sin_Designacion,,,,20-09-2026 22:29:53,20-09-2026 22:29:53,0.253s,PASSED

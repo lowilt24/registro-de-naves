@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU05_03_Juridica_Sin_Pais_Rechazada</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>b8bcc2ae-753d-456b-8661-48cb3d3777ee</testCaseGuid>
+</TestCaseEntity>

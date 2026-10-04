@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU06_04_Datos_Contacto_Invalidos</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>ad4c3cf3-6ce0-49f0-a851-0bc3cf5d19d1</testCaseGuid>
+</TestCaseEntity>

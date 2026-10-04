@@ -4,15 +4,26 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
- * Campos obligatorios de HU-03. Las anotaciones son el contrato de validacion
- * que ejercitan los casos negativos TC-02 y TC-03 de Katalon.
+ * HU-03 — datos de la nave.
+ *
+ * Cambio del Sprint 3: ya no pide propietarioId ni agenteResidenteId. La
+ * nave se registra sola y despues se le vinculan propietarios (HU-05) y
+ * se le designa agente residente (HU-06).
  */
 public record NaveRequest(
 
+        /*
+         * Remediacion del hallazgo SEC-02 del informe de seguridad.
+         *
+         * El patron anterior admitia "admin'--", que es la forma canonica
+         * de un comentario SQL. Ahora se exige al menos una letra y se
+         * rechazan las secuencias -- , '- y -' , sin dejar de aceptar
+         * nombres legitimos como O'Brien o Mar-Azul.
+         */
         @NotBlank(message = "El nombre de la nave es obligatorio.")
         @Size(max = 120, message = "El nombre no puede exceder 120 caracteres.")
-        @Pattern(regexp = "^[\\p{L}\\p{N} .'\\-]+$",
-                 message = "El nombre solo admite letras, numeros, espacios, punto, guion y apostrofe.")
+        @Pattern(regexp = "^(?=.*\\p{L})(?!.*(--|'-|-'))[\\p{L}\\p{N} .'\\-]+$",
+                 message = "El nombre debe contener letras y no admite secuencias como -- o '-.")
         String nombre,
 
         @NotNull(message = "El tipo de nave es obligatorio.")
@@ -66,11 +77,5 @@ public record NaveRequest(
         @NotNull(message = "La potencia es obligatoria.")
         @DecimalMin(value = "0.01", message = "La potencia debe ser mayor que cero.")
         @Digits(integer = 8, fraction = 2, message = "La potencia admite hasta 2 decimales.")
-        BigDecimal potenciaKw,
-
-        @NotNull(message = "Debe seleccionar el propietario de la nave.")
-        Long propietarioId,
-
-        @NotNull(message = "Debe seleccionar el agente residente.")
-        Long agenteResidenteId
+        BigDecimal potenciaKw
 ) {}

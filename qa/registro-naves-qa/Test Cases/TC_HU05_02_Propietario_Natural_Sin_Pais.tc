@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU05_02_Propietario_Natural_Sin_Pais</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e0f91424-39cb-418f-ba8e-7c4a1ad67cd7</testCaseGuid>
+</TestCaseEntity>

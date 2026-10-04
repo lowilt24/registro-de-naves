@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Iniciar sesion — Navesitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/app.css">
 </head>
@@ -38,9 +40,13 @@
 <script>
   const parametros = new URLSearchParams(location.search);
   const aviso = document.getElementById('aviso-login');
+
   if (parametros.has('error')) {
     aviso.dataset.estado = 'ocupado';
     aviso.textContent = 'Correo o contrasena incorrectos.';
+  } else if (parametros.has('expirada')) {
+    aviso.dataset.estado = 'neutro';
+    aviso.textContent = 'Su sesion termino. Vuelva a entrar para continuar.';
   } else if (parametros.has('creado')) {
     aviso.dataset.estado = 'libre';
     aviso.textContent = 'Cuenta creada. Ya puede iniciar sesion.';

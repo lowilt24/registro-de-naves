@@ -52,11 +52,16 @@ crear.setBodyContent(new HttpTextBodyContent(cuerpo))
 ResponseObject rCrear = WS.sendRequest(crear)
 WS.verifyResponseStatusCode(rCrear, 201)
 
-// Ahora el nombre ya esta tomado
+// Ahora el nombre ya esta tomado.
+// La consulta tambien exige sesion desde el Sprint 3 (hallazgo SEC-04):
+// sin la cookie responde 401 y no llega a comparar el nombre.
 RequestObject consulta = new RequestObject('disponibilidad')
 consulta.setRestUrl(base + '/api/naves/disponibilidad?nombre=' +
     java.net.URLEncoder.encode(nombre, 'UTF-8'))
 consulta.setRestRequestMethod('GET')
+consulta.setHttpHeaderProperties([
+    new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
+])
 
 ResponseObject r = WS.sendRequest(consulta)
 println('Respuesta: ' + r.getResponseBodyContent())

@@ -34,17 +34,16 @@ public class NaveController {
     @ResponseStatus(HttpStatus.CREATED)
     public NaveResponse registrar(@Valid @RequestBody NaveRequest peticion,
                                   Authentication autenticacion) {
-        String correo = autenticacion == null ? null : autenticacion.getName();
-        return servicio.registrar(peticion, correo);
+        return servicio.registrar(peticion, autenticacion.getName());
     }
 
     @GetMapping
-    public List<NaveResponse> listar() {
-        return servicio.listar();
+    public List<NaveResponse> listar(Authentication autenticacion) {
+        return servicio.listarPropias(autenticacion.getName());
     }
 
     @GetMapping("/{id}")
-    public NaveResponse obtener(@PathVariable Long id) {
-        return servicio.obtener(id);
+    public NaveResponse obtener(@PathVariable Long id, Authentication autenticacion) {
+        return servicio.obtener(id, autenticacion.getName());
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_HU05_05_Identificacion_Duplicada</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>ac6d19f5-da91-4e74-aef0-d29ab6be471d</testCaseGuid>
+</TestCaseEntity>
