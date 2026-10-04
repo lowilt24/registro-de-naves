@@ -1,7 +1,7 @@
 package pa.amp.registro_naves.nave;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record NaveResponse(
         Long id,
@@ -19,7 +19,7 @@ public record NaveResponse(
         String tipoPropulsion,
         BigDecimal potenciaKw,
         String estado,
-        LocalDateTime fechaRegistro
+        OffsetDateTime creadoEn
 ) {
     public static NaveResponse de(Nave n) {
         return new NaveResponse(
@@ -38,6 +38,6 @@ public record NaveResponse(
                 n.getTipoPropulsion(),
                 n.getPotenciaKw(),
                 n.getEstado().name(),
-                n.getFechaRegistro());
+                n.getCreadoEn());
     }
 }

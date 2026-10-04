@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-23 HU-08: filtros por tipo y estado.</description>
+   <name>TC_HU08_03_Filtro_Por_Tipo</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>86f95fcd-9814-4c0f-b4c6-08699719d3ba</testCaseGuid>
+</TestCaseEntity>

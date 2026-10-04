@@ -640,6 +640,90 @@ table .enlace-fila { font-weight: 700; }
   #lista-historial td:nth-child(4)::before { content: "Estado"; }
 }
 
+/* =====================================================================
+   Documentos (HU-07, HU-08): camara 5
+   ===================================================================== */
+
+/* La camara 5 se cruza cuando estan los cuatro documentos. */
+#seccion-documentos[data-completo="si"] .placa {
+  background: var(--agua);
+  border-color: var(--agua);
+  color: #fff;
+}
+
+/* En las camaras 1 a 4 el cerrojo es hijo directo de la camara; aqui vive
+   dentro del formulario, porque el listado (HU-08) queda visible y util
+   aunque la carga (HU-07) siga cerrada. */
+.subformulario > .cerrojo { margin: 0 0 var(--e4); }
+.subformulario:has(> fieldset:disabled) > .cerrojo { display: block; }
+.subformulario:has(> fieldset:disabled) .error-campo,
+.subformulario:has(> fieldset:disabled) .nota-version { display: none; }
+
+#resumen-documentos { margin: 0 0 var(--e4); }
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--e3) var(--e4);
+  margin-bottom: var(--e3);
+}
+.filtros > div { flex: 0 1 15rem; }
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: var(--alto-control);
+  font-weight: 400;
+  cursor: pointer;
+}
+.casilla input { width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; }
+
+input[type="file"] {
+  height: auto;
+  padding: 9px 12px;
+  line-height: 1.4;
+}
+
+.nota-version { display: block; margin-top: 6px; font-size: .875rem; }
+.nota-version:empty { display: none; }
+
+.archivo { overflow-wrap: anywhere; }
+#lista-documentos .fecha { white-space: nowrap; font-size: .9375rem; }
+.archivo .pista { display: block; font-size: .875rem; }
+
+/* Estado del documento. Siempre con texto; la forma del borde separa lo
+   que no existe (faltante: punteado) de lo que existe. El rojo queda para
+   observado, que es la senal de alto del expediente. */
+.doc-estado {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: var(--radio);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.doc-estado[data-estado="FALTANTE"]  { color: var(--tinta);       border: 1px dashed var(--tinta);   background: var(--superficie); }
+.doc-estado[data-estado="PENDIENTE"] { color: var(--tinta);       border-color: var(--filete-campo); background: var(--neutro-fondo); }
+.doc-estado[data-estado="APROBADO"]  { color: var(--siga-tinta);  border-color: var(--siga);         background: var(--siga-fondo); }
+.doc-estado[data-estado="OBSERVADO"] { color: var(--alto-tinta);  border-color: var(--alto);         background: var(--alto-fondo); }
+
+.fila-faltante td:first-child { font-weight: 600; }
+.fila-anterior td { color: var(--tinta-suave); }
+
+@media (max-width: 720px) {
+  .filtros > div { flex: 1 1 100%; }
+  #lista-documentos td:nth-child(2)::before { content: "Archivo"; }
+  #lista-documentos td:nth-child(3)::before { content: "Versión"; }
+  #lista-documentos td:nth-child(4)::before { content: "Cargado"; }
+  #lista-documentos td:nth-child(5)::before { content: "Estado"; }
+  #lista-documentos td:nth-child(6)::before { content: "Acción"; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

@@ -32,6 +32,18 @@
     <p class="veredicto" id="aviso-login" role="status"></p>
   </form>
 
+  <!-- Sprint 4: pedir otro enlace de validacion. Solo aparece cuando hace falta. -->
+  <form class="tarjeta oculto" id="form-reenvio" novalidate>
+    <div class="campo">
+      <label for="correo-reenvio">Correo de la cuenta</label>
+      <input type="email" id="correo-reenvio" autocomplete="email">
+    </div>
+    <div class="acciones">
+      <button type="submit" class="secundario" id="btn-reenvio">Enviarme otro enlace</button>
+    </div>
+    <p class="veredicto" id="aviso-reenvio" role="status" aria-live="polite"></p>
+  </form>
+
   <p class="nota">
     &iquest;No tiene cuenta? <a href="/registro-usuario.html">Registrarse</a>
   </p>
@@ -48,12 +60,59 @@
     aviso.dataset.estado = 'neutro';
     aviso.textContent = 'Su sesion termino. Vuelva a entrar para continuar.';
   } else if (parametros.has('creado')) {
+    // Sprint 4: la cuenta nace sin validar.
+    aviso.dataset.estado = 'neutro';
+    aviso.textContent = 'Cuenta creada. Le enviamos un enlace a su correo: '
+      + 'ábralo para activar la cuenta y después inicie sesión aquí.';
+  } else if (parametros.has('sinValidar')) {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'La cuenta todavía no está activa. Abra el enlace que le '
+      + 'enviamos por correo al registrarse.';
+    mostrarReenvio();
+  } else if (parametros.has('validado')) {
     aviso.dataset.estado = 'libre';
-    aviso.textContent = 'Cuenta creada. Ya puede iniciar sesion.';
+    aviso.textContent = 'Correo confirmado. Ya puede iniciar sesión.';
+  } else if (parametros.get('enlace') === 'vencido') {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'El enlace venció: dura 24 horas. Pida uno nuevo abajo.';
+    mostrarReenvio();
+  } else if (parametros.get('enlace') === 'invalido') {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'El enlace no es válido o ya se usó. Si su cuenta sigue '
+      + 'sin activar, pida uno nuevo abajo.';
+    mostrarReenvio();
   } else if (parametros.has('salida')) {
     aviso.dataset.estado = 'neutro';
     aviso.textContent = 'Sesion cerrada.';
   }
+
+  function mostrarReenvio() {
+    document.getElementById('form-reenvio').classList.remove('oculto');
+  }
+
+  document.getElementById('form-reenvio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const avisoReenvio = document.getElementById('aviso-reenvio');
+    const correo = document.getElementById('correo-reenvio').value.trim();
+    if (!correo) {
+      avisoReenvio.dataset.estado = 'ocupado';
+      avisoReenvio.textContent = 'Escriba el correo de la cuenta.';
+      return;
+    }
+    try {
+      const r = await fetch('/api/auth/reenviar-validacion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo })
+      });
+      const datos = await r.json().catch(() => ({}));
+      avisoReenvio.dataset.estado = r.ok ? 'libre' : 'ocupado';
+      avisoReenvio.textContent = datos.mensaje || 'No se pudo enviar el enlace.';
+    } catch (err) {
+      avisoReenvio.dataset.estado = 'ocupado';
+      avisoReenvio.textContent = 'No se pudo contactar el servidor.';
+    }
+  });
 </script>
 </body>
 </html>

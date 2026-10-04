@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-21 HU-08: consulta con documentos.</description>
+   <name>TC_HU08_01_Consulta_Con_Documentos</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>17557534-e1eb-4362-9b0e-8ad4c4b809e3</testCaseGuid>
+</TestCaseEntity>

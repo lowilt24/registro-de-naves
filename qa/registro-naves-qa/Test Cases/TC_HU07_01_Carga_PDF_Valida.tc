@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-17 HU-07: carga de PDF valido, hash y versionado.</description>
+   <name>TC_HU07_01_Carga_PDF_Valida</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>0ef2b14d-9ce4-416a-b3b6-7ed62e01e401</testCaseGuid>
+</TestCaseEntity>

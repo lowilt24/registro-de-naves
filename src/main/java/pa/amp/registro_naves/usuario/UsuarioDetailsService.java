@@ -24,7 +24,10 @@ public class UsuarioDetailsService implements UserDetailsService {
         return User.withUsername(usuario.getCorreo())
                 .password(usuario.getPasswordHash())
                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())))
-                .disabled(!usuario.isActivo())
+                // Sprint 4: sin correo validado la cuenta no entra. Spring
+                // responde DisabledException y SecurityConfig lo convierte
+                // en el aviso de "confirme su correo" del login.
+                .disabled(!usuario.isActivo() || !usuario.isCorreoValidado())
                 .build();
     }
 }

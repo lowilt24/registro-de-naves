@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-24 HU-08: descarga ajena (403), IDOR (404) y sin sesion (401).</description>
+   <name>TC_HU08_04_Descarga_Nave_Ajena</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>354b714f-e492-4b31-b18b-6c530ce1d65b</testCaseGuid>
+</TestCaseEntity>

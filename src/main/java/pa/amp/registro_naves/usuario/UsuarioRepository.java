@@ -8,4 +8,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByCorreoIgnoreCase(String correo);
 
     boolean existsByCorreoIgnoreCase(String correo);
+
+    Optional<Usuario> findByTokenValidacion(String hashToken);
 }

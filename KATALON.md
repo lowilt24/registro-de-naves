@@ -151,3 +151,48 @@ JUnit prueba el endpoint. Mencionar las dos capas suma a la lámina de calidad.
 La evidencia de la última corrida está en `qa/evidencias/sprint-3/`. El reporte
 completo de Katalon **no se versiona**: registra la contraseña del usuario de
 demo en texto plano (ver el LEEME de esa carpeta).
+
+---
+
+# Sprint 4 — HU-07 y HU-08
+
+Suite `TS04_Sprint4`, casos TC-17 a TC-24. Prueban la API de documentos
+según `CONTRATO-DOCUMENTOS.md`.
+
+## Antes de correrlos
+
+- La aplicación levantada en `localhost:8080` con el backend de HU-07 y HU-08.
+- Que existan `agente@navesitas.pa` y `revisor@navesitas.pa` con la contraseña
+  de demo. La V5 activa la validación de correo y deja a los usuarios de demo
+  ya validados, así que pueden iniciar sesión sin abrir ningún enlace. Si se
+  crea una cuenta nueva para probar, esa sí tiene que validar el correo
+  primero (el enlace aparece en Mailpit, `http://localhost:8025`).
+
+## Caso auxiliar
+
+`TC_AUX_Preparar_Nave_Con_Agente` no va en ninguna suite. Crea una nave con
+propietario y agente vigente (la precondición de HU-07) y devuelve
+`[cookie, naveId]`. Los ocho casos lo llaman con `callTestCase`, así cada uno
+trabaja sobre una nave nueva y no dependen entre sí.
+
+Los archivos de prueba (PDF válido, PDF disfrazado, PDF de más de 10 MB) se
+generan al vuelo en la carpeta temporal. No hay archivos en el repositorio.
+
+## Casos
+
+| Caso | Script | Historia | Qué verifica | Espera |
+|---|---|---|---|---|
+| TC-17 | `TC_HU07_01_Carga_PDF_Valida` | HU-07 | Carga, hash SHA-256, tamaño, versión 2 al recargar | 201 |
+| TC-18 | `TC_HU07_02_Archivo_No_PDF` | HU-07 | Texto y ejecutable con nombre `.pdf` | 415 |
+| TC-19 | `TC_HU07_03_Archivo_Sobre_Limite` | HU-07 | PDF de 10 MB + 1 KB | 413 |
+| TC-20 | `TC_HU07_04_Nave_Ajena` | HU-07 | Carga en nave ajena / inexistente | 403 / 404 |
+| TC-21 | `TC_HU08_01_Consulta_Con_Documentos` | HU-08 | Listado con tipo, fecha, versión y estado | 200 |
+| TC-22 | `TC_HU08_02_Consulta_Sin_Documentos` | HU-08 | Nave sin documentos | 200 `[]` |
+| TC-23 | `TC_HU08_03_Filtro_Por_Tipo` | HU-08 | Filtros por tipo y estado; tipo inventado | 200 / 400 |
+| TC-24 | `TC_HU08_04_Descarga_Nave_Ajena` | HU-08 | Descarga ajena, IDOR, sin sesión | 403 / 404 / 401 |
+
+## Si TC-19 falla con error de red y no con 413
+
+No es Katalon: el backend tiene el tope de multipart en 10 MB o menos y
+Tomcat corta la conexión antes de responder. La configuración correcta está
+en `CONTRATO-DOCUMENTOS.md`, sección "Ojo con el límite de tamaño".

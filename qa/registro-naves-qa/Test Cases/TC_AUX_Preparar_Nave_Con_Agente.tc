@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Auxiliar: nave con propietario y agente vigente. No va en suites.</description>
+   <name>TC_AUX_Preparar_Nave_Con_Agente</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>eb05c6e0-937a-41b1-a96e-3f31caf2762f</testCaseGuid>
+</TestCaseEntity>

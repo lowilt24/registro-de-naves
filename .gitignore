@@ -48,3 +48,6 @@ seguridad/reportes/
 **/.impeccable/questions/
 **/.impeccable/live/
 # impeccable-ignore-end
+
+### Sprint 4: PDF cargados por la aplicacion (HU-07). Nunca se versionan. ###
+almacen/

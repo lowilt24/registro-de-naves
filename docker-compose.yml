@@ -8,5 +8,14 @@ services:
       POSTGRES_PASSWORD: registro
     ports: ["5432:5432"]
     volumes: [amp-data:/var/lib/postgresql/data]
+
+  # Sprint 4: servidor de correo de desarrollo. Recibe los correos de
+  # validacion y los muestra en http://localhost:8025 sin enviarlos a
+  # ningun lado. La aplicacion le habla por SMTP en el puerto 1025.
+  correo:
+    image: axllent/mailpit:v1.31.1
+    container_name: amp-correo
+    ports: ["1025:1025", "8025:8025"]
+
 volumes:
   amp-data:

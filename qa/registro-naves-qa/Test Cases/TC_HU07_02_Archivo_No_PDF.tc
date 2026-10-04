@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-18 HU-07: archivo disfrazado de PDF rechazado por firma binaria (415).</description>
+   <name>TC_HU07_02_Archivo_No_PDF</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>cacb7eb4-dbaf-4835-93b7-0fc659435a97</testCaseGuid>
+</TestCaseEntity>

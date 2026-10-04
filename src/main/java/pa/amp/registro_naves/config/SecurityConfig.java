@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -45,6 +46,8 @@ public class SecurityConfig {
                                  "/css/**", "/js/**", "/favicon.ico",
                                  "/actuator/health").permitAll()
                 .requestMatchers("/api/auth/registro", "/api/auth/sesion").permitAll()
+                // Sprint 4: el enlace del correo se abre sin sesion, por definicion.
+                .requestMatchers("/api/auth/validar", "/api/auth/reenviar-validacion").permitAll()
 
                 /*
                  * Sprint 3 — remediacion del hallazgo SEC-04.
@@ -68,7 +71,13 @@ public class SecurityConfig {
                 .usernameParameter("correo")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/naves.html", true)
-                .failureUrl("/login.html?error=1")
+                // Sprint 4: una cuenta sin correo validado llega aqui como
+                // DisabledException; se le dice que confirme el correo en vez
+                // de "contrasena incorrecta", que la mandaria a reintentar.
+                .failureHandler((peticion, respuesta, error) -> respuesta.sendRedirect(
+                        error instanceof DisabledException
+                                ? "/login.html?sinValidar=1"
+                                : "/login.html?error=1"))
                 .permitAll())
 
             .logout(logout -> logout

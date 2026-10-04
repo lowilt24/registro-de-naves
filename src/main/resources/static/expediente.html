@@ -22,8 +22,9 @@
 
   <h2 id="titulo-nave">Expediente</h2>
   <p class="sumario">
-    Aquí se vinculan los propietarios de la nave y se designa al agente
-    residente que gestiona su trámite ante la DGMM.
+    Aquí se vinculan los propietarios de la nave, se designa al agente
+    residente que gestiona su trámite ante la DGMM y se cargan los
+    documentos del expediente de abanderamiento.
   </p>
 
   <p class="veredicto" id="aviso-nave" role="status" aria-live="polite"></p>
@@ -196,9 +197,93 @@
       </div>
     </div>
   </section>
+  <!-- ============ HU-07 y HU-08: documentos (camara 5) ============ -->
+  <section class="tarjeta camara" id="seccion-documentos">
+    <div class="encabezado-seccion">
+      <h3 class="camara-titulo"><span class="placa"><span class="sr">Paso </span>5</span> Documentos</h3>
+      <span class="contador" id="contador-documentos"></span>
+    </div>
+
+    <!-- HU-08: que falta. Siempre texto e icono, nunca solo color. -->
+    <p class="veredicto" id="resumen-documentos" role="status" aria-live="polite"></p>
+
+    <div class="filtros" role="group" aria-label="Filtrar documentos">
+      <div>
+        <label for="f-tipo">Tipo</label>
+        <select id="f-tipo">
+          <option value="">Todos</option>
+          <option value="CERTIFICADO_PROPIEDAD">Certificado de propiedad</option>
+          <option value="PODER_NOTARIAL">Poder notarial</option>
+          <option value="ITC">Certificado de arqueo (ITC)</option>
+          <option value="SMC">Gestión de la seguridad (SMC)</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-estado">Estado</label>
+        <select id="f-estado">
+          <option value="">Todos</option>
+          <option value="FALTANTE">Faltante</option>
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="APROBADO">Aprobado</option>
+          <option value="OBSERVADO">Observado</option>
+        </select>
+      </div>
+      <label class="casilla" for="f-historial">
+        <input type="checkbox" id="f-historial">
+        Mostrar versiones anteriores
+      </label>
+    </div>
+
+    <div class="tabla-desplazable">
+      <table class="apilable">
+        <thead>
+          <tr><th>Documento</th><th>Archivo</th><th>Versión</th><th>Cargado</th><th>Estado</th><th>Acción</th></tr>
+        </thead>
+        <tbody id="lista-documentos"></tbody>
+      </table>
+    </div>
+
+    <!-- HU-07: carga -->
+    <form id="form-documento" class="subformulario" novalidate>
+      <p class="cerrojo" id="cerrojo-documentos">
+        Se habilita cuando la nave tenga al menos un propietario y un agente
+        residente designado.
+      </p>
+      <fieldset id="campos-documento">
+        <legend>Cargar un documento</legend>
+
+        <div class="rejilla">
+          <div>
+            <label for="d-tipo">Tipo de documento</label>
+            <select id="d-tipo" name="tipo">
+              <option value="">Seleccione</option>
+              <option value="CERTIFICADO_PROPIEDAD">Certificado de propiedad</option>
+              <option value="PODER_NOTARIAL">Poder notarial</option>
+              <option value="ITC">Certificado de arqueo (ITC)</option>
+              <option value="SMC">Gestión de la seguridad (SMC)</option>
+            </select>
+            <span class="pista nota-version" id="nota-version"></span>
+            <span class="error-campo" data-error="tipo"></span>
+          </div>
+
+          <div>
+            <label for="d-archivo">Archivo <span class="pista">(PDF, máximo 10 MB)</span></label>
+            <input type="file" id="d-archivo" name="archivo" accept="application/pdf,.pdf">
+            <span class="error-campo" data-error="archivo"></span>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" id="btn-documento">Cargar documento</button>
+        </div>
+      </fieldset>
+      <p class="veredicto" id="aviso-documento" role="status" aria-live="polite"></p>
+    </form>
+  </section>
 </main>
 
 <script src="/js/comun.js"></script>
+<script src="/js/documentos.js"></script>
 <script src="/js/expediente.js"></script>
 </body>
 </html>

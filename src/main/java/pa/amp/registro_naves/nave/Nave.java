@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import pa.amp.registro_naves.usuario.Usuario;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "nave")
@@ -62,9 +62,12 @@ public class Nave {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private EstadoNave estado = EstadoNave.REGISTRADA;
-
-    @Column(name = "fecha_registro", nullable = false)
-    private LocalDateTime fechaRegistro = LocalDateTime.now();
+    /**
+     * Sprint 4: fecha y hora de creacion con zona (TIMESTAMPTZ). Reemplaza a
+     * fecha_registro, que no decia en que zona estaba la hora.
+     */
+    @Column(name = "creado_en", nullable = false)
+    private OffsetDateTime creadoEn = OffsetDateTime.now();
 
     /*
      * Sprint 3: la nave ya no guarda propietario ni agente residente.
@@ -140,8 +143,8 @@ public class Nave {
     public EstadoNave getEstado() { return estado; }
     public void setEstado(EstadoNave estado) { this.estado = estado; }
 
-    public LocalDateTime getFechaRegistro() { return fechaRegistro; }
-    public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+    public OffsetDateTime getCreadoEn() { return creadoEn; }
+    public void setCreadoEn(OffsetDateTime creadoEn) { this.creadoEn = creadoEn; }
 
     public Usuario getRegistradoPor() { return registradoPor; }
     public void setRegistradoPor(Usuario registradoPor) { this.registradoPor = registradoPor; }
