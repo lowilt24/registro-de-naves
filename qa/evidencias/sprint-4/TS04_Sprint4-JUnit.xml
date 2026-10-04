@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TS04_Sprint4" time="8.177" tests="8" passed="8" failures="0" errors="0" incompleted="0" skipped="0">
+   <testsuite name="TS04_Sprint4" tests="8" passed="8" failures="0" errors="0" incompleted="0" skipped="0" time="8.177" timestamp="2026-10-04T22:36:42.479Z" hostname="ismae - Ismael.home.lla.com" id="Test Suites/TS04_Sprint4" status="PASSED">
+      <testcase name="Test Cases/TC_HU07_01_Carga_PDF_Valida" time="2.836" classname="Test Cases/TC_HU07_01_Carga_PDF_Valida" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU07_02_Archivo_No_PDF" time="0.705" classname="Test Cases/TC_HU07_02_Archivo_No_PDF" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU07_03_Archivo_Sobre_Limite" time="0.958" classname="Test Cases/TC_HU07_03_Archivo_Sobre_Limite" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU07_04_Nave_Ajena" time="0.728" classname="Test Cases/TC_HU07_04_Nave_Ajena" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU08_01_Consulta_Con_Documentos" time="0.669" classname="Test Cases/TC_HU08_01_Consulta_Con_Documentos" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU08_02_Consulta_Sin_Documentos" time="0.505" classname="Test Cases/TC_HU08_02_Consulta_Sin_Documentos" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU08_03_Filtro_Por_Tipo" time="0.706" classname="Test Cases/TC_HU08_03_Filtro_Por_Tipo" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU08_04_Descarga_Nave_Ajena" time="0.895" classname="Test Cases/TC_HU08_04_Descarga_Nave_Ajena" status="PASSED">
+         </testcase>
+      </testsuite>
+</testsuites>
