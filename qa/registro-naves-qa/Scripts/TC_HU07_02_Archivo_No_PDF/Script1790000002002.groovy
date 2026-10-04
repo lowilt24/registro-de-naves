@@ -55,11 +55,17 @@ def cargarDocumento = { String cookie, def naveId, String tipo, File archivo ->
     carga.setRestRequestMethod('POST')
     List<TestObjectProperty> cabeceras = []
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
-    carga.setHttpHeaderProperties(cabeceras)
-    carga.setBodyContent(new HttpFormDataBodyContent([
+    HttpFormDataBodyContent cuerpo = new HttpFormDataBodyContent([
         new FormDataBodyParameter('tipo', tipo, FormDataBodyParameter.PARAM_TYPE_TEXT),
         new FormDataBodyParameter('archivo', archivo.absolutePath, FormDataBodyParameter.PARAM_TYPE_FILE)
-    ]))
+    ])
+    // Katalon no pone solo el Content-Type cuando la peticion se arma por
+    // codigo. Sin esta cabecera el servidor recibe la carga sin tipo y
+    // responde 415 antes de mirar el archivo. getContentType() incluye el
+    // boundary, que es lo que separa las partes del multipart.
+    cabeceras << new TestObjectProperty('Content-Type', ConditionType.EQUALS, cuerpo.getContentType())
+    carga.setHttpHeaderProperties(cabeceras)
+    carga.setBodyContent(cuerpo)
     return WS.sendRequest(carga)
 }
 
@@ -98,7 +104,10 @@ disfraces.each { nombre, contenido ->
     ResponseObject r = cargarDocumento(cookie, naveId, 'SMC', crearArchivo(nombre, contenido))
     println(nombre + ': ' + r.getStatusCode() + ' ' + r.getResponseBodyContent())
     WS.verifyResponseStatusCode(r, 415)
-    WS.verifyNotEqual(json(r).mensaje, null)
+    // campos.archivo solo lo pone la verificacion de firma %PDF-. Sin esto,
+    // un 415 por otra causa (por ejemplo, la carga sin Content-Type
+    // multipart) haria pasar la prueba sin haber probado nada.
+    WS.verifyNotEqual(json(r).campos?.archivo, null)
 }
 
 // Nada de eso quedo guardado.

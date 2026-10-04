@@ -55,11 +55,17 @@ def cargarDocumento = { String cookie, def naveId, String tipo, File archivo ->
     carga.setRestRequestMethod('POST')
     List<TestObjectProperty> cabeceras = []
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
-    carga.setHttpHeaderProperties(cabeceras)
-    carga.setBodyContent(new HttpFormDataBodyContent([
+    HttpFormDataBodyContent cuerpo = new HttpFormDataBodyContent([
         new FormDataBodyParameter('tipo', tipo, FormDataBodyParameter.PARAM_TYPE_TEXT),
         new FormDataBodyParameter('archivo', archivo.absolutePath, FormDataBodyParameter.PARAM_TYPE_FILE)
-    ]))
+    ])
+    // Katalon no pone solo el Content-Type cuando la peticion se arma por
+    // codigo. Sin esta cabecera el servidor recibe la carga sin tipo y
+    // responde 415 antes de mirar el archivo. getContentType() incluye el
+    // boundary, que es lo que separa las partes del multipart.
+    cabeceras << new TestObjectProperty('Content-Type', ConditionType.EQUALS, cuerpo.getContentType())
+    carga.setHttpHeaderProperties(cabeceras)
+    carga.setBodyContent(cuerpo)
     return WS.sendRequest(carga)
 }
 
