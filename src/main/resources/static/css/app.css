@@ -1,238 +1,645 @@
-/* Navesitas — hoja de estilos comun de las pantallas del Sprint 2.
-   La referencia visual es un formulario de registro maritimo: denso,
-   legible y con las cifras alineadas en monoespaciada. */
+/* Navesitas — hoja de estilos comun de todas las pantallas.
+
+   Sprint 4 — refresco visual. La referencia es la senaletica operativa de
+   una esclusa: el tramite se recorre como un juego de camaras (nombre,
+   nave, propietarios, agente residente) y cada camara se llena antes de
+   abrir la siguiente. Una camara cerrada lleva la franja de compuerta en
+   el borde superior; al abrirse, las dos hojas se retiran hacia los muros
+   y queda la linea de agua.
+
+   Este archivo solo cambia la presentacion. Las clases que pone el JS
+   (oculto, bloqueado, cifra, estado-etiqueta, enlace-fila, vacio, pista,
+   cuota, etiqueta-historial) y los atributos data-estado / data-visible
+   conservan su significado. */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("/css/fuentes/atkinson-hyperlegible-next.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible Mono";
+  src: url("/css/fuentes/atkinson-hyperlegible-mono.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Abertura de las hojas de la compuerta: 50% cerrada, 0% abierta. */
+@property --hoja {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
 
 :root {
-  --tinta:        #0f2438;
-  --tinta-suave:  #40566d;
-  --papel:        #eceff3;
-  --superficie:   #ffffff;
-  --linea:        #c9d2dc;
-  --marea:        #14627a;
-  --marea-clara:  #e4eff3;
-  --via-libre:    #0d6b4b;
-  --bloqueo:      #a02b25;
-  --bloqueo-tenue:#fbeceb;
+  color-scheme: light;
+
+  /* muro y tinta */
+  --muro:          #15181c;
+  --muro-texto:    #b9c0c8;
+  --tinta:         #15181c;
+  --tinta-suave:   #4f555c;
+
+  /* superficies */
+  --hormigon:      #e4e7e9;
+  --hormigon-alto: #f2f4f5;
+  --superficie:    #ffffff;
+  --filete:        #cdd2d6;
+  --filete-campo:  #6c737a;
+
+  /* senales */
+  --seguridad:     #f2c400;
+  --agua:          #1f4e8c;
+  --agua-hondo:    #173d6e;
+  --agua-clara:    #e3ecf6;
+  --siga:          #1e7a46;
+  --siga-tinta:    #155a33;
+  --siga-fondo:    #e6f3eb;
+  --alto:          #b42318;
+  --alto-tinta:    #8e1c13;
+  --alto-fondo:    #fcebe9;
+  --neutro-fondo:  #eef0f2;
+
+  /* tipografia */
+  --letra:  "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cifras: "Atkinson Hyperlegible Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ritmo de 8px */
+  --e1: 4px;  --e2: 8px;  --e3: 16px; --e4: 24px;
+  --e5: 32px; --e6: 40px; --e7: 48px; --e8: 64px;
+
+  --radio: 2px;
+  --alto-control: 44px;
+  --salida: cubic-bezier(.16, 1, .3, 1);
+
+  /* franja de compuerta: amarillo de seguridad y negro de muro */
+  --franja: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23f2c400'/%3E%3Cpath d='M8 0H16L0 16V8Z M16 8V16H8Z' fill='%2315181c'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  background: var(--papel);
+  background: var(--hormigon);
   color: var(--tinta);
-  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
+  font-family: var(--letra);
+  font-size: 1rem;
+  line-height: 1.5;
+  caret-color: var(--agua);
+  accent-color: var(--agua);
+  scrollbar-color: var(--filete-campo) var(--hormigon);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--seguridad); color: var(--muro); }
+
+a {
+  color: var(--agua);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover { color: var(--agua-hondo); text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
 }
 
 .cifra, input[type="number"] {
-  font-family: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+  font-family: var(--cifras);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
-/* --- estructura --- */
-.barra {
-  background: var(--tinta);
-  color: #fff;
-  padding: 14px 24px;
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-.barra h1 { font-size: 1.05rem; margin: 0; font-weight: 600; letter-spacing: .01em; }
-.barra span { color: #9db2c6; font-size: .875rem; }
-.barra .derecha { margin-left: auto; }
-.barra a { color: #9db2c6; }
-
-main { max-width: 900px; margin: 0 auto; padding: 32px 24px 72px; }
-
-h2 { font-size: 1.5rem; margin: 0 0 6px; font-weight: 600; }
-.sumario { color: var(--tinta-suave); margin: 0 0 28px; max-width: 62ch; }
-
-.tarjeta {
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: 4px;
-  padding: 24px;
-  margin-bottom: 20px;
-}
-
-fieldset {
+/* Texto solo para lectores de pantalla. */
+.sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
   border: 0;
-  border-top: 1px solid var(--linea);
-  padding: 20px 0 4px;
-  margin: 0;
 }
-fieldset:first-of-type { border-top: 0; padding-top: 0; }
-legend { font-weight: 600; font-size: .95rem; padding: 0 8px 0 0; }
 
-.rejilla { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.rejilla.tres { grid-template-columns: repeat(3, 1fr); }
-.ancho-total { grid-column: 1 / -1; }
+.oculto { display: none !important; }
 
-label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: 5px; }
-.pista { font-weight: 400; color: var(--tinta-suave); }
-
-input, select {
-  width: 100%;
-  padding: 9px 11px;
-  border: 1px solid var(--linea);
-  border-radius: 3px;
-  background: #fff;
-  color: inherit;
-  font: inherit;
-  font-size: .95rem;
-}
-input:focus-visible, select:focus-visible, button:focus-visible {
-  outline: 2px solid var(--marea);
-  outline-offset: 1px;
-}
-input:disabled, select:disabled { background: #f4f6f8; color: #8a97a5; }
-
-button {
-  font: inherit;
-  font-weight: 500;
-  padding: 10px 20px;
-  border-radius: 3px;
-  border: 1px solid var(--tinta);
-  background: var(--tinta);
-  color: #fff;
-  cursor: pointer;
-}
-button.secundario { background: #fff; color: var(--tinta); }
-button:disabled { opacity: .45; cursor: not-allowed; }
-
-/* --- compuerta de nombre (HU-04) --- */
-.compuerta { border-left: 4px solid var(--marea); background: var(--marea-clara); }
-.compuerta .fila { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
-.compuerta .fila > div { flex: 1 1 320px; }
-
-.veredicto {
-  margin-top: 16px;
-  padding: 12px 14px;
-  border-radius: 3px;
-  border-left: 4px solid;
-  font-size: .95rem;
-  display: none;
-}
-.veredicto[data-estado="libre"]     { display: block; border-color: var(--via-libre); background: #e8f4ef; color: var(--via-libre); }
-.veredicto[data-estado="ocupado"]   { display: block; border-color: var(--bloqueo);  background: var(--bloqueo-tenue); color: var(--bloqueo); }
-.veredicto[data-estado="neutro"]    { display: block; border-color: var(--tinta-suave); background: #eef1f4; color: var(--tinta-suave); }
-
-/* --- bloque de resultado del registro --- */
+/* La confirmacion del registro aparece solo cuando naves.js la marca. */
 #resultado { display: none; }
 #resultado[data-visible="si"] { display: block; }
 
-.error-campo { color: var(--bloqueo); font-size: .8rem; margin-top: 4px; display: block; }
+/* =====================================================================
+   Estructura
+   ===================================================================== */
 
-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linea); }
-th { color: var(--tinta-suave); font-weight: 600; }
+.barra {
+  background: var(--muro);
+  color: #fff;
+  min-height: 56px;
+  padding: var(--e2) var(--e4);
+  display: flex;
+  align-items: center;
+  gap: var(--e2) var(--e3);
+  flex-wrap: wrap;
+}
+.barra h1 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.barra > span { color: var(--muro-texto); font-size: .875rem; }
+.barra .derecha { margin-left: auto; color: #fff; }
+.barra a { color: #fff; }
+.barra a:hover { color: var(--seguridad); }
+.barra :focus-visible { outline-color: var(--seguridad); }
 
-.estado-etiqueta {
-  display: inline-block;
-  padding: 2px 8px;
-  border: 1px solid var(--via-libre);
-  color: var(--via-libre);
-  border-radius: 2px;
-  font-size: .78rem;
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--e6) var(--e4) var(--e8);
+}
+main.estrecho { max-width: 480px; }
+
+main > h2 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin: 0 0 var(--e2);
+  text-wrap: balance;
 }
 
-@media (max-width: 640px) {
-  .rejilla, .rejilla.tres { grid-template-columns: 1fr; }
-  main { padding: 24px 16px 60px; }
+.sumario {
+  color: var(--tinta-suave);
+  margin: 0 0 var(--e5);
+  max-width: 64ch;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+.nota { font-size: .9375rem; color: var(--tinta-suave); }
+
+.migas { font-size: .875rem; margin: 0 0 var(--e3); }
+.migas a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e2);
+  font-weight: 600;
+  text-decoration: none;
+}
+.migas a:hover { text-decoration: underline; }
+.migas svg { width: 16px; height: 16px; flex: none; }
+
+/* =====================================================================
+   Areas de trabajo
+   ===================================================================== */
+
+.tarjeta {
+  position: relative;
+  background: var(--superficie);
+  border: 1px solid var(--filete);
+  border-radius: var(--radio);
+  padding: var(--e4) var(--e5);
+  margin-bottom: var(--e4);
+}
+
+.tarjeta h3 {
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 0 0 var(--e3);
 }
 
 /* =====================================================================
-   Sprint 3 — expediente de la nave: propietarios (HU-05) y agente
-   residente (HU-06).
+   Camaras de la esclusa
+
+   Cada paso del tramite es una camara numerada. La placa amarilla dice
+   en que orden se recorren; la linea superior dice si la camara esta
+   abierta (agua) o cerrada (franja de compuerta). El estado sale del
+   propio formulario: una camara esta cerrada mientras su fieldset este
+   deshabilitado, o cuando el JS la marca como bloqueada.
    ===================================================================== */
 
-.migas {
-  font-size: .875rem;
-  color: var(--tinta-suave);
-  margin-bottom: 10px;
-}
-.migas a { color: var(--marea); }
+.camara { padding-top: var(--e5); }
 
-.ficha-nave {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 14px 20px;
+/* linea de agua */
+.camara::before,
+.camara::after {
+  content: "";
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 6px;
+  border-radius: var(--radio) var(--radio) 0 0;
+  pointer-events: none;
 }
-.ficha-nave div span {
-  display: block;
-  font-size: .78rem;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: var(--tinta-suave);
-  font-weight: 600;
-}
-.ficha-nave div b { font-weight: 500; }
+.camara::before { background: var(--agua); }
 
-.encabezado-seccion {
+/* hojas de la compuerta: se retiran hacia los muros al abrirse */
+.camara::after {
+  background: var(--franja) repeat;
+  --hoja: 0%;
+  -webkit-mask-image: linear-gradient(to right,
+      #000 var(--hoja), transparent var(--hoja),
+      transparent calc(100% - var(--hoja)), #000 calc(100% - var(--hoja)));
+          mask-image: linear-gradient(to right,
+      #000 var(--hoja), transparent var(--hoja),
+      transparent calc(100% - var(--hoja)), #000 calc(100% - var(--hoja)));
+  transition: --hoja 260ms var(--salida);
+}
+.camara:has(fieldset:disabled)::after,
+.camara.bloqueado::after { --hoja: 50%; }
+
+.camara-titulo {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-.encabezado-seccion h2 { margin: 0; }
-.encabezado-seccion .contador {
-  margin-left: auto;
-  font-size: .85rem;
-  color: var(--tinta-suave);
+  align-items: center;
+  gap: var(--e3);
 }
 
-.cuota {
-  display: inline-block;
-  padding: 2px 8px;
-  border: 1px solid var(--marea);
-  color: var(--marea);
-  border-radius: 2px;
-  font-size: .78rem;
-  font-family: "IBM Plex Mono", monospace;
+.placa {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  background: var(--seguridad);
+  color: var(--muro);
+  border: 2px solid var(--muro);
+  border-radius: var(--radio);
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 200ms var(--salida);
 }
-
-.etiqueta-historial {
-  display: inline-block;
-  padding: 2px 8px;
-  border: 1px solid var(--linea);
-  color: var(--tinta-suave);
-  border-radius: 2px;
-  font-size: .78rem;
+/* Camara cruzada: su condicion ya se cumplio (nombre libre, al menos un
+   propietario, agente designado). La placa pasa a agua; la camara activa
+   conserva el amarillo y una cerrada queda en blanco. */
+.compuerta:has(.veredicto[data-estado="libre"]) .placa,
+#seccion-propietarios:has(.cuota) .placa,
+#seccion-agente:has(#agente-vigente table) .placa {
+  background: var(--agua);
+  border-color: var(--agua);
+  color: #fff;
 }
+.camara:has(fieldset:disabled) .placa,
+.camara.bloqueado .placa { background: var(--superficie); color: var(--muro); border-color: var(--muro); }
 
-.vacio {
-  color: var(--tinta-suave);
-  font-style: italic;
-  padding: 10px 0;
+/* que abre una camara cerrada */
+.cerrojo {
+  display: none;
+  margin: calc(-1 * var(--e2)) 0 var(--e4);
+  padding: var(--e2) var(--e3);
+  background: var(--hormigon-alto);
+  border: 1px solid var(--filete);
+  border-radius: var(--radio);
+  font-size: .9375rem;
+  color: var(--tinta);
 }
+.camara:has(> fieldset:disabled) > .cerrojo { display: block; }
 
-.acciones { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-
-.oculto { display: none; }
+.camara:has(fieldset:disabled) fieldset { opacity: .6; }
+.camara:has(> fieldset:disabled) .error-campo { display: none; }
 
 .bloqueado {
   opacity: .5;
   pointer-events: none;
 }
+.camara.bloqueado { opacity: 1; }
+.camara.bloqueado > * { opacity: .5; }
 
 .aviso-precondicion {
-  border-left: 3px solid var(--tinta-suave);
-  background: #eef1f4;
-  padding: 11px 14px;
-  border-radius: 0 3px 3px 0;
-  font-size: .92rem;
-  color: var(--tinta-suave);
-  margin-bottom: 16px;
+  margin: 0 0 var(--e4);
+  padding: var(--e2) var(--e3);
+  background: var(--hormigon-alto);
+  border: 1px solid var(--filete);
+  border-radius: var(--radio);
+  font-size: .9375rem;
 }
 
-table .enlace-fila { color: var(--marea); text-decoration: none; font-weight: 500; }
-table .enlace-fila:hover { text-decoration: underline; }
+/* =====================================================================
+   Formularios
+   ===================================================================== */
+
+fieldset {
+  border: 0;
+  border-top: 1px solid var(--filete);
+  padding: var(--e2) 0 var(--e1);
+  margin: var(--e5) 0 0;
+  min-width: 0;
+}
+fieldset:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+fieldset fieldset:first-of-type { border-top: 1px solid var(--filete); padding-top: var(--e2); margin-top: var(--e5); }
+
+legend {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0 var(--e2) 0 0;
+  margin-bottom: var(--e2);
+}
+
+.rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e3) var(--e4); }
+.rejilla.tres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ancho-total { grid-column: 1 / -1; }
+
+.campo + .campo { margin-top: var(--e3); }
+
+label {
+  display: block;
+  font-size: .875rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.pista { font-weight: 400; color: var(--tinta-suave); }
+
+input, select {
+  width: 100%;
+  height: var(--alto-control);
+  padding: 0 12px;
+  border: 1px solid var(--filete-campo);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+input::placeholder { color: #6b7076; opacity: 1; }
+input:hover:not(:disabled), select:hover:not(:disabled) { border-color: var(--tinta); }
+input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--agua);
+  outline-offset: 0;
+  border-color: var(--agua);
+}
+input:disabled, select:disabled {
+  background-color: var(--hormigon-alto);
+  color: #6b7076;
+  cursor: not-allowed;
+}
+
+select {
+  appearance: none;
+  padding-right: 40px;
+  background: var(--superficie) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%2315181c' stroke-width='2' stroke-linecap='square'/%3E%3C/svg%3E") no-repeat right 12px center;
+}
+select:disabled { background-color: var(--hormigon-alto); }
+
+/* campo con error devuelto por el backend */
+div:has(> .error-campo:not(:empty)) > input:not(:disabled),
+div:has(> .error-campo:not(:empty)) > select:not(:disabled) {
+  border-color: var(--alto);
+  box-shadow: inset 0 0 0 1px var(--alto);
+}
+.error-campo {
+  display: block;
+  color: var(--alto-tinta);
+  font-size: .875rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.error-campo:empty { display: none; }
+
+/* =====================================================================
+   Botones
+   ===================================================================== */
+
+button, .boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--alto-control);
+  padding: 0 var(--e4);
+  border: 1px solid var(--agua);
+  border-radius: var(--radio);
+  background: var(--agua);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+button:hover:not(:disabled), .boton:hover { background: var(--agua-hondo); border-color: var(--agua-hondo); color: #fff; }
+button:active:not(:disabled), .boton:active { background: var(--muro); border-color: var(--muro); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+button.secundario {
+  background: var(--superficie);
+  color: var(--tinta);
+  border-color: var(--filete-campo);
+}
+button.secundario:hover:not(:disabled) { background: var(--hormigon-alto); border-color: var(--tinta); color: var(--tinta); }
+
+.acciones {
+  display: flex;
+  gap: var(--e3);
+  flex-wrap: wrap;
+  margin-top: var(--e4);
+}
+/* Limpiar formulario descarta lo escrito: vive lejos de Guardar. */
+.acciones .secundario { margin-left: auto; }
+
+/* =====================================================================
+   Consulta de nombre (HU-04): camara 1
+   ===================================================================== */
+
+.compuerta .fila { display: flex; gap: var(--e3); align-items: flex-end; flex-wrap: wrap; }
+.compuerta .fila > div { flex: 1 1 320px; }
+.compuerta input { font-size: 1.0625rem; }
+
+/* =====================================================================
+   Avisos: semaforo de la esclusa
+
+   El estado nunca va solo en color: cada aviso lleva una forma (circulo
+   con visto para siga, octagono de alto para detenerse, anillo para
+   informacion) ademas del texto.
+   ===================================================================== */
+
+.veredicto {
+  display: none;
+  margin: var(--e4) 0 0;
+  padding: 12px var(--e3) 12px 48px;
+  border: 1px solid;
+  border-radius: var(--radio);
+  font-size: .9375rem;
+  font-weight: 600;
+  background-repeat: no-repeat;
+  background-position: 16px 13px;
+  background-size: 20px 20px;
+}
+.veredicto[data-estado] { display: block; }
+main > .veredicto { margin: 0 0 var(--e4); }
+.veredicto[data-estado="libre"] {
+  color: var(--siga-tinta);
+  background-color: var(--siga-fondo);
+  border-color: var(--siga);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='10' fill='%231e7a46'/%3E%3Cpath d='M5.5 10.3l3 3 6-6.3' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3C/svg%3E");
+}
+.veredicto[data-estado="ocupado"] {
+  color: var(--alto-tinta);
+  background-color: var(--alto-fondo);
+  border-color: var(--alto);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 0h8l6 6v8l-6 6H6l-6-6V6z' fill='%23b42318'/%3E%3Cpath d='M5 10h10' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E");
+}
+.veredicto[data-estado="neutro"] {
+  color: var(--tinta);
+  background-color: var(--neutro-fondo);
+  border-color: var(--filete-campo);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8.8' fill='none' stroke='%234f555c' stroke-width='2.4'/%3E%3Cpath d='M10 9v5' stroke='%234f555c' stroke-width='2.4'/%3E%3Ccircle cx='10' cy='6' r='1.4' fill='%234f555c'/%3E%3C/svg%3E");
+}
+
+/* =====================================================================
+   Tablas
+   ===================================================================== */
+
+.tabla-desplazable { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--filete); vertical-align: top; }
+thead th {
+  color: var(--tinta-suave);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--tinta);
+  white-space: nowrap;
+}
+tbody tr:hover td { background: var(--hormigon-alto); }
+
+/* tablas clave-valor (resultado del registro, agente vigente) */
+#tabla-resultado th, #agente-vigente th {
+  width: 34%;
+  color: var(--tinta-suave);
+  font-weight: 600;
+}
+
+.estado-etiqueta, .cuota, .etiqueta-historial {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: var(--radio);
+  font-size: .8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.estado-etiqueta { color: var(--siga-tinta); border-color: var(--siga); background: var(--siga-fondo); letter-spacing: .03em; }
+.cuota { color: var(--agua); border-color: var(--agua); background: var(--agua-clara); font-family: var(--cifras); font-variant-numeric: tabular-nums; }
+.etiqueta-historial { color: var(--tinta-suave); border-color: var(--filete-campo); background: var(--hormigon-alto); }
+
+.vacio {
+  color: var(--tinta-suave);
+  padding: var(--e3) 0;
+  margin: 0;
+}
+
+table .enlace-fila { font-weight: 700; }
+
+/* =====================================================================
+   Expediente (HU-05, HU-06)
+   ===================================================================== */
+
+.ficha-nave {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--e3) var(--e4);
+  align-items: start;
+}
+.ficha-nave > div > span {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  margin-bottom: 2px;
+}
+.ficha-nave > div > b { font-weight: 600; font-size: 1rem; overflow-wrap: break-word; }
+/* el numero de registro es la cifra que manda */
+.ficha-nave > div:first-child b { font-size: 2rem; font-weight: 700; line-height: 1.1; }
+
+.encabezado-seccion {
+  display: flex;
+  align-items: center;
+  gap: var(--e2) var(--e3);
+  flex-wrap: wrap;
+  margin-bottom: var(--e3);
+}
+.encabezado-seccion h3 { margin: 0; }
+.encabezado-seccion .contador {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-size: .9375rem;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.subformulario { margin-top: var(--e5); }
+.historial { margin-top: var(--e5); }
+.historial h4 { font-size: 1rem; font-weight: 700; margin: 0 0 var(--e2); }
+
+/* =====================================================================
+   Pantallas angostas
+   ===================================================================== */
+
+@media (max-width: 720px) {
+  .rejilla, .rejilla.tres { grid-template-columns: minmax(0, 1fr); }
+  main { padding: var(--e5) var(--e3) var(--e7); }
+  main > h2 { font-size: 1.5rem; }
+  .tarjeta { padding: var(--e4) var(--e3); }
+  .camara { padding-top: var(--e5); }
+  .barra { padding: var(--e2) var(--e3); }
+  .barra .derecha { margin-left: 0; width: 100%; }
+  .acciones .secundario { margin-left: 0; }
+  .compuerta .fila > button { width: 100%; }
+}
+
+/* Tablas de listado en pantallas angostas: cada fila se apila con el
+   rotulo de su columna, para que "Abrir" y "Participacion" no queden
+   fuera de la vista. */
+@media (max-width: 720px) {
+  table.apilable thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  table.apilable tr { display: block; padding: 12px 0; border-bottom: 1px solid var(--filete); }
+  table.apilable td {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: var(--e3);
+    align-items: baseline;
+    padding: 4px 0;
+    border: 0;
+  }
+  table.apilable td:first-child { display: block; font-weight: 700; padding-bottom: var(--e2); }
+  table.apilable td.vacio { display: block; font-weight: 400; }
+  table.apilable td::before {
+    color: var(--tinta-suave);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  table.apilable td > * { justify-self: start; }
+  tbody tr:hover td { background: none; }
+
+  #lista-naves td:nth-child(2)::before { content: "Tipo"; }
+  #lista-naves td:nth-child(3)::before { content: "TRB"; }
+  #lista-naves td:nth-child(4)::before { content: "Estado"; }
+  #lista-naves td:nth-child(5)::before { content: "Expediente"; }
+  #lista-propietarios td:nth-child(2)::before { content: "Tipo"; }
+  #lista-propietarios td:nth-child(3)::before { content: "Nacionalidad"; }
+  #lista-propietarios td:nth-child(4)::before { content: "Participación"; }
+  #lista-historial td:nth-child(2)::before { content: "Idoneidad"; }
+  #lista-historial td:nth-child(3)::before { content: "Designado"; }
+  #lista-historial td:nth-child(4)::before { content: "Estado"; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

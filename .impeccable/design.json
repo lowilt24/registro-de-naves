@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T06:52:39+00:00",
+  "title": "Design System: Navesitas",
+  "extensions": {
+    "colorMeta": {
+      "muro": {
+        "role": "neutral",
+        "displayName": "Negro de muro",
+        "canonical": "#15181c",
+        "tonalRamp": [
+          "oklch(15% 0.009 256)",
+          "oklch(26% 0.009 256)",
+          "oklch(38% 0.009 256)",
+          "oklch(49% 0.009 256)",
+          "oklch(61% 0.009 256)",
+          "oklch(72% 0.009 256)",
+          "oklch(84% 0.009 256)",
+          "oklch(95% 0.009 256)"
+        ]
+      },
+      "muro-texto": {
+        "role": "neutral",
+        "displayName": "Gris de muro",
+        "canonical": "#b9c0c8",
+        "tonalRamp": [
+          "oklch(15% 0.014 252)",
+          "oklch(26% 0.014 252)",
+          "oklch(38% 0.014 252)",
+          "oklch(49% 0.014 252)",
+          "oklch(61% 0.014 252)",
+          "oklch(72% 0.014 252)",
+          "oklch(84% 0.014 252)",
+          "oklch(95% 0.014 252)"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#15181c",
+        "tonalRamp": [
+          "oklch(15% 0.009 256)",
+          "oklch(26% 0.009 256)",
+          "oklch(38% 0.009 256)",
+          "oklch(49% 0.009 256)",
+          "oklch(61% 0.009 256)",
+          "oklch(72% 0.009 256)",
+          "oklch(84% 0.009 256)",
+          "oklch(95% 0.009 256)"
+        ]
+      },
+      "tinta-suave": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "#4f555c",
+        "tonalRamp": [
+          "oklch(15% 0.014 252)",
+          "oklch(26% 0.014 252)",
+          "oklch(38% 0.014 252)",
+          "oklch(49% 0.014 252)",
+          "oklch(61% 0.014 252)",
+          "oklch(72% 0.014 252)",
+          "oklch(84% 0.014 252)",
+          "oklch(95% 0.014 252)"
+        ]
+      },
+      "hormigon": {
+        "role": "neutral",
+        "displayName": "Hormigón",
+        "canonical": "#e4e7e9",
+        "tonalRamp": [
+          "oklch(15% 0.004 237)",
+          "oklch(26% 0.004 237)",
+          "oklch(38% 0.004 237)",
+          "oklch(49% 0.004 237)",
+          "oklch(61% 0.004 237)",
+          "oklch(72% 0.004 237)",
+          "oklch(84% 0.004 237)",
+          "oklch(95% 0.004 237)"
+        ]
+      },
+      "hormigon-alto": {
+        "role": "neutral",
+        "displayName": "Hormigón alto",
+        "canonical": "#f2f4f5",
+        "tonalRamp": [
+          "oklch(15% 0.003 229)",
+          "oklch(26% 0.003 229)",
+          "oklch(38% 0.003 229)",
+          "oklch(49% 0.003 229)",
+          "oklch(61% 0.003 229)",
+          "oklch(72% 0.003 229)",
+          "oklch(84% 0.003 229)",
+          "oklch(95% 0.003 229)"
+        ]
+      },
+      "superficie": {
+        "role": "neutral",
+        "displayName": "Superficie",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(38% 0.000 90)",
+          "oklch(49% 0.000 90)",
+          "oklch(61% 0.000 90)",
+          "oklch(72% 0.000 90)",
+          "oklch(84% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "filete": {
+        "role": "neutral",
+        "displayName": "Filete",
+        "canonical": "#cdd2d6",
+        "tonalRamp": [
+          "oklch(15% 0.008 242)",
+          "oklch(26% 0.008 242)",
+          "oklch(38% 0.008 242)",
+          "oklch(49% 0.008 242)",
+          "oklch(61% 0.008 242)",
+          "oklch(72% 0.008 242)",
+          "oklch(84% 0.008 242)",
+          "oklch(95% 0.008 242)"
+        ]
+      },
+      "filete-campo": {
+        "role": "neutral",
+        "displayName": "Filete de campo",
+        "canonical": "#6c737a",
+        "tonalRamp": [
+          "oklch(15% 0.014 248)",
+          "oklch(26% 0.014 248)",
+          "oklch(38% 0.014 248)",
+          "oklch(49% 0.014 248)",
+          "oklch(61% 0.014 248)",
+          "oklch(72% 0.014 248)",
+          "oklch(84% 0.014 248)",
+          "oklch(95% 0.014 248)"
+        ]
+      },
+      "seguridad": {
+        "role": "secondary",
+        "displayName": "Amarillo de seguridad",
+        "canonical": "#f2c400",
+        "tonalRamp": [
+          "oklch(15% 0.102 92)",
+          "oklch(26% 0.119 92)",
+          "oklch(38% 0.137 92)",
+          "oklch(49% 0.155 92)",
+          "oklch(61% 0.170 92)",
+          "oklch(72% 0.152 92)",
+          "oklch(84% 0.135 92)",
+          "oklch(95% 0.117 92)"
+        ]
+      },
+      "agua": {
+        "role": "primary",
+        "displayName": "Azul de agua",
+        "canonical": "#1f4e8c",
+        "tonalRamp": [
+          "oklch(15% 0.068 257)",
+          "oklch(26% 0.080 257)",
+          "oklch(38% 0.092 257)",
+          "oklch(49% 0.104 257)",
+          "oklch(61% 0.114 257)",
+          "oklch(72% 0.102 257)",
+          "oklch(84% 0.090 257)",
+          "oklch(95% 0.079 257)"
+        ]
+      },
+      "agua-hondo": {
+        "role": "primary",
+        "displayName": "Agua honda",
+        "canonical": "#173d6e",
+        "tonalRamp": [
+          "oklch(15% 0.057 256)",
+          "oklch(26% 0.066 256)",
+          "oklch(38% 0.076 256)",
+          "oklch(49% 0.086 256)",
+          "oklch(61% 0.095 256)",
+          "oklch(72% 0.085 256)",
+          "oklch(84% 0.075 256)",
+          "oklch(95% 0.065 256)"
+        ]
+      },
+      "agua-clara": {
+        "role": "primary",
+        "displayName": "Agua clara",
+        "canonical": "#e3ecf6",
+        "tonalRamp": [
+          "oklch(15% 0.017 251)",
+          "oklch(26% 0.017 251)",
+          "oklch(38% 0.017 251)",
+          "oklch(49% 0.017 251)",
+          "oklch(61% 0.017 251)",
+          "oklch(72% 0.017 251)",
+          "oklch(84% 0.017 251)",
+          "oklch(95% 0.017 251)"
+        ]
+      },
+      "siga": {
+        "role": "tertiary",
+        "displayName": "Verde siga",
+        "canonical": "#1e7a46",
+        "tonalRamp": [
+          "oklch(15% 0.070 154)",
+          "oklch(26% 0.082 154)",
+          "oklch(38% 0.094 154)",
+          "oklch(49% 0.106 154)",
+          "oklch(61% 0.117 154)",
+          "oklch(72% 0.105 154)",
+          "oklch(84% 0.093 154)",
+          "oklch(95% 0.080 154)"
+        ]
+      },
+      "siga-tinta": {
+        "role": "tertiary",
+        "displayName": "Tinta siga",
+        "canonical": "#155a33",
+        "tonalRamp": [
+          "oklch(15% 0.056 154)",
+          "oklch(26% 0.065 154)",
+          "oklch(38% 0.075 154)",
+          "oklch(49% 0.084 154)",
+          "oklch(61% 0.093 154)",
+          "oklch(72% 0.083 154)",
+          "oklch(84% 0.074 154)",
+          "oklch(95% 0.064 154)"
+        ]
+      },
+      "siga-fondo": {
+        "role": "tertiary",
+        "displayName": "Fondo siga",
+        "canonical": "#e6f3eb",
+        "tonalRamp": [
+          "oklch(15% 0.017 159)",
+          "oklch(26% 0.017 159)",
+          "oklch(38% 0.017 159)",
+          "oklch(49% 0.017 159)",
+          "oklch(61% 0.017 159)",
+          "oklch(72% 0.017 159)",
+          "oklch(84% 0.017 159)",
+          "oklch(95% 0.017 159)"
+        ]
+      },
+      "alto": {
+        "role": "tertiary",
+        "displayName": "Rojo alto",
+        "canonical": "#b42318",
+        "tonalRamp": [
+          "oklch(15% 0.108 30)",
+          "oklch(26% 0.127 30)",
+          "oklch(38% 0.146 30)",
+          "oklch(49% 0.164 30)",
+          "oklch(61% 0.181 30)",
+          "oklch(72% 0.162 30)",
+          "oklch(84% 0.143 30)",
+          "oklch(95% 0.125 30)"
+        ]
+      },
+      "alto-tinta": {
+        "role": "tertiary",
+        "displayName": "Tinta alto",
+        "canonical": "#8e1c13",
+        "tonalRamp": [
+          "oklch(15% 0.090 29)",
+          "oklch(26% 0.105 29)",
+          "oklch(38% 0.121 29)",
+          "oklch(49% 0.136 29)",
+          "oklch(61% 0.150 29)",
+          "oklch(72% 0.134 29)",
+          "oklch(84% 0.119 29)",
+          "oklch(95% 0.103 29)"
+        ]
+      },
+      "alto-fondo": {
+        "role": "tertiary",
+        "displayName": "Fondo alto",
+        "canonical": "#fcebe9",
+        "tonalRamp": [
+          "oklch(15% 0.019 26)",
+          "oklch(26% 0.019 26)",
+          "oklch(38% 0.019 26)",
+          "oklch(49% 0.019 26)",
+          "oklch(61% 0.019 26)",
+          "oklch(72% 0.019 26)",
+          "oklch(84% 0.019 26)",
+          "oklch(95% 0.019 26)"
+        ]
+      },
+      "neutro-fondo": {
+        "role": "neutral",
+        "displayName": "Fondo neutro",
+        "canonical": "#eef0f2",
+        "tonalRamp": [
+          "oklch(15% 0.003 248)",
+          "oklch(26% 0.003 248)",
+          "oklch(38% 0.003 248)",
+          "oklch(49% 0.003 248)",
+          "oklch(61% 0.003 248)",
+          "oklch(72% 0.003 248)",
+          "oklch(84% 0.003 248)",
+          "oklch(95% 0.003 248)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Título de pantalla."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Título de cámara o tarjeta, junto a su placa."
+      },
+      "marca": {
+        "displayName": "Marca",
+        "purpose": "Nombre del producto en la barra."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto corrido y campos."
+      },
+      "body-compacto": {
+        "displayName": "Body compacto",
+        "purpose": "Avisos, tablas, notas y leyendas de cerrojo."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Rótulos de campo."
+      },
+      "label-dato": {
+        "displayName": "Label de dato",
+        "purpose": "Encabezados de columna y rótulos de la ficha, en mayúsculas espaciadas."
+      },
+      "placa": {
+        "displayName": "Placa",
+        "purpose": "Número de cámara."
+      },
+      "cifra": {
+        "displayName": "Cifra",
+        "purpose": "Números de datos y campos numéricos."
+      },
+      "cifra-mayor": {
+        "displayName": "Cifra mayor",
+        "purpose": "Número de registro en la ficha de la nave."
+      }
+    },
+    "shadows": [
+      {
+        "name": "anillo-error",
+        "value": "inset 0 0 0 1px var(--alto)",
+        "purpose": "Engrosa el borde de un campo con error. No es elevación; el sistema no tiene sombras."
+      }
+    ],
+    "motion": [
+      {
+        "name": "salida",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Salida exponencial para la apertura de la compuerta y el cambio de color de la placa."
+      },
+      {
+        "name": "compuerta",
+        "value": "--hoja 260ms var(--salida)",
+        "purpose": "Las hojas de la franja se retiran hacia los muros (máscara sobre la propiedad registrada --hoja, 50% a 0%) y dejan a la vista la línea de agua fija."
+      },
+      {
+        "name": "placa",
+        "value": "background-color 200ms var(--salida)",
+        "purpose": "Cambio de estado de la placa (cerrada, activa, cruzada)."
+      },
+      {
+        "name": "control",
+        "value": "150ms ease-out",
+        "purpose": "Hover y foco de botones y campos."
+      },
+      {
+        "name": "movimiento-reducido",
+        "value": "none",
+        "purpose": "Con prefers-reduced-motion: reduce, todas las transiciones son instantáneas."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "angosto",
+        "value": "720px"
+      }
+    ],
+    "patterns": [
+      {
+        "name": "franja-compuerta",
+        "value": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23f2c400'/%3E%3Cpath d='M8 0H16L0 16V8Z M16 8V16H8Z' fill='%2315181c'/%3E%3C/svg%3E\")",
+        "purpose": "Patrón SVG de 16 px, amarillo de seguridad y negro de muro, en el borde superior de una cámara cerrada."
+      }
+    ],
+    "adaptations": [
+      {
+        "contract": "El agua sube en la cámara 2 (~250 ms).",
+        "shipped": "Las dos hojas de la compuerta se retiran hacia los muros en 260 ms y revelan una línea de agua fija.",
+        "reason": "Se lee como una compuerta de busco que se abre, no cambia la maquetación, es solo CSS y una banda que subiera quedaría oculta bajo la franja cerrada."
+      }
+    ],
+    "constraints": [
+      "Solo presentación: el JS depende de id, name, value, data-*, de las clases funcionales oculto y bloqueado, y de que #resultado[data-visible=\"si\"] y .veredicto[data-estado] estén estilizados.",
+      "Recursos estáticos solo bajo /css/ (solo /css/** y /js/** son públicos; la pantalla de inicio de sesión no tiene sesión)."
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción que avanza el trámite (consultar, guardar, registrar, designar).",
+      "html": "<button class=\"ds-btn\">Consultar disponibilidad</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 24px; border:1px solid var(--agua,#1f4e8c); border-radius:var(--radio,2px); background:var(--agua,#1f4e8c); color:#fff; font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); font-size:1rem; font-weight:700; cursor:pointer; transition:background-color 150ms ease-out, border-color 150ms ease-out; } .ds-btn:hover { background:var(--agua-hondo,#173d6e); border-color:var(--agua-hondo,#173d6e); } .ds-btn:active { background:var(--muro,#15181c); border-color:var(--muro,#15181c); } .ds-btn:focus-visible { outline:2px solid var(--tinta,#15181c); outline-offset:2px; } .ds-btn:disabled { opacity:.5; cursor:not-allowed; }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción que descarta o retrocede; vive lejos de la principal.",
+      "html": "<button class=\"ds-btn-sec\">Limpiar formulario</button>",
+      "css": ".ds-btn-sec { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 24px; border:1px solid var(--filete-campo,#6c737a); border-radius:var(--radio,2px); background:var(--superficie,#fff); color:var(--tinta,#15181c); font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); font-size:1rem; font-weight:700; cursor:pointer; transition:background-color 150ms ease-out, border-color 150ms ease-out; } .ds-btn-sec:hover { background:var(--hormigon-alto,#f2f4f5); border-color:var(--tinta,#15181c); } .ds-btn-sec:focus-visible { outline:2px solid var(--tinta,#15181c); outline-offset:2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo con rótulo, pista y mensaje de error que nombra el campo.",
+      "html": "<div class=\"ds-campo\"><label class=\"ds-label\" for=\"ds-n\">Nombre propuesto de la nave</label><input class=\"ds-input\" id=\"ds-n\" placeholder=\"Ej. Gaviota del Darién\"><div class=\"ds-campo ds-error-caja\"><label class=\"ds-label\" for=\"ds-e\">Eslora <span class=\"ds-pista\">(m)</span></label><input class=\"ds-input ds-input-error\" id=\"ds-e\" type=\"number\"><span class=\"ds-error\">Indique la eslora en metros.</span></div></div>",
+      "css": ".ds-campo { font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); color:var(--tinta,#15181c); } .ds-error-caja { margin-top:16px; } .ds-label { display:block; font-size:.875rem; font-weight:600; margin-bottom:6px; } .ds-pista { font-weight:400; color:var(--tinta-suave,#4f555c); } .ds-input { width:100%; height:44px; padding:0 12px; border:1px solid var(--filete-campo,#6c737a); border-radius:var(--radio,2px); background:var(--superficie,#fff); color:inherit; font:inherit; font-size:1rem; transition:border-color 150ms ease-out, box-shadow 150ms ease-out; } .ds-input[type=number] { font-family:var(--cifras,'Atkinson Hyperlegible Mono',ui-monospace,monospace); font-variant-numeric:tabular-nums; } .ds-input::placeholder { color:#6b7076; } .ds-input:hover { border-color:var(--tinta,#15181c); } .ds-input:focus-visible { outline:2px solid var(--agua,#1f4e8c); outline-offset:0; border-color:var(--agua,#1f4e8c); } .ds-input-error { border-color:var(--alto,#b42318); box-shadow:inset 0 0 0 1px var(--alto,#b42318); } .ds-error { display:block; color:var(--alto-tinta,#8e1c13); font-size:.875rem; font-weight:600; margin-top:6px; }"
+    },
+    {
+      "name": "Barra",
+      "kind": "nav",
+      "refersTo": "barra",
+      "description": "Muro negro con la marca, el subtítulo y la sesión.",
+      "html": "<header class=\"ds-barra\"><strong class=\"ds-marca\">Navesitas</strong><span class=\"ds-sub\">Registro de naves comerciales · DGMM</span><span class=\"ds-der\">Agente Naviero de Prueba · <a href=\"#\">Salir</a></span></header>",
+      "css": ".ds-barra { background:var(--muro,#15181c); color:#fff; min-height:56px; padding:8px 24px; display:flex; align-items:center; gap:8px 16px; flex-wrap:wrap; font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); } .ds-marca { font-size:1.125rem; font-weight:700; letter-spacing:.01em; } .ds-sub { color:var(--muro-texto,#b9c0c8); font-size:.875rem; } .ds-der { margin-left:auto; } .ds-barra a { color:#fff; text-underline-offset:3px; } .ds-barra a:hover { color:var(--seguridad,#f2c400); } .ds-barra a:focus-visible { outline:2px solid var(--seguridad,#f2c400); outline-offset:2px; }"
+    },
+    {
+      "name": "Etiquetas de dato",
+      "kind": "chip",
+      "refersTo": "etiqueta-estado",
+      "description": "Estado de la nave, cuota de participación e historial.",
+      "html": "<span class=\"ds-tag ds-tag-estado\">REGISTRADA</span> <span class=\"ds-tag ds-tag-cuota\">100%</span> <span class=\"ds-tag ds-tag-hist\">Reemplazado</span>",
+      "css": ".ds-tag { display:inline-block; padding:2px 8px; border:1px solid; border-radius:var(--radio,2px); font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); font-size:.8125rem; font-weight:700; line-height:1.4; white-space:nowrap; } .ds-tag-estado { color:var(--siga-tinta,#155a33); border-color:var(--siga,#1e7a46); background:var(--siga-fondo,#e6f3eb); letter-spacing:.03em; } .ds-tag-cuota { color:var(--agua,#1f4e8c); border-color:var(--agua,#1f4e8c); background:var(--agua-clara,#e3ecf6); font-family:var(--cifras,'Atkinson Hyperlegible Mono',ui-monospace,monospace); font-variant-numeric:tabular-nums; } .ds-tag-hist { color:var(--tinta-suave,#4f555c); border-color:var(--filete-campo,#6c737a); background:var(--hormigon-alto,#f2f4f5); }"
+    },
+    {
+      "name": "Aviso (semáforo)",
+      "kind": "custom",
+      "refersTo": "veredicto-libre",
+      "description": "Veredicto con forma, texto y color: siga, alto, información.",
+      "html": "<p class=\"ds-av ds-av-libre\">El nombre está libre. Ya puede completar los datos de la nave.</p><p class=\"ds-av ds-av-alto\">El nombre ya pertenece a otra nave.</p><p class=\"ds-av ds-av-neutro\">Consulte la disponibilidad del nombre antes de continuar.</p>",
+      "css": ".ds-av { margin:0 0 16px; padding:12px 16px 12px 48px; border:1px solid; border-radius:var(--radio,2px); font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); font-size:.9375rem; font-weight:600; background-repeat:no-repeat; background-position:16px 13px; background-size:20px 20px; } .ds-av-libre { color:var(--siga-tinta,#155a33); background-color:var(--siga-fondo,#e6f3eb); border-color:var(--siga,#1e7a46); background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='10' fill='%231e7a46'/%3E%3Cpath d='M5.5 10.3l3 3 6-6.3' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3C/svg%3E\"); } .ds-av-alto { color:var(--alto-tinta,#8e1c13); background-color:var(--alto-fondo,#fcebe9); border-color:var(--alto,#b42318); background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 0h8l6 6v8l-6 6H6l-6-6V6z' fill='%23b42318'/%3E%3Cpath d='M5 10h10' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E\"); } .ds-av-neutro { color:var(--tinta,#15181c); background-color:var(--neutro-fondo,#eef0f2); border-color:var(--filete-campo,#6c737a); background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8.8' fill='none' stroke='%234f555c' stroke-width='2.4'/%3E%3Cpath d='M10 9v5' stroke='%234f555c' stroke-width='2.4'/%3E%3Ccircle cx='10' cy='6' r='1.4' fill='%234f555c'/%3E%3C/svg%3E\"); }"
+    },
+    {
+      "name": "Cámara de esclusa",
+      "kind": "custom",
+      "refersTo": "tarjeta",
+      "description": "Paso numerado del trámite en sus tres estados: activa, cerrada (franja de compuerta, placa blanca, leyenda) y cruzada. Pase el cursor sobre la cerrada para ver las hojas retirarse.",
+      "html": "<section class=\"ds-cam\"><h3 class=\"ds-cam-t\"><span class=\"ds-placa\">1</span> Disponibilidad del nombre</h3><p class=\"ds-txt\">Cámara activa: línea de agua y placa amarilla.</p></section><section class=\"ds-cam ds-cerrada\"><h3 class=\"ds-cam-t\"><span class=\"ds-placa\">2</span> Datos de la nave</h3><p class=\"ds-cerrojo\">Se habilita cuando el nombre consultado esté libre.</p><p class=\"ds-txt ds-tenue\">Contenido atenuado mientras la cámara está cerrada.</p></section><section class=\"ds-cam ds-cruzada\"><h3 class=\"ds-cam-t\"><span class=\"ds-placa\">3</span> Propietarios</h3><p class=\"ds-txt\">Cámara cruzada: su condición ya se cumplió.</p></section>",
+      "css": ".ds-cam { position:relative; background:var(--superficie,#fff); border:1px solid var(--filete,#cdd2d6); border-radius:var(--radio,2px); padding:32px 32px 24px; margin-bottom:24px; font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); color:var(--tinta,#15181c); } .ds-cam::before, .ds-cam::after { content:''; position:absolute; top:-1px; left:-1px; right:-1px; height:6px; border-radius:2px 2px 0 0; pointer-events:none; } .ds-cam::before { background:var(--agua,#1f4e8c); } .ds-cam::after { background:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23f2c400'/%3E%3Cpath d='M8 0H16L0 16V8Z M16 8V16H8Z' fill='%2315181c'/%3E%3C/svg%3E\") repeat; -webkit-mask-image:linear-gradient(to right,#000 0%,transparent 0%,transparent 100%,#000 100%); mask-image:linear-gradient(to right,#000 0%,transparent 0%,transparent 100%,#000 100%); } .ds-cerrada::after { -webkit-mask-image:none; mask-image:none; } .ds-cerrada:hover::after { -webkit-mask-image:linear-gradient(to right,#000 0%,transparent 0%,transparent 100%,#000 100%); mask-image:linear-gradient(to right,#000 0%,transparent 0%,transparent 100%,#000 100%); } .ds-cam-t { display:flex; align-items:center; gap:16px; margin:0 0 16px; font-size:1.1875rem; line-height:1.3; font-weight:700; } .ds-placa { display:inline-grid; place-items:center; flex:none; width:40px; height:40px; background:var(--seguridad,#f2c400); color:var(--muro,#15181c); border:2px solid var(--muro,#15181c); border-radius:var(--radio,2px); font-size:1.375rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; transition:background-color 200ms cubic-bezier(.16,1,.3,1); } .ds-cerrada .ds-placa { background:var(--superficie,#fff); } .ds-cruzada .ds-placa { background:var(--agua,#1f4e8c); border-color:var(--agua,#1f4e8c); color:#fff; } .ds-cerrojo { margin:-8px 0 24px; padding:8px 16px; background:var(--hormigon-alto,#f2f4f5); border:1px solid var(--filete,#cdd2d6); border-radius:var(--radio,2px); font-size:.9375rem; } .ds-txt { margin:0; } .ds-tenue { opacity:.6; }"
+    },
+    {
+      "name": "Tabla de datos",
+      "kind": "custom",
+      "refersTo": "tarjeta",
+      "description": "Listado con encabezados en label de dato, filetes de 1 px y cifras en Mono.",
+      "html": "<table class=\"ds-tabla\"><thead><tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Expediente</th></tr></thead><tbody><tr><td>Estrella del Istmo</td><td>CARGA</td><td class=\"ds-num\">18450</td><td><a href=\"#\">Abrir</a></td></tr></tbody></table>",
+      "css": ".ds-tabla { width:100%; border-collapse:collapse; font-family:var(--letra, 'Atkinson Hyperlegible Next', system-ui, sans-serif); font-size:.9375rem; color:var(--tinta,#15181c); } .ds-tabla th, .ds-tabla td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--filete,#cdd2d6); } .ds-tabla thead th { color:var(--tinta-suave,#4f555c); font-size:.8125rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-bottom-color:var(--tinta,#15181c); } .ds-tabla tbody tr:hover td { background:var(--hormigon-alto,#f2f4f5); } .ds-num { font-family:var(--cifras,'Atkinson Hyperlegible Mono',ui-monospace,monospace); font-variant-numeric:tabular-nums; } .ds-tabla a { color:var(--agua,#1f4e8c); font-weight:700; text-underline-offset:3px; } .ds-tabla a:hover { color:var(--agua-hondo,#173d6e); text-decoration-thickness:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Esclusas del Canal",
+    "overview": "El trámite de registro se recorre como el paso de un buque por un juego de esclusas. Cada paso es una cámara numerada (1 nombre y 2 datos de la nave en la pantalla de registro; 3 propietarios y 4 agente residente en el expediente) y una cámara no se abre hasta que la anterior cumple su condición. El lenguaje visual viene de la señalética operativa de una esclusa: muro negro, hormigón claro, amarillo de seguridad para las placas numeradas y para la franja de compuerta, azul de agua para la cámara llena y la acción principal, y verde/rojo de semáforo para los avisos. Modo de trabajo: Operate. Es una herramienta de oficina para un agente naviero en escritorio, densa y sobria, no una página de presentación.\n\nEl sistema existe para que el usuario vea en qué cámara está, por qué la siguiente sigue cerrada y qué la abre. Un bloque deshabilitado nunca es solo un gris apagado: lleva la franja de compuerta en su borde superior, una placa blanca y, cuando hace falta, una leyenda que dice qué lo habilita. Se rechaza explícitamente el formulario de gobierno genérico, donde un bloque bloqueado no explica nada.\n\nNo se usa ninguna marca de la AMP ni del Canal de Panamá; la referencia es el oficio de la esclusa, no su identidad institucional. La identidad del producto (\"Navesitas\" frente a AMP/DGMM) es una decisión abierta registrada en PRODUCT.md y este sistema no la resuelve.",
+    "keyCharacteristics": [
+      "Cámaras numeradas con tres estados visibles: cerrada, activa y cruzada.",
+      "Franja de compuerta amarilla y negra como firma; se retira hacia los muros al abrirse la cámara.",
+      "Una sola familia tipográfica (Atkinson Hyperlegible Next) y su Mono solo para cifras.",
+      "Filetes de 1 px, radio de 2 px, sin sombras de elevación.",
+      "Ritmo de espaciado de 8 px.",
+      "Ningún estado se comunica solo con color: cada aviso lleva forma y texto."
+    ],
+    "rules": [
+      {
+        "name": "Regla del amarillo acotado",
+        "body": "El amarillo de seguridad pertenece a las placas de cámara y a la franja de compuerta; fuera de ellas solo aparece como señal sobre el muro negro (hover y foco en la barra) y en la selección de texto. Nunca es fondo de tarjeta, de botón ni de aviso.",
+        "section": "colors"
+      },
+      {
+        "name": "Regla del rojo de alto",
+        "body": "El rojo se reserva a errores y a la señal de \"alto\". No se usa para decoración, énfasis ni acciones destructivas que no sean un error.",
+        "section": "colors"
+      },
+      {
+        "name": "Regla de la forma más el color",
+        "body": "Ningún estado se comunica solo con color. Cada aviso lleva una forma (círculo con visto para siga, octágono de alto para detenerse, anillo con \"i\" para información) además del texto; cada cámara cerrada lleva la franja y la leyenda, no solo atenuación.",
+        "section": "colors"
+      },
+      {
+        "name": "Regla de la Mono para cifras",
+        "body": "La Mono solo se aplica a números que se comparan o se transcriben. Los títulos, rótulos y botones van siempre en Atkinson Hyperlegible Next.",
+        "section": "typography"
+      },
+      {
+        "name": "Regla de la mayúscula que rotula",
+        "body": "Las mayúsculas espaciadas existen solo como rótulo de un dato (columna de tabla, campo de ficha). No se colocan sobre un título como antetítulo.",
+        "section": "typography"
+      },
+      {
+        "name": "Regla del muro plano",
+        "body": "Ninguna superficie flota. Si algo debe destacar, lo hace con filete, tono o la línea superior de cámara, nunca con sombra.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** representar cada paso del trámite como una cámara numerada con placa y línea superior, y derivar su estado del formulario (fieldset deshabilitado o clase de bloqueo), no de un color suelto.",
+      "**Do** acompañar toda cámara cerrada con la franja de compuerta y, si el motivo no es evidente, con una leyenda de cerrojo que diga qué la abre.",
+      "**Do** usar la escala de 8 px (4, 8, 16, 24, 32, 40, 48, 64 px), filetes de 1 px y radio de 2 px.",
+      "**Do** mantener controles de 44 px de alto y foco visible: contorno de 2 px en tinta (amarillo sobre la barra, azul de agua en campos).",
+      "**Do** acompañar cada aviso de una forma SVG y texto, en tinta oscura sobre fondo claro de su señal.",
+      "**Do** cargar fuentes y cualquier recurso estático nuevo bajo `/css/`; solo `/css/**` y `/js/**` son públicos y la pantalla de inicio de sesión no tiene sesión.",
+      "**Do** limitar los cambios a la presentación: conservar `id`, `name`, `for`, `value`, `data-*`, las clases funcionales `oculto` y `bloqueado`, y seguir estilizando `#resultado[data-visible=\"si\"]`, `.veredicto[data-estado]` y las clases que inyecta el JS (cifra, estado-etiqueta, enlace-fila, vacio, pista, cuota, etiqueta-historial).",
+      "**Do** escribir el texto de ejemplo en español de Panamá con trato de \"usted\" (\"Se habilita cuando el nombre consultado esté libre.\").",
+      "**Do** verificar contraste AA en cada combinación nueva; el piso actual es 4.80:1 (borde de campo sobre blanco)."
+    ],
+    "donts": [
+      "**Don't** usar el amarillo de seguridad fuera de placas, franja de compuerta, señales sobre la barra negra y selección de texto.",
+      "**Don't** usar el rojo para nada que no sea un error o la señal de \"alto\".",
+      "**Don't** comunicar un estado solo con color o solo con atenuación.",
+      "**Don't** añadir sombras de elevación ni degradados decorativos.",
+      "**Don't** usar la Mono para títulos, rótulos o botones.",
+      "**Don't** colocar rótulos en mayúsculas como antetítulo encima de un título.",
+      "**Don't** usar logotipos, colores ni marcas de la AMP o del Canal de Panamá mientras la identidad siga abierta.",
+      "**Don't** animar algo más que la apertura de la compuerta y los cambios de color de estado, y nunca sin respetar el movimiento reducido."
+    ]
+  }
+}

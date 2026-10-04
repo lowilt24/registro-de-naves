@@ -37,3 +37,14 @@ src/main/resources/application-local.properties
 
 data/
 seguridad/reportes/
+
+# impeccable-ignore-start
+# Archivos efimeros de Impeccable (herramienta de diseno). Se versionan
+# config.json, design.json, surfaces/ y critique/.
+**/.impeccable/config.local.json
+**/.impeccable/hook.cache.json
+**/.impeccable/*.png
+**/.impeccable/review/
+**/.impeccable/questions/
+**/.impeccable/live/
+# impeccable-ignore-end

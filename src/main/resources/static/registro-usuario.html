@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crear cuenta — Navesitas</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/css/fuentes/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -13,34 +13,36 @@
   <span>Registro de naves comerciales &middot; DGMM</span>
 </header>
 
-<main style="max-width:480px;">
+<main class="estrecho">
   <h2>Crear cuenta</h2>
   <p class="sumario">La cuenta de agente naviero permite registrar naves y darles seguimiento.</p>
 
   <form class="tarjeta" id="form-registro" novalidate>
-    <div style="margin-bottom:16px;">
+    <div class="campo">
       <label for="nombreCompleto">Nombre completo</label>
       <input type="text" id="nombreCompleto" name="nombreCompleto" maxlength="150">
       <span class="error-campo" data-error="nombreCompleto"></span>
     </div>
-    <div style="margin-bottom:16px;">
+    <div class="campo">
       <label for="correo">Correo</label>
       <input type="email" id="correo" name="correo" maxlength="120" autocomplete="username">
       <span class="error-campo" data-error="correo"></span>
     </div>
-    <div style="margin-bottom:16px;">
-      <label for="password">Contrasena <span class="pista">(minimo 8 caracteres)</span></label>
+    <div class="campo">
+      <label for="password">Contraseña <span class="pista">(mínimo 8 caracteres)</span></label>
       <input type="password" id="password" name="password" autocomplete="new-password">
       <span class="error-campo" data-error="password"></span>
     </div>
-    <div style="margin-bottom:20px;">
+    <div class="campo">
       <label for="rol">Rol</label>
       <select id="rol" name="rol">
         <option value="AGENTE_NAVIERO">Agente naviero</option>
         <option value="FUNCIONARIO_DGMM">Funcionario DGMM</option>
       </select>
     </div>
-    <button type="submit" id="btn-crear">Crear cuenta</button>
+    <div class="acciones">
+      <button type="submit" id="btn-crear">Crear cuenta</button>
+    </div>
     <p class="veredicto" id="aviso-registro" role="status" aria-live="polite"></p>
   </form>
 </main>
