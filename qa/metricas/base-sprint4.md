@@ -18,7 +18,7 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
 | Defectos abiertos | **2** |
 | Densidad de defectos (encontrados) | **1.04** por KELOC (4 ÷ 3.843) |
 | Densidad de defectos (abiertos) | **0.52** por KELOC (2 ÷ 3.843) |
-| Vulnerabilidades encontradas (Wfuzz) | ___ (la completa quien lleva seguridad) |
+| Vulnerabilidades encontradas (Wfuzz) | **0** (0 respuestas 500; ver `seguridad/evidencia-sprint4.md`) |
 
 **Cómo se obtuvo cada cifra**
 
@@ -26,6 +26,11 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
   code; ELOC = solo `code` (ver la sección siguiente).
 - Cobertura: JaCoCo 0.8.15 con `./mvnw clean verify`, solo sobre el Java de producción
   (51 clases).
+- Vulnerabilidades: fuzzing con Wfuzz sobre los 4 endpoints (HU-03, HU-04 y la
+  manipulación del ID de nave de HU-05), con sesión iniciada. 0 errores 500 y
+  ningún acceso a naves ajenas. Queda una observación informativa (no contada):
+  `AccesoNave` distingue 403 de 404, lo que permite enumerar IDs; es una decisión
+  documentada a propósito. Detalle en `seguridad/evidencia-sprint4.md`.
 - Densidad de defectos = defectos ÷ (ELOC / 1000). Se reporta con las dos definiciones:
   - **encontrados**: todos los defectos detectados en el sprint, incluidos los ya
     corregidos. Es la definición de la profesora.
