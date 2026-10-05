@@ -154,6 +154,33 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--
+				Sprint 4: cobertura con JaCoCo. Metrica principal: cobertura de
+				rama (los criterios de aceptacion son decisiones); la de linea se
+				reporta al lado. `./mvnw verify` deja el reporte en
+				target/site/jacoco/. Sin regla `check` a proposito: el umbral lo
+				decide el equipo despues de ver la cifra real.
+			-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.15</version>
+				<executions>
+					<execution>
+						<id>preparar-agente</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>reporte-cobertura</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
