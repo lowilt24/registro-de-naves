@@ -1,0 +1,10 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS04_Sprint4,,Casos de calidad del Sprint 4: HU-07 (carga de documentos) y HU-08 (consulta del estado de los documentos). TC-17 a TC-24.,,04-10-2026 17:36:42,04-10-2026 17:36:50,8.210s,PASSED
+Test Cases/TC_HU07_01_Carga_PDF_Valida,,"TC-17 HU-07: carga de PDF valido, hash y versionado.",,04-10-2026 17:36:42,04-10-2026 17:36:45,2.836s,PASSED
+Test Cases/TC_HU07_02_Archivo_No_PDF,,TC-18 HU-07: archivo disfrazado de PDF rechazado por firma binaria (415).,,04-10-2026 17:36:45,04-10-2026 17:36:46,0.705s,PASSED
+Test Cases/TC_HU07_03_Archivo_Sobre_Limite,,TC-19 HU-07: PDF de mas de 10 MB rechazado (413).,,04-10-2026 17:36:46,04-10-2026 17:36:47,0.958s,PASSED
+Test Cases/TC_HU07_04_Nave_Ajena,,TC-20 HU-07: carga en nave ajena (403) e inexistente (404).,,04-10-2026 17:36:47,04-10-2026 17:36:47,0.728s,PASSED
+Test Cases/TC_HU08_01_Consulta_Con_Documentos,,TC-21 HU-08: consulta con documentos.,,04-10-2026 17:36:47,04-10-2026 17:36:48,0.669s,PASSED
+Test Cases/TC_HU08_02_Consulta_Sin_Documentos,,TC-22 HU-08: consulta sin documentos (200 y lista vacia).,,04-10-2026 17:36:48,04-10-2026 17:36:49,0.505s,PASSED
+Test Cases/TC_HU08_03_Filtro_Por_Tipo,,TC-23 HU-08: filtros por tipo y estado.,,04-10-2026 17:36:49,04-10-2026 17:36:49,0.706s,PASSED
+Test Cases/TC_HU08_04_Descarga_Nave_Ajena,,"TC-24 HU-08: descarga ajena (403), IDOR (404) y sin sesion (401).",,04-10-2026 17:36:49,04-10-2026 17:36:50,0.895s,PASSED

@@ -17,10 +17,14 @@ function escapar(texto) {
  * existio, y no tiene sentido seguir mostrando la pantalla.
  */
 async function api(ruta, opciones = {}) {
+  // Sprint 4: opciones.formulario lleva un FormData (carga de archivos).
+  // No se fija Content-Type a mano: el navegador lo pone con el boundary.
   const respuesta = await fetch(ruta, {
     headers: opciones.cuerpo ? { 'Content-Type': 'application/json' } : {},
     method: opciones.metodo || 'GET',
-    body: opciones.cuerpo ? JSON.stringify(opciones.cuerpo) : undefined
+    body: opciones.formulario
+      ? opciones.formulario
+      : (opciones.cuerpo ? JSON.stringify(opciones.cuerpo) : undefined)
   });
 
   if (respuesta.status === 401) {

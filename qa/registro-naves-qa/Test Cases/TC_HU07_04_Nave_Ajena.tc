@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-20 HU-07: carga en nave ajena (403) e inexistente (404).</description>
+   <name>TC_HU07_04_Nave_Ajena</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>4673aca2-344b-4cbf-b28d-aabd42fdf062</testCaseGuid>
+</TestCaseEntity>

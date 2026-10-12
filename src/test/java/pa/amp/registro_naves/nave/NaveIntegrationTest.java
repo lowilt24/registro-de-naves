@@ -37,6 +37,15 @@ class NaveIntegrationTest {
     @Autowired
     MockMvc mvc;
 
+    /**
+     * Las pruebas corren contra la misma base que el desarrollo, asi que un
+     * nombre fijo puede estar ocupado por una nave que alguien creo a mano
+     * probando la pantalla. Con el sufijo, "libre" significa libre de verdad.
+     */
+    private static String nombreUnico(String base) {
+        return base + " " + System.nanoTime();
+    }
+
     private String naveValida(String nombre) {
         return """
                {
@@ -62,7 +71,7 @@ class NaveIntegrationTest {
     void registraNaveConDatosCompletos() throws Exception {
         mvc.perform(post("/api/naves").with(user(AGENTE))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(naveValida("Vientos de Chiriqui")))
+                        .content(naveValida(nombreUnico("Vientos de Chiriqui"))))
            .andExpect(status().isCreated())
            .andExpect(jsonPath("$.id").exists())
            .andExpect(jsonPath("$.estado").value("REGISTRADA"));
@@ -98,7 +107,7 @@ class NaveIntegrationTest {
     @Test
     void reportaNombreDisponible() throws Exception {
         mvc.perform(get("/api/naves/disponibilidad").with(user(AGENTE))
-                        .param("nombre", "Gaviota del Darien"))
+                        .param("nombre", nombreUnico("Gaviota del Darien")))
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.disponible").value(true));
     }

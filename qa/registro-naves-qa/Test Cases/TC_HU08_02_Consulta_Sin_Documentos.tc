@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-22 HU-08: consulta sin documentos (200 y lista vacia).</description>
+   <name>TC_HU08_02_Consulta_Sin_Documentos</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>e70bf892-f933-452e-98a6-6dfe1a44a1ce</testCaseGuid>
+</TestCaseEntity>

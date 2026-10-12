@@ -46,6 +46,16 @@ jobs:
           path: target/surefire-reports/
           if-no-files-found: ignore
 
+      # Sprint 4: reporte de cobertura de JaCoCo (rama y linea), para
+      # revisarlo sin clonar el repo. Abrir index.html dentro del artefacto.
+      - name: Publicar reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-cobertura
+          path: target/site/jacoco/
+          if-no-files-found: ignore
+
       - name: Empaquetar jar
         run: ./mvnw -B -DskipTests package
 

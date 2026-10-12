@@ -1,6 +1,7 @@
 /* Navesitas — expediente de una nave.
    HU-05: registro y vinculacion de propietarios.
    HU-06: designacion y consulta del agente residente.
+   HU-07 y HU-08 (camara 5) viven en documentos.js, que se carga antes.
 
    La nave se toma de la direccion: expediente.html?naveId=7 */
 
@@ -40,7 +41,8 @@ async function cargarNave() {
     <div><span>Servicio</span><b>${datos.servicio}</b></div>
     <div><span>Tonelaje bruto</span><b class="cifra">${datos.tonelajeBruto}</b></div>
     <div><span>Eslora</span><b class="cifra">${datos.eslora} m</b></div>
-    <div><span>Estado</span><b><span class="estado-etiqueta">${datos.estado}</span></b></div>`;
+    <div><span>Estado</span><b><span class="estado-etiqueta">${datos.estado}</span></b></div>
+    <div><span>Fecha de registro</span><b class="cifra">${fechaHora(datos.creadoEn || datos.fechaRegistro)}</b></div>`;
 
   return true;
 }
@@ -49,6 +51,7 @@ function bloquearTodo() {
   $('tarjeta-nave').classList.add('oculto');
   $('seccion-propietarios').classList.add('bloqueado');
   $('seccion-agente').classList.add('bloqueado');
+  $('seccion-documentos').classList.add('bloqueado');
 }
 
 // ---------------------------------------------------------------
@@ -147,6 +150,7 @@ $('form-propietario').addEventListener('submit', async (e) => {
 function actualizarPrecondicionAgente() {
   $('precondicion-agente').classList.toggle('oculto', tienePropietarios);
   $('campos-agente').disabled = !tienePropietarios;
+  actualizarCamaraDocumentos();
 }
 
 async function cargarAgente() {
@@ -156,14 +160,22 @@ async function cargarAgente() {
   if (estado === 404) {
     caja.innerHTML = '<p class="vacio">Esta nave no tiene agente residente designado.</p>';
     $('leyenda-agente').textContent = 'Designar agente residente';
+    tieneAgente = false;
+    actualizarCamaraDocumentos();
     await cargarHistorial();
     return;
   }
 
   if (!ok) {
     caja.innerHTML = '<p class="vacio">No se pudo consultar el agente residente.</p>';
+    tieneAgente = false;
+    actualizarCamaraDocumentos();
     return;
   }
+
+  // Precondicion de HU-07: con agente vigente se abre la camara 5.
+  tieneAgente = true;
+  actualizarCamaraDocumentos();
 
   caja.innerHTML = `
     <table>
@@ -249,5 +261,6 @@ $('form-agente').addEventListener('submit', async (e) => {
   if (await cargarNave()) {
     await cargarPropietarios();
     await cargarAgente();
+    await cargarDocumentos();
   }
 })();

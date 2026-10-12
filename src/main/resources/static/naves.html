@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Registrar nave — Navesitas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/css/fuentes/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -21,28 +19,32 @@
   <h2>Registrar nave</h2>
   <p class="sumario">
     Primero se consulta si el nombre propuesto ya pertenece a otra nave.
-    El resto del formulario se habilita solo cuando el nombre esta libre.
-    Los propietarios y el agente residente se agregan despues, desde el
+    El resto del formulario se habilita solo cuando el nombre está libre.
+    Los propietarios y el agente residente se agregan después, desde el
     expediente de la nave.
   </p>
 
-  <!-- ============ HU-04: compuerta de disponibilidad ============ -->
-  <section class="tarjeta compuerta">
+  <!-- ============ HU-04: compuerta de disponibilidad (camara 1) ============ -->
+  <section class="tarjeta compuerta camara">
+    <h3 class="camara-titulo"><span class="placa"><span class="sr">Paso </span>1</span> Disponibilidad del nombre</h3>
     <div class="fila">
       <div>
         <label for="nombre">Nombre propuesto de la nave</label>
         <input type="text" id="nombre" name="nombre" maxlength="120"
-               autocomplete="off" placeholder="Ej. Gaviota del Darien">
+               autocomplete="off" placeholder="Ej. Gaviota del Darién">
       </div>
       <button type="button" id="btn-consultar">Consultar disponibilidad</button>
     </div>
     <p class="veredicto" id="veredicto" role="status" aria-live="polite"></p>
   </section>
 
-  <!-- ============ HU-03: datos de la nave ============ -->
-  <form class="tarjeta" id="form-nave" novalidate>
+  <!-- ============ HU-03: datos de la nave (camara 2) ============ -->
+  <form class="tarjeta camara" id="form-nave" novalidate>
+    <h3 class="camara-titulo"><span class="placa"><span class="sr">Paso </span>2</span> Datos de la nave</h3>
+    <p class="cerrojo">Se habilita cuando el nombre consultado esté libre.</p>
+
     <fieldset id="campos-nave" disabled>
-      <legend>Clasificacion</legend>
+      <legend>Clasificación</legend>
       <div class="rejilla">
         <div>
           <label for="tipo">Tipo de nave</label>
@@ -107,10 +109,10 @@
       </fieldset>
 
       <fieldset>
-        <legend>Construccion</legend>
+        <legend>Construcción</legend>
         <div class="rejilla tres">
           <div>
-            <label for="anioConstruccion">Anio</label>
+            <label for="anioConstruccion">Año</label>
             <input type="number" id="anioConstruccion" name="anioConstruccion" min="1900" max="2100" step="1">
             <span class="error-campo" data-error="anioConstruccion"></span>
           </div>
@@ -128,12 +130,12 @@
       </fieldset>
 
       <fieldset>
-        <legend>Propulsion</legend>
+        <legend>Propulsión</legend>
         <div class="rejilla">
           <div>
-            <label for="tipoPropulsion">Tipo de propulsion</label>
+            <label for="tipoPropulsion">Tipo de propulsión</label>
             <input type="text" id="tipoPropulsion" name="tipoPropulsion" maxlength="60"
-                   placeholder="Motor diesel de dos tiempos">
+                   placeholder="Motor diésel de dos tiempos">
             <span class="error-campo" data-error="tipoPropulsion"></span>
           </div>
           <div>
@@ -155,22 +157,26 @@
 
   <!-- ============ Confirmacion ============ -->
   <section class="tarjeta" id="resultado">
-    <h2 style="font-size:1.1rem;">Nave registrada</h2>
-    <table id="tabla-resultado"></table>
+    <h3>Nave registrada</h3>
+    <div class="tabla-desplazable">
+      <table id="tabla-resultado"></table>
+    </div>
     <div class="acciones">
-      <a id="enlace-expediente" href="#"><button type="button">Abrir expediente de la nave</button></a>
+      <a class="boton" id="enlace-expediente" href="#">Abrir expediente de la nave</a>
     </div>
   </section>
 
   <!-- ============ Naves del usuario ============ -->
   <section class="tarjeta">
-    <h2 style="font-size:1.1rem;">Mis naves</h2>
-    <table>
-      <thead>
-        <tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Estado</th><th>Expediente</th></tr>
-      </thead>
-      <tbody id="lista-naves"></tbody>
-    </table>
+    <h3>Mis naves</h3>
+    <div class="tabla-desplazable">
+      <table class="apilable">
+        <thead>
+          <tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Estado</th><th>Expediente</th></tr>
+        </thead>
+        <tbody id="lista-naves"></tbody>
+      </table>
+    </div>
   </section>
 </main>
 

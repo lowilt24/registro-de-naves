@@ -3,10 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Iniciar sesion — Navesitas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Iniciar sesión — Navesitas</title>
+<link rel="preload" href="/css/fuentes/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -15,24 +13,38 @@
   <span>Registro de naves comerciales &middot; DGMM</span>
 </header>
 
-<main style="max-width:440px;">
-  <h2>Iniciar sesion</h2>
+<main class="estrecho">
+  <h2>Iniciar sesión</h2>
   <p class="sumario">Acceso para agentes navieros y funcionarios de la DGMM.</p>
 
   <form class="tarjeta" method="post" action="/api/auth/login" id="form-login">
-    <div style="margin-bottom:16px;">
+    <div class="campo">
       <label for="correo">Correo</label>
       <input type="email" id="correo" name="correo" required autocomplete="username">
     </div>
-    <div style="margin-bottom:20px;">
-      <label for="password">Contrasena</label>
+    <div class="campo">
+      <label for="password">Contraseña</label>
       <input type="password" id="password" name="password" required autocomplete="current-password">
     </div>
-    <button type="submit" id="btn-entrar">Entrar</button>
+    <div class="acciones">
+      <button type="submit" id="btn-entrar">Entrar</button>
+    </div>
     <p class="veredicto" id="aviso-login" role="status"></p>
   </form>
 
-  <p style="font-size:.9rem; color:var(--tinta-suave);">
+  <!-- Sprint 4: pedir otro enlace de validacion. Solo aparece cuando hace falta. -->
+  <form class="tarjeta oculto" id="form-reenvio" novalidate>
+    <div class="campo">
+      <label for="correo-reenvio">Correo de la cuenta</label>
+      <input type="email" id="correo-reenvio" autocomplete="email">
+    </div>
+    <div class="acciones">
+      <button type="submit" class="secundario" id="btn-reenvio">Enviarme otro enlace</button>
+    </div>
+    <p class="veredicto" id="aviso-reenvio" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="nota">
     &iquest;No tiene cuenta? <a href="/registro-usuario.html">Registrarse</a>
   </p>
 </main>
@@ -48,12 +60,59 @@
     aviso.dataset.estado = 'neutro';
     aviso.textContent = 'Su sesion termino. Vuelva a entrar para continuar.';
   } else if (parametros.has('creado')) {
+    // Sprint 4: la cuenta nace sin validar.
+    aviso.dataset.estado = 'neutro';
+    aviso.textContent = 'Cuenta creada. Le enviamos un enlace a su correo: '
+      + 'ábralo para activar la cuenta y después inicie sesión aquí.';
+  } else if (parametros.has('sinValidar')) {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'La cuenta todavía no está activa. Abra el enlace que le '
+      + 'enviamos por correo al registrarse.';
+    mostrarReenvio();
+  } else if (parametros.has('validado')) {
     aviso.dataset.estado = 'libre';
-    aviso.textContent = 'Cuenta creada. Ya puede iniciar sesion.';
+    aviso.textContent = 'Correo confirmado. Ya puede iniciar sesión.';
+  } else if (parametros.get('enlace') === 'vencido') {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'El enlace venció: dura 24 horas. Pida uno nuevo abajo.';
+    mostrarReenvio();
+  } else if (parametros.get('enlace') === 'invalido') {
+    aviso.dataset.estado = 'ocupado';
+    aviso.textContent = 'El enlace no es válido o ya se usó. Si su cuenta sigue '
+      + 'sin activar, pida uno nuevo abajo.';
+    mostrarReenvio();
   } else if (parametros.has('salida')) {
     aviso.dataset.estado = 'neutro';
     aviso.textContent = 'Sesion cerrada.';
   }
+
+  function mostrarReenvio() {
+    document.getElementById('form-reenvio').classList.remove('oculto');
+  }
+
+  document.getElementById('form-reenvio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const avisoReenvio = document.getElementById('aviso-reenvio');
+    const correo = document.getElementById('correo-reenvio').value.trim();
+    if (!correo) {
+      avisoReenvio.dataset.estado = 'ocupado';
+      avisoReenvio.textContent = 'Escriba el correo de la cuenta.';
+      return;
+    }
+    try {
+      const r = await fetch('/api/auth/reenviar-validacion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo })
+      });
+      const datos = await r.json().catch(() => ({}));
+      avisoReenvio.dataset.estado = r.ok ? 'libre' : 'ocupado';
+      avisoReenvio.textContent = datos.mensaje || 'No se pudo enviar el enlace.';
+    } catch (err) {
+      avisoReenvio.dataset.estado = 'ocupado';
+      avisoReenvio.textContent = 'No se pudo contactar el servidor.';
+    }
+  });
 </script>
 </body>
 </html>

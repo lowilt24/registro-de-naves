@@ -2,6 +2,7 @@ package pa.amp.registro_naves.usuario;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "usuario")
@@ -30,6 +31,19 @@ public class Usuario {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
+    // --- Sprint 4: validacion del correo (observacion de la profesora) ---
+
+    /** La cuenta no inicia sesion hasta que esto sea true. */
+    @Column(name = "correo_validado", nullable = false)
+    private boolean correoValidado = false;
+
+    /** Hash SHA-256 del token del enlace, nunca el token en claro. */
+    @Column(name = "token_validacion", length = 64, unique = true)
+    private String tokenValidacion;
+
+    @Column(name = "token_expira_en")
+    private OffsetDateTime tokenExpiraEn;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -50,4 +64,13 @@ public class Usuario {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public boolean isCorreoValidado() { return correoValidado; }
+    public void setCorreoValidado(boolean correoValidado) { this.correoValidado = correoValidado; }
+
+    public String getTokenValidacion() { return tokenValidacion; }
+    public void setTokenValidacion(String tokenValidacion) { this.tokenValidacion = tokenValidacion; }
+
+    public OffsetDateTime getTokenExpiraEn() { return tokenExpiraEn; }
+    public void setTokenExpiraEn(OffsetDateTime tokenExpiraEn) { this.tokenExpiraEn = tokenExpiraEn; }
 }

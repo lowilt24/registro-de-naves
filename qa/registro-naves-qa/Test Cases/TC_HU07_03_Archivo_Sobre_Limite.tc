@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-19 HU-07: PDF de mas de 10 MB rechazado (413).</description>
+   <name>TC_HU07_03_Archivo_Sobre_Limite</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>c5a56c93-7e3f-4065-8b59-a3da708e9db4</testCaseGuid>
+</TestCaseEntity>
