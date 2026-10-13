@@ -55,10 +55,10 @@
 
   if (parametros.has('error')) {
     aviso.dataset.estado = 'ocupado';
-    aviso.textContent = 'Correo o contrasena incorrectos.';
+    aviso.textContent = 'Correo o contraseña incorrectos.';
   } else if (parametros.has('expirada')) {
     aviso.dataset.estado = 'neutro';
-    aviso.textContent = 'Su sesion termino. Vuelva a entrar para continuar.';
+    aviso.textContent = 'Su sesión terminó. Vuelva a entrar para continuar.';
   } else if (parametros.has('creado')) {
     // Sprint 4: la cuenta nace sin validar.
     aviso.dataset.estado = 'neutro';
@@ -83,7 +83,7 @@
     mostrarReenvio();
   } else if (parametros.has('salida')) {
     aviso.dataset.estado = 'neutro';
-    aviso.textContent = 'Sesion cerrada.';
+    aviso.textContent = 'Sesión cerrada.';
   }
 
   function mostrarReenvio() {

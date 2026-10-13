@@ -1,5 +1,7 @@
 package pa.amp.registro_naves.nave;
 
+import pa.amp.registro_naves.tramite.EstadoTramite;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
@@ -18,10 +20,20 @@ public record NaveResponse(
         String materialCasco,
         String tipoPropulsion,
         BigDecimal potenciaKw,
+        /** Estado de la nave (nave.estado). No es el estado del tramite. */
         String estado,
-        OffsetDateTime creadoEn
+        OffsetDateTime creadoEn,
+        /**
+         * Sprint 5 (D4): estado del tramite, que vive en TRAMITES. Va aparte
+         * de "estado" para que la pantalla los rotule por separado (P6).
+         */
+        String estadoTramite
 ) {
     public static NaveResponse de(Nave n) {
+        return de(n, null);
+    }
+
+    public static NaveResponse de(Nave n, EstadoTramite estadoTramite) {
         return new NaveResponse(
                 n.getId(),
                 n.getNombre(),
@@ -38,6 +50,7 @@ public record NaveResponse(
                 n.getTipoPropulsion(),
                 n.getPotenciaKw(),
                 n.getEstado().name(),
-                n.getCreadoEn());
+                n.getCreadoEn(),
+                estadoTramite == null ? null : estadoTramite.name());
     }
 }

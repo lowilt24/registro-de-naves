@@ -2,6 +2,7 @@
    HU-05: registro y vinculacion de propietarios.
    HU-06: designacion y consulta del agente residente.
    HU-07 y HU-08 (camara 5) viven en documentos.js, que se carga antes.
+   HU-09 (camara 6) vive en tramite.js, que tambien se carga antes.
 
    La nave se toma de la direccion: expediente.html?naveId=7 */
 
@@ -15,7 +16,7 @@ let tienePropietarios = false;
 // ---------------------------------------------------------------
 async function cargarNave() {
   if (!naveId) {
-    mostrar($('aviso-nave'), 'ocupado', 'No se indico que nave abrir.');
+    mostrar($('aviso-nave'), 'ocupado', 'No se indicó qué nave abrir.');
     bloquearTodo();
     return false;
   }
@@ -26,7 +27,7 @@ async function cargarNave() {
     // 404: no existe. 403: existe pero es de otro agente.
     const mensaje = estado === 403
       ? 'Esta nave pertenece a otro agente. No puede abrir su expediente.'
-      : (datos && datos.mensaje) || 'No se encontro la nave indicada.';
+      : (datos && datos.mensaje) || 'No se encontró la nave indicada.';
     mostrar($('aviso-nave'), 'ocupado', mensaje);
     bloquearTodo();
     return false;
@@ -41,7 +42,8 @@ async function cargarNave() {
     <div><span>Servicio</span><b>${datos.servicio}</b></div>
     <div><span>Tonelaje bruto</span><b class="cifra">${datos.tonelajeBruto}</b></div>
     <div><span>Eslora</span><b class="cifra">${datos.eslora} m</b></div>
-    <div><span>Estado</span><b><span class="estado-etiqueta">${datos.estado}</span></b></div>
+    <div><span>Estado de la nave</span><b><span class="estado-etiqueta">${escapar(datos.estado)}</span></b></div>
+    <div><span>Estado del trámite</span><b id="ficha-estado-tramite">${etiquetaTramite(datos.estadoTramite)}</b></div>
     <div><span>Fecha de registro</span><b class="cifra">${fechaHora(datos.creadoEn || datos.fechaRegistro)}</b></div>`;
 
   return true;
@@ -52,6 +54,31 @@ function bloquearTodo() {
   $('seccion-propietarios').classList.add('bloqueado');
   $('seccion-agente').classList.add('bloqueado');
   $('seccion-documentos').classList.add('bloqueado');
+  $('seccion-tramite').classList.add('bloqueado');
+}
+
+/**
+ * Sprint 5: la DGMM y el auditor abren el expediente de cualquier nave
+ * para ver y mover el tramite (D1, P7, P8). Propietarios, agente y
+ * documentos siguen siendo del agente que registro la nave, asi que esas
+ * camaras no se muestran.
+ */
+function vistaDeConsulta(rol) {
+  ['seccion-propietarios', 'seccion-agente', 'seccion-documentos']
+    .forEach(id => $(id).classList.add('oculto'));
+  mostrar($('aviso-nave'), 'neutro', rol === 'FUNCIONARIO_DGMM'
+    ? 'Vista de la DGMM: aquí ve la ficha de la nave y gestiona el estado de su trámite. '
+      + 'Propietarios, agente residente y documentos los gestiona el agente que registró la nave.'
+    : 'Vista de consulta: puede leer el estado del trámite y su línea de tiempo, sin cambiarlos.');
+}
+
+async function rolDeSesion() {
+  try {
+    const { datos } = await api('/api/auth/sesion');
+    return datos && datos.autenticado ? datos.rol : null;
+  } catch (e) {
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------
@@ -69,14 +96,14 @@ async function cargarPropietarios() {
   tienePropietarios = datos.length > 0;
 
   if (!tienePropietarios) {
-    cuerpo.innerHTML = '<tr><td colspan="4" class="vacio">Todavia no hay propietarios vinculados.</td></tr>';
+    cuerpo.innerHTML = '<tr><td colspan="4" class="vacio">Todavía no hay propietarios vinculados.</td></tr>';
     cuotaDisponible = 100;
   } else {
     cuerpo.innerHTML = datos.map(p => `
       <tr>
         <td>${escapar(p.nombre)}${p.paisConstitucion
               ? '<br><span class="pista">Constituida en ' + escapar(p.paisConstitucion) + '</span>' : ''}</td>
-        <td>${p.tipo === 'JURIDICA' ? 'Juridica' : 'Natural'}</td>
+        <td>${p.tipo === 'JURIDICA' ? 'Jurídica' : 'Natural'}</td>
         <td>${escapar(p.nacionalidad)}</td>
         <td><span class="cuota">${p.porcentaje}%</span></td>
       </tr>`).join('');
@@ -85,7 +112,7 @@ async function cargarPropietarios() {
     cuotaDisponible = Math.round((100 - asignado) * 100) / 100;
   }
 
-  $('cuota-disponible').textContent = 'Participacion disponible: ' + cuotaDisponible + '%';
+  $('cuota-disponible').textContent = 'Participación disponible: ' + cuotaDisponible + '%';
   $('p-porcentaje').max = cuotaDisponible;
   $('p-porcentaje').placeholder = cuotaDisponible;
 
@@ -181,7 +208,7 @@ async function cargarAgente() {
     <table>
       <tr><th>Agente vigente</th><td>${escapar(datos.nombre)}</td></tr>
       ${datos.idoneidad ? `<tr><th>Idoneidad</th><td class="cifra">${escapar(datos.idoneidad)}</td></tr>` : ''}
-      <tr><th>Contacto</th><td>${escapar(datos.telefono)} &middot; ${escapar(datos.correo)}</td></tr>
+      <tr><th>Contacto</th><td>${contactoAgente(datos)}</td></tr>
       ${datos.poderNumero ? `<tr><th>Poder</th><td>${escapar(datos.poderNumero)}
           ${datos.poderFecha ? ' del ' + datos.poderFecha : ''}
           ${datos.poderLugar ? '<br><span class="pista">' + escapar(datos.poderLugar) + '</span>' : ''}</td></tr>` : ''}
@@ -191,6 +218,19 @@ async function cargarAgente() {
   $('leyenda-agente').textContent = 'Reemplazar agente residente';
 
   await cargarHistorial();
+}
+
+/**
+ * Issue #7: telefono y correo se unen solo si existen. Sin ninguno se dice,
+ * en vez de dejar un punto suelto ("Contacto ·").
+ */
+function contactoAgente(agente) {
+  const partes = [agente.telefono, agente.correo]
+    .filter(v => v != null && String(v).trim() !== '')
+    .map(escapar);
+  return partes.length > 0
+    ? partes.join(' &middot; ')
+    : '<span class="pista">Sin datos de contacto</span>';
 }
 
 async function cargarHistorial() {
@@ -233,7 +273,7 @@ $('form-agente').addEventListener('submit', async (e) => {
 
     if (estado === 201) {
       mostrar($('aviso-agente'), 'libre',
-        'Agente residente designado. La designacion anterior, si la habia, quedo reemplazada.');
+        'Agente residente designado. La designación anterior, si la había, quedó reemplazada.');
       form.reset();
       await cargarAgente();
       return;
@@ -258,9 +298,15 @@ $('form-agente').addEventListener('submit', async (e) => {
 // ---------------------------------------------------------------
 (async function iniciar() {
   pintarSesion();
-  if (await cargarNave()) {
+  if (!(await cargarNave())) return;
+
+  const rol = await rolDeSesion();
+  if (rol === 'AGENTE_NAVIERO') {
     await cargarPropietarios();
     await cargarAgente();
     await cargarDocumentos();
+  } else {
+    vistaDeConsulta(rol);
   }
+  await cargarTramite();
 })();

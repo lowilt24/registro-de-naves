@@ -57,12 +57,12 @@ public record NaveRequest(
         @Digits(integer = 6, fraction = 2, message = "El puntal admite hasta 2 decimales.")
         BigDecimal puntal,
 
-        @NotNull(message = "El anio de construccion es obligatorio.")
-        @Min(value = 1900, message = "El anio de construccion no puede ser anterior a 1900.")
-        @Max(value = 2100, message = "El anio de construccion no es valido.")
+        @NotNull(message = "El año de construcción es obligatorio.")
+        @Min(value = 1900, message = "El año de construcción no puede ser anterior a 1900.")
+        @Max(value = 2100, message = "El año de construcción no es válido.")
         Integer anioConstruccion,
 
-        @NotBlank(message = "El lugar de construccion es obligatorio.")
+        @NotBlank(message = "El lugar de construcción es obligatorio.")
         @Size(max = 120)
         String lugarConstruccion,
 
@@ -70,7 +70,7 @@ public record NaveRequest(
         @Size(max = 60)
         String materialCasco,
 
-        @NotBlank(message = "El tipo de propulsion es obligatorio.")
+        @NotBlank(message = "El tipo de propulsión es obligatorio.")
         @Size(max = 60)
         String tipoPropulsion,
 

@@ -60,7 +60,7 @@ campoNombre.addEventListener('input', () => {
   if (nombreAprobado !== null && campoNombre.value !== nombreAprobado) {
     nombreAprobado = null;
     camposNave.disabled = true;
-    mostrar(veredicto, 'neutro', 'El nombre cambio. Consulte la disponibilidad otra vez.');
+    mostrar(veredicto, 'neutro', 'El nombre cambió. Consulte la disponibilidad otra vez.');
   }
 });
 
@@ -107,9 +107,11 @@ formNave.addEventListener('submit', async (e) => {
     if (estado === 201) {
       mostrarResultado(datos);
       mostrar(avisoForm, 'libre',
-        'La nave quedo guardada con estado REGISTRADA. Ahora puede vincularle propietarios.');
+        'La nave quedó guardada y su trámite quedó en Solicitud presentada. '
+        + 'Ahora puede vincularle propietarios.');
       camposNave.disabled = true;
       nombreAprobado = null;
+      await cargarConteo();
       await cargarNaves();
       return;
     }
@@ -129,12 +131,13 @@ formNave.addEventListener('submit', async (e) => {
 
 function mostrarResultado(nave) {
   $('tabla-resultado').innerHTML = `
-    <tr><th>Numero de registro</th><td class="cifra">${nave.id}</td></tr>
+    <tr><th>Número de registro</th><td class="cifra">${nave.id}</td></tr>
     <tr><th>Nombre</th><td>${escapar(nave.nombre)}</td></tr>
     <tr><th>Tipo y servicio</th><td>${nave.tipo} &middot; ${nave.servicio}</td></tr>
     <tr><th>Tonelaje</th><td class="cifra">${nave.tonelajeBruto} TRB / ${nave.tonelajeNeto} TRN</td></tr>
     <tr><th>Dimensiones</th><td class="cifra">${nave.eslora} &times; ${nave.manga} &times; ${nave.puntal} m</td></tr>
-    <tr><th>Estado</th><td><span class="estado-etiqueta">${nave.estado}</span></td></tr>`;
+    <tr><th>Estado de la nave</th><td><span class="estado-etiqueta">${escapar(nave.estado)}</span></td></tr>
+    <tr><th>Estado del trámite</th><td>${etiquetaTramite(nave.estadoTramite)}</td></tr>`;
   $('enlace-expediente').href = '/expediente.html?naveId=' + nave.id;
   resultado.dataset.visible = 'si';
 }
@@ -151,30 +154,95 @@ $('btn-limpiar').addEventListener('click', () => {
 });
 
 // ---------------------------------------------------------------
-// Lista de naves propias
+// Lista de naves propias, con el filtro de HU-10
 // ---------------------------------------------------------------
+
+/** Estado elegido en los chips; '' es "Todas". */
+let filtroEstado = '';
+let conteo = null;          // ultima respuesta de /api/naves/conteo-por-estado
+let consultaNaves = 0;      // para descartar respuestas viejas si se pulsa rapido
+
+async function cargarConteo() {
+  try {
+    const { ok, datos } = await api('/api/naves/conteo-por-estado');
+    conteo = ok ? datos : null;
+  } catch (e) {
+    conteo = null;
+  }
+  pintarChips();
+}
+
+function pintarChips() {
+  const caja = $('filtro-estado');
+  if (!conteo || !conteo.estados) {
+    caja.innerHTML = '';
+    return;
+  }
+  const opciones = [['', 'Todas', conteo.total]].concat(
+    Object.keys(NOMBRE_ESTADO_TRAMITE).map(e =>
+      [e, NOMBRE_ESTADO_TRAMITE[e], conteo.estados[e] || 0]));
+
+  caja.innerHTML = opciones.map(([estado, nombre, cantidad]) => `
+    <button type="button" class="chip" data-estado="${estado}"
+            aria-pressed="${estado === filtroEstado ? 'true' : 'false'}">
+      ${escapar(nombre)} <span class="cifra">${cantidad}</span>
+    </button>`).join('');
+}
+
+$('filtro-estado').addEventListener('click', async (e) => {
+  const chip = e.target.closest('button[data-estado]');
+  if (!chip || chip.dataset.estado === filtroEstado) return;
+  filtroEstado = chip.dataset.estado;
+  pintarChips();
+  await cargarNaves();
+});
+
 async function cargarNaves() {
   const cuerpo = $('lista-naves');
+  const sinResultados = $('sin-resultados');
+  const caja = $('caja-lista-naves');
+  const esta = ++consultaNaves;
+
+  const ruta = filtroEstado
+    ? '/api/naves?estado=' + encodeURIComponent(filtroEstado)
+    : '/api/naves';
+
   try {
-    const { ok, datos } = await api('/api/naves');
+    const { ok, datos } = await api(ruta);
+    if (esta !== consultaNaves) return;   // llego tarde: ya se pidio otro filtro
+
+    sinResultados.classList.add('oculto');
+    caja.classList.remove('oculto');
+
     if (!ok || !Array.isArray(datos)) {
-      cuerpo.innerHTML = '<tr><td colspan="5">No se pudo cargar el registro.</td></tr>';
+      cuerpo.innerHTML = '<tr><td colspan="6">' + escapar((datos && datos.mensaje)
+        || 'No se pudo cargar el registro.') + '</td></tr>';
       return;
     }
+
     if (datos.length === 0) {
-      cuerpo.innerHTML = '<tr><td colspan="5" class="vacio">Todavia no ha registrado naves.</td></tr>';
+      // HU-10: sin resultados se dice, en vez de dejar una tabla vacia.
+      caja.classList.add('oculto');
+      sinResultados.textContent = filtroEstado
+        ? 'No tiene naves con el trámite en «' + NOMBRE_ESTADO_TRAMITE[filtroEstado]
+          + '». Elija otro estado o «Todas».'
+        : 'Todavía no ha registrado naves.';
+      sinResultados.classList.remove('oculto');
       return;
     }
+
     cuerpo.innerHTML = datos.map(n => `
       <tr>
         <td>${escapar(n.nombre)}</td>
-        <td>${n.tipo}</td>
+        <td>${escapar(n.tipo)}</td>
         <td class="cifra">${n.tonelajeBruto}</td>
-        <td><span class="estado-etiqueta">${n.estado}</span></td>
+        <td><span class="estado-etiqueta">${escapar(n.estado)}</span></td>
+        <td>${etiquetaTramite(n.estadoTramite)}</td>
         <td><a class="enlace-fila" href="/expediente.html?naveId=${n.id}">Abrir</a></td>
       </tr>`).join('');
   } catch (e) { /* api() ya redirigio si fue 401 */ }
 }
 
 pintarSesion();
+cargarConteo();
 cargarNaves();

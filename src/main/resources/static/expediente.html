@@ -23,8 +23,9 @@
   <h2 id="titulo-nave">Expediente</h2>
   <p class="sumario">
     Aquí se vinculan los propietarios de la nave, se designa al agente
-    residente que gestiona su trámite ante la DGMM y se cargan los
-    documentos del expediente de abanderamiento.
+    residente que gestiona su trámite ante la DGMM, se cargan los
+    documentos del expediente de abanderamiento y se sigue el estado del
+    trámite.
   </p>
 
   <p class="veredicto" id="aviso-nave" role="status" aria-live="polite"></p>
@@ -280,10 +281,50 @@
       <p class="veredicto" id="aviso-documento" role="status" aria-live="polite"></p>
     </form>
   </section>
+
+  <!-- ============ HU-09: estado del tramite (camara 6) ============ -->
+  <!-- Rotulado aparte del estado de la nave de la ficha (P6): son dos
+       datos distintos y la PO todavia no decidio si se conectan. -->
+  <section class="tarjeta camara" id="seccion-tramite">
+    <div class="encabezado-seccion">
+      <h3 class="camara-titulo"><span class="placa"><span class="sr">Paso </span>6</span> Estado del trámite</h3>
+    </div>
+
+    <div id="tramite-actual" class="tramite-actual"></div>
+
+    <form id="form-tramite" class="subformulario oculto" novalidate>
+      <fieldset id="campos-tramite">
+        <legend>Acciones disponibles</legend>
+
+        <div class="campo">
+          <label for="t-observacion">Observación <span class="pista" id="pista-observacion">(opcional)</span></label>
+          <input type="text" id="t-observacion" maxlength="1000"
+                 placeholder="Qué falta o qué se corrigió">
+          <span class="error-campo" data-error="observacion"></span>
+        </div>
+
+        <p class="nota oculto" id="nota-final">
+          Aprobar, rechazar y desistir cierran el trámite: después ya no admite cambios.
+        </p>
+
+        <div class="acciones" id="botones-tramite"></div>
+      </fieldset>
+    </form>
+
+    <!-- Fuera del formulario: tras observar o aprobar ya no quedan botones
+         y el formulario se oculta, pero el aviso tiene que verse. -->
+    <p class="veredicto" id="aviso-tramite" role="status" aria-live="polite"></p>
+
+    <div class="historial">
+      <h4>Línea de tiempo</h4>
+      <ol class="linea-tiempo" id="linea-tiempo"></ol>
+    </div>
+  </section>
 </main>
 
 <script src="/js/comun.js"></script>
 <script src="/js/documentos.js"></script>
+<script src="/js/tramite.js"></script>
 <script src="/js/expediente.js"></script>
 </body>
 </html>

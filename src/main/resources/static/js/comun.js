@@ -89,7 +89,7 @@ async function pintarSesion() {
         f.submit();
       });
     } else {
-      caja.innerHTML = '<a href="/login.html">Iniciar sesion</a>';
+      caja.innerHTML = '<a href="/login.html">Iniciar sesión</a>';
     }
   } catch (e) { /* api() ya redirigio */ }
 }
@@ -109,4 +109,28 @@ function texto(id) {
 function numero(id) {
   const v = $(id).value.trim();
   return v === '' ? null : Number(v);
+}
+
+// ---------------------------------------------------------------
+// Sprint 5 — tramite (HU-09, HU-10). Lo usan naves.js y tramite.js.
+// ---------------------------------------------------------------
+
+/** Nombre visible de cada estado del tramite, en el orden de la maquina. */
+const NOMBRE_ESTADO_TRAMITE = {
+  SOLICITUD_PRESENTADA: 'Solicitud presentada',
+  EN_REVISION:          'En revisión',
+  OBSERVADA:            'Observada',
+  APROBADA:             'Aprobada',
+  RECHAZADA:            'Rechazada',
+  DESISTIDA:            'Desistida'
+};
+
+/**
+ * Etiqueta del estado del tramite. Siempre con texto; es otra etiqueta que
+ * la del estado de la nave (estado-etiqueta) para no confundirlas (P6).
+ */
+function etiquetaTramite(estado) {
+  if (!estado) return '<span class="pista">Sin trámite</span>';
+  return '<span class="tramite-estado" data-estado="' + escapar(estado) + '">'
+       + escapar(NOMBRE_ESTADO_TRAMITE[estado] || estado) + '</span>';
 }

@@ -3,6 +3,7 @@ package pa.amp.registro_naves.common;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,7 +31,7 @@ public class ManejadorGlobalDeErrores {
           .forEach(e -> campos.putIfAbsent(e.getField(), e.getDefaultMessage()));
 
         Map<String, Object> cuerpo = new LinkedHashMap<>();
-        cuerpo.put("mensaje", "Hay campos obligatorios sin completar o con formato invalido.");
+        cuerpo.put("mensaje", "Hay campos obligatorios sin completar o con formato inválido.");
         cuerpo.put("campos", campos);
         return ResponseEntity.badRequest().body(cuerpo);
     }
@@ -47,13 +48,13 @@ public class ManejadorGlobalDeErrores {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> cuerpoIlegible(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body(Map.of(
-                "mensaje", "El cuerpo de la solicitud no tiene un formato valido."));
+                "mensaje", "El cuerpo de la solicitud no tiene un formato válido."));
     }
 
     @ExceptionHandler(ValidacionCampoException.class)
     public ResponseEntity<Map<String, Object>> campoInvalido(ValidacionCampoException ex) {
         Map<String, Object> cuerpo = new LinkedHashMap<>();
-        cuerpo.put("mensaje", "Hay campos obligatorios sin completar o con formato invalido.");
+        cuerpo.put("mensaje", "Hay campos obligatorios sin completar o con formato inválido.");
         cuerpo.put("campos", Map.of(ex.getCampo(), ex.getMessage()));
         return ResponseEntity.badRequest().body(cuerpo);
     }
@@ -94,7 +95,7 @@ public class ManejadorGlobalDeErrores {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Map<String, Object>> cargaExcedida(MaxUploadSizeExceededException ex) {
         return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE)
-                .body(Map.of("mensaje", "El archivo supera el limite de 10 MB."));
+                .body(Map.of("mensaje", "El archivo supera el límite de 10 MB."));
     }
 
     /** HU-07, criterio 3: la firma binaria no es la de un PDF. */
@@ -110,7 +111,7 @@ public class ManejadorGlobalDeErrores {
     @ExceptionHandler(MultipartException.class)
     public ResponseEntity<Map<String, Object>> multipartInvalido(MultipartException ex) {
         return ResponseEntity.badRequest()
-                .body(Map.of("mensaje", "La carga no tiene un formato valido."));
+                .body(Map.of("mensaje", "La carga no tiene un formato válido."));
     }
 
     // ------------------------------------------------------------------
@@ -130,13 +131,13 @@ public class ManejadorGlobalDeErrores {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, Object>> parametroInvalido(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.badRequest()
-                .body(Map.of("mensaje", "Uno de los parametros de la solicitud no es valido."));
+                .body(Map.of("mensaje", "Uno de los parámetros de la solicitud no es válido."));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Map<String, Object>> metodoNoPermitido(HttpRequestMethodNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(Map.of("mensaje", "Metodo no permitido."));
+                .body(Map.of("mensaje", "Método no permitido."));
     }
 
     /** Ruta inexistente con sesion iniciada: 404, no 500. */
@@ -144,6 +145,22 @@ public class ManejadorGlobalDeErrores {
     public ResponseEntity<Map<String, Object>> rutaInexistente(NoResourceFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("mensaje", "Recurso no encontrado."));
+    }
+
+    // ------------------------------------------------------------------
+    // Sprint 5 — tramite (HU-09)
+    // ------------------------------------------------------------------
+
+    /**
+     * Dos personas cambiaron el mismo tramite a la vez. El segundo cambio
+     * no se aplica (bloqueo optimista en Tramite#version) y se le pide
+     * recargar, en vez de pisar al primero o responder 500.
+     */
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, Object>> cambioSimultaneo(ObjectOptimisticLockingFailureException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("mensaje",
+                        "El trámite cambió mientras tanto. Recargue la página e intente de nuevo."));
     }
 
     @ExceptionHandler(Exception.class)
