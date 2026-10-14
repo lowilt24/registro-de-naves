@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestCaseEntity>
-   <description>TC-38 HU-03/HU-09 (decision de la PO del 13-10-2026): solo el agente naviero registra naves; la DGMM y el auditor reciben 403 y no se crea nada. Activar en la suite cuando exista la regla.</description>
+   <description>TC-38 HU-03/HU-09 (decision de la PO del 13-10-2026): solo el agente naviero registra naves; la DGMM y el auditor reciben 403 y no se crea nada. Activo desde el 13-10-2026.</description>
    <name>TC_HU03_04_Registro_Solo_Agente</name>
    <tag></tag>
    <comment></comment>

@@ -8,10 +8,36 @@ en `localhost:8080`.
 > Louis y Claude porque la computadora de Abdiel tuvo problemas. Si Abdiel puede, revisa
 > los resultados antes del cierre.
 
-**Estado: corrida previa (13-10-2026, código `c858cb5`).** La corrida que va como evidencia
-del sprint se repite cuando Ismael suba las reglas de la PO (issue #10, documentos
-obligatorios y expediente de solo lectura), porque cambian respuestas de las pruebas 8 y 9.
-La corrida se hizo dos veces seguidas y dio el mismo resultado.
+**Hubo dos corridas el 13-10-2026:**
+
+- **Previa**, sobre el código de `c858cb5`. Se repitió dos veces seguidas, con el mismo
+  resultado. Encontró **SEC-08**.
+- **Final (23:24)**, sobre la versión con las reglas de la PO y la corrección de SEC-08.
+  Es la que va como evidencia del sprint: **0 respuestas 500**.
+
+Las reglas y la corrección las implementaron Louis y Claude, porque el sprint se presentaba
+al día siguiente.
+
+## Resultado de la corrida final
+
+| Prueba | Códigos | Veredicto |
+|---|---|---|
+| 1. HU-10: filtro por estado | 200×7, 400×21 | OK |
+| 2. HU-09: ID de nave al leer el trámite | 200×1, 400×5, 403×1, 404×4 | OK: la nave ajena da 403 |
+| 3. HU-09: ID de nave en el historial | 200×1, 400×5, 403×1, 404×4 | OK |
+| 4. HU-09: ID de nave al cambiar el estado | 200×1, 400×1, 403×1, 404×3 | OK: la nave ajena da 403 y no cambia |
+| 5. HU-09: campo `accion` | 400×13, 403×2, 409×7 | OK |
+| 6a. HU-09: `observacion` (lectura y validación) | 400×4, 409×15 | OK: los dos payloads con carácter nulo ahora dan 400 |
+| 6b. HU-09: `observacion` (guardado en la base) | 200×15, 400×4; historial 200 | **OK: SEC-08 corregido** |
+| 7. Sin sesión | 401×5 | OK |
+| 8. Registro de nave por rol | agente 201, DGMM 403, auditor 403 | **OK: issue #10 corregido** |
+| 9. Escrituras con el trámite Desistido | documento 409, propietario 409, agente 409 | **OK: regla de la PO** |
+
+**Vulnerabilidades encontradas en el sprint: 1 (SEC-08), corregida. Abiertas al cierre: 0**
+de este sprint (siguen SEC-03 y SEC-05, de sprints anteriores).
+
+La sección siguiente es la corrida **previa**, que se conserva como registro de cómo se
+encontró SEC-08.
 
 ## Qué cambia respecto del Sprint 4
 
@@ -25,7 +51,7 @@ La corrida se hizo dos veces seguidas y dio el mismo resultado.
 - **Diccionarios nuevos:** `wordlist-estados.txt` (28), `wordlist-acciones.txt` (22) y
   `wordlist-observaciones.txt` (19).
 
-## Resultado
+## Resultado de la corrida previa (`c858cb5`)
 
 | Prueba | Endpoint | Peticiones | Códigos | Veredicto |
 |---|---|---:|---|---|
@@ -71,10 +97,11 @@ y la clave duplicada `{"accion":"","accion":"APROBAR"}`. La lectura del JSON las
 `APROBAR` y luego pasan por la misma autorización y la misma máquina de estados: **no es
 vulnerabilidad**.
 
-## SEC-08 — Carácter nulo en la observación del trámite (500)
+## SEC-08 — Carácter nulo en la observación del trámite (500) — **CORREGIDO**
 
 | | |
 |---|---|
+| Estado | **Corregido** el 13-10-2026. Verificado en la corrida final de Wfuzz y en `TramiteIntegrationTest` / `ManejadorGlobalDeErroresTest` |
 | Severidad | Baja: no expone datos ni salta controles, pero devuelve 500 y deja una traza en el log |
 | Endpoint | `POST /api/naves/{id}/tramite/estado` (observar, rechazar, subsanar, etc.) |
 | Payload | `{"accion":"OBSERVAR","observacion":"nulo\u0000intermedio"}` |
@@ -91,10 +118,16 @@ revierte), así que no hay inconsistencia de datos.
 `DataIntegrityViolationException` y supone que es el nombre duplicado. El mensaje es
 engañoso. `nombre` sí da 400, porque tiene validación de formato.
 
-**Corrección sugerida (para Ismael):** rechazar `\u0000` en los textos de entrada con 400 (una
-validación común para los DTO, o un filtro en la lectura del JSON) en lugar de dejar que
-llegue a la base. El `catch` de `NaveService.registrar` debería distinguir el choque de
-`uk_nave_nombre_normalizado` de los demás errores de integridad.
+**Corrección aplicada:**
+
+- **Un solo lugar para todos los DTO** (`config/TextoSinNulosConfig`): el lector de cadenas
+  de Jackson rechaza cualquier texto con `U+0000`. El manejador global lo convierte en
+  **400** "El texto contiene caracteres no permitidos."
+- **Red de seguridad para lo que no llega por JSON** (formularios, multipart): si PostgreSQL
+  rechaza el byte (SQLState `22021`), la respuesta también es **400**. Cualquier otro error
+  de integridad sigue siendo 500.
+- **`NaveService.registrar`** responde "Nombre no disponible" (409) solo cuando choca
+  `uk_nave_nombre_normalizado`. Con un carácter nulo en `lugarConstruccion` ahora da 400.
 
 ## Observaciones informativas (no se cuentan como vulnerabilidad)
 

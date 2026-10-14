@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TS05_Sprint5" time="12.209" tests="12" passed="12" failures="0" errors="0" incompleted="0" skipped="0">
+   <testsuite name="TS05_Sprint5" tests="12" passed="12" failures="0" errors="0" incompleted="0" skipped="0" time="12.209" timestamp="2026-10-14T04:14:50.647Z" hostname="lowilt - macbookpro.lan" id="Test Suites/TS05_Sprint5" status="PASSED">
+      <testcase name="Test Cases/TC_HU09_01_Tramite_Nace_Al_Registrar" time="2.807" classname="Test Cases/TC_HU09_01_Tramite_Nace_Al_Registrar" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_02_Acciones_Por_Rol" time="0.707" classname="Test Cases/TC_HU09_02_Acciones_Por_Rol" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_03_Sin_Sesion_E_Inexistente" time="0.493" classname="Test Cases/TC_HU09_03_Sin_Sesion_E_Inexistente" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_04_Permisos_403" time="1.469" classname="Test Cases/TC_HU09_04_Permisos_403" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_05_Transicion_Invalida_409" time="0.671" classname="Test Cases/TC_HU09_05_Transicion_Invalida_409" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_06_Desistir_Estado_Final" time="1.152" classname="Test Cases/TC_HU09_06_Desistir_Estado_Final" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_07_Flujo_Revision_Completo" time="1.213" classname="Test Cases/TC_HU09_07_Flujo_Revision_Completo" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU09_08_Rechazo_Con_Observacion" time="1.034" classname="Test Cases/TC_HU09_08_Rechazo_Con_Observacion" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU10_01_Filtro_Por_Estado" time="0.488" classname="Test Cases/TC_HU10_01_Filtro_Por_Estado" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU10_02_Conteo_Por_Estado" time="0.609" classname="Test Cases/TC_HU10_02_Conteo_Por_Estado" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU10_03_Estado_Invalido_400" time="0.442" classname="Test Cases/TC_HU10_03_Estado_Invalido_400" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU10_04_Sin_Resultados_Y_Aislamiento" time="0.97" classname="Test Cases/TC_HU10_04_Sin_Resultados_Y_Aislamiento" status="PASSED">
+         </testcase>
+   </testsuite>
+</testsuites>

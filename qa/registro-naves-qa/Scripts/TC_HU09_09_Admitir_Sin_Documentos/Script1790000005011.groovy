@@ -123,8 +123,7 @@ def cargarDocumento = { String cookie, def naveId, String tipo, File archivo ->
  * "En revision" (admitir ni subsanar) mientras falten documentos
  * obligatorios. 409 con "faltantes" en el orden oficial.
  *
- * PENDIENTE DE IMPLEMENTAR: en la suite va con isRun=false hasta que
- * Ismael suba la regla.
+ * Implementado el 13-10-2026 (TramiteService.exigirDocumentosObligatorios).
  */
 String agente = iniciarSesion('agente@navesitas.pa')
 String dgmm = iniciarSesion('revisor@navesitas.pa')

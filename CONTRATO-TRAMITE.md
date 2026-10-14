@@ -34,10 +34,11 @@ Se revisan en este orden; sale el primero que aplique:
 | Código | Cuándo |
 |---|---|
 | 401 | Sin sesión |
-| 400 | Cuerpo mal formado: falta `accion`, acción inventada, `PRESENTAR`/`MIGRACION`, observación de más de 1000 caracteres, ID no numérico |
+| 400 | Cuerpo mal formado: falta `accion`, acción inventada, `PRESENTAR`/`MIGRACION`, observación de más de 1000 caracteres, ID no numérico, texto con carácter nulo `\u0000` (SEC-08: "El texto contiene caracteres no permitidos.") |
 | 404 | La nave no existe |
 | 403 | El rol o la relación con la nave no dan esa acción (agente que aprueba, DGMM que subsana, auditor, nave de otro agente) |
 | 409 | La acción no existe desde el estado actual (aprobar sin admitir, cualquier cosa en un estado final) o dos personas cambiaron el trámite a la vez |
+| 409 | Admitir o subsanar (destino "En revisión") con documentos obligatorios faltantes. Cuerpo: `{"mensaje": "Faltan documentos obligatorios: ITC, SMC", "faltantes": ["ITC", "SMC"]}`, siempre en el orden `CERTIFICADO_PROPIEDAD`, `PODER_NOTARIAL`, `ITC`, `SMC`. Un documento cuenta si es vigente y está en `PENDIENTE` o `APROBADO` (PO, 13-10-2026) |
 | 400 | Observar o rechazar sin observación (`campos.observacion`) |
 
 ## Endpoints
@@ -125,7 +126,17 @@ abrir el expediente por ID mientras no exista la bandeja de la DGMM (P7).
 Propietarios, agente residente y documentos siguen siendo solo del agente
 que registró la nave (403 para los demás).
 
-## Para Wfuzz (Abdiel)
+### Reglas de la PO del 13-10-2026 fuera de `/tramite`
+
+- **`POST /api/naves` (HU-03):** solo `AGENTE_NAVIERO`. Otro rol recibe 403 "Solo un agente
+  naviero puede registrar naves." (issue #10).
+- **Expediente de solo lectura:** con el trámite en `APROBADA`, `RECHAZADA` o `DESISTIDA`,
+  `POST /api/naves/{id}/documentos`, `POST /api/propietarios` y
+  `POST /api/naves/{id}/agente-residente` responden 409 "El trámite ya terminó (Aprobada); el
+  expediente es de solo lectura." El orden de los errores es 404 → 403 → 409, así que a quien no
+  es dueño se le sigue respondiendo 403.
+
+## Para Wfuzz
 
 Superficie nueva:
 

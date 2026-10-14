@@ -124,7 +124,7 @@ def cargarDocumento = { String cookie, def naveId, String tipo, File archivo ->
  * cambio (documentos, propietarios, agente residente) -> 409. Mientras el
  * tramite esta en curso se edita como siempre. Leer sigue permitido.
  *
- * PENDIENTE DE IMPLEMENTAR: en la suite va con isRun=false.
+ * Implementado el 13-10-2026.
  */
 String dgmm = iniciarSesion('revisor@navesitas.pa')
 String sufijo = System.currentTimeMillis().toString()
@@ -153,9 +153,17 @@ def verificarSoloLectura = { String cookie, def naveId, String estado ->
     int docsAntes = json(consultar(cookie, '/api/naves/' + naveId + '/documentos')).size()
     ResponseObject rDoc = cargarDocumento(cookie, naveId, 'ITC', crearArchivo('itc-final.pdf', pdfValido('final')))
     println(estado + ' / documento: ' + rDoc.getStatusCode() + ' ' + rDoc.getResponseBodyContent())
+    String mensaje = 'El trámite ya terminó (' + estado + '); el expediente es de solo lectura.'
+    // Se verifica el mensaje: un 409 por otra regla (p. ej. participacion
+    // del propietario) no prueba que el expediente este cerrado.
     WS.verifyResponseStatusCode(rDoc, 409)
-    WS.verifyResponseStatusCode(postJson(cookie, '/api/propietarios', propietario(naveId)), 409)
-    WS.verifyResponseStatusCode(postJson(cookie, '/api/naves/' + naveId + '/agente-residente', agenteResidente(naveId)), 409)
+    WS.verifyEqual(json(rDoc).mensaje, mensaje)
+    ResponseObject rProp = postJson(cookie, '/api/propietarios', propietario(naveId))
+    WS.verifyResponseStatusCode(rProp, 409)
+    WS.verifyEqual(json(rProp).mensaje, mensaje)
+    ResponseObject rAgen = postJson(cookie, '/api/naves/' + naveId + '/agente-residente', agenteResidente(naveId))
+    WS.verifyResponseStatusCode(rAgen, 409)
+    WS.verifyEqual(json(rAgen).mensaje, mensaje)
     // Leer sigue permitido y no cambio nada.
     WS.verifyEqual(json(consultar(cookie, '/api/naves/' + naveId + '/documentos')).size(), docsAntes)
     WS.verifyResponseStatusCode(consultar(cookie, '/api/naves/' + naveId + '/propietarios'), 200)
@@ -168,9 +176,9 @@ WS.verifyResponseStatusCode(cargarDocumento(aprobada.cookie, aprobada.naveId, 'I
         crearArchivo('itc-v2.pdf', pdfValido('v2'))), 201)
 WS.verifyResponseStatusCode(accion(dgmm, aprobada.naveId, 'ADMITIR'), 200)
 WS.verifyResponseStatusCode(accion(dgmm, aprobada.naveId, 'APROBAR'), 200)
-verificarSoloLectura(aprobada.cookie, aprobada.naveId, 'APROBADA')
+verificarSoloLectura(aprobada.cookie, aprobada.naveId, 'Aprobada')
 
 // b) Desistida.
 def desistida = WebUI.callTestCase(findTestCase('Test Cases/TC_AUX_Preparar_Nave_Con_Agente'), [:], FailureHandling.STOP_ON_FAILURE)
 WS.verifyResponseStatusCode(accion(desistida.cookie, desistida.naveId, 'DESISTIR'), 200)
-verificarSoloLectura(desistida.cookie, desistida.naveId, 'DESISTIDA')
+verificarSoloLectura(desistida.cookie, desistida.naveId, 'Desistida')

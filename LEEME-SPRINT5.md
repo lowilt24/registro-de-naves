@@ -22,10 +22,37 @@ Aquí no se tocan.
 
 Contrato de la API (para Katalon y Wfuzz): `CONTRATO-TRAMITE.md`.
 
-## Propuestas que se aplicaron mientras la PO responde
+## Cambios del 13-10-2026 (Louis y Claude)
 
-El plan deja P1 a P9 pendientes. Se programó con la **propuesta** de cada
-una. Si Madeleine decide otra cosa, esto es lo que cambia:
+Madeleine respondió el 13-10-2026: **P1 a P9 quedaron aprobadas tal como están
+programadas**, salvo P4 y P7 (ver abajo). Agregó tres reglas, y la corrida previa de
+Wfuzz encontró SEC-08. Como el sprint se presentaba al día siguiente, Louis y Claude
+implementaron todo eso en `sprint-5`:
+
+| Cambio | Respuesta | Dónde |
+|---|---|---|
+| **Documentos obligatorios.** Admitir y Subsanar no pasan a "En revisión" si falta alguno de los 4. Cuenta un documento vigente en `PENDIENTE` o `APROBADO` | 409 `{"mensaje": "Faltan documentos obligatorios: ITC, SMC", "faltantes": ["ITC","SMC"]}`, en el orden oficial | `TipoDocumento.OBLIGATORIOS` (único lugar), `TramiteService.exigirDocumentosObligatorios` |
+| **Solo `AGENTE_NAVIERO` registra naves** (issue #10: la DGMM podía aprobar su propia solicitud) | 403 "Solo un agente naviero puede registrar naves." | `NaveService.registrar` |
+| **Expediente de solo lectura** con el trámite Aprobado, Rechazado o Desistido: documentos, propietarios y agente residente | 409 "El trámite ya terminó (…); el expediente es de solo lectura." Va después del control de acceso: a quien no es dueño se le sigue respondiendo 403 | `TramiteService.exigirExpedienteAbierto`, llamado desde `DocumentoService`, `PropietarioService` y `AgenteService` |
+| **SEC-08:** un carácter nulo (`\u0000`) en un texto daba 500 | 400 "El texto contiene caracteres no permitidos." | `config/TextoSinNulosConfig` (lector de JSON) y `ManejadorGlobalDeErrores` (red de seguridad, SQLState `22021`) |
+| `NaveService.registrar` decía "Nombre no disponible" ante cualquier error de integridad | Solo cuando choca `uk_nave_nombre_normalizado` | `NaveService` |
+| Pantalla: los faltantes se muestran con su nombre de la cámara 5 | — | `js/tramite.js` |
+
+**Pruebas:**
+
+- `mvnw verify`: **205 pruebas**, todas pasan.
+- `TramiteIntegrationTest`:
+  - ahora carga el expediente completo antes de admitir;
+  - tiene 9 pruebas nuevas, de las reglas y de SEC-08;
+  - se corrigió `sinParametroLaListaNoCambia` (issue #9).
+- `DocumentoIntegrationTest`: el IDOR usa un segundo agente.
+
+**P4 y P7:** Subsanar no tiene carga propia, porque el agente corrige en la cámara 5. La
+bandeja de la DGMM y la revisión de documentos pasan al Sprint 6, como limitación conocida.
+
+## Propuestas que se aplicaron mientras la PO respondía
+
+Este era el plan original. Todas quedaron aprobadas (ver arriba).
 
 | # | Propuesta aplicada | Si cambia, se toca |
 |---|---|---|
@@ -61,12 +88,12 @@ corrección iría en una V7.
   visto bueno del equipo antes del PR.**
 - En pantalla angosta, la tabla "Mis naves" tiene una columna más.
 
-## Pendiente
+## Pendiente (Sprint 6)
 
-- Respuestas de la PO a P1 y P3 (bloquean la V6) y al resto.
-- La DGMM revisa documentos (aprobar u observar cada uno). Es parte de P4 y
-  queda para el Sprint 6.
+- La DGMM revisa documentos (aprobar u observar cada uno). Viene de P4.
 - Bandeja de la DGMM (P7).
+- ITC y SMC condicionales según eslora, GT y tipo de viaje. Es deuda del backlog: basta
+  con cambiar `TipoDocumento.OBLIGATORIOS` por una regla.
 
 ---
 

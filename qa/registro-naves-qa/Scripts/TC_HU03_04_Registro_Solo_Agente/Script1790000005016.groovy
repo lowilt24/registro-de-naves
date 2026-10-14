@@ -91,7 +91,7 @@ def registrarNave = { String cookie, String prefijo ->
  * autoaprobacion: si la DGMM pudiera registrar naves, podria admitir y
  * aprobar su propia solicitud. Solo AGENTE_NAVIERO registra.
  *
- * PENDIENTE DE IMPLEMENTAR: en la suite va con isRun=false.
+ * Implementado el 13-10-2026.
  */
 String dgmm = iniciarSesion('revisor@navesitas.pa')
 String auditor = iniciarSesion('auditor@navesitas.pa')

@@ -1,11 +1,17 @@
 # Evidencia de calidad — Sprint 5
 
 HU-09 (estado del trámite) y HU-10 (naves por estado del trámite), sobre la rama
-`sprint-5` en `c858cb5` (código de Ismael) más las pruebas de QA de este bloque.
+`sprint-5`:
 
-**Estado: parcial.** Faltan la corrida de `TS05_Sprint5` en Katalon (Louis) y la regla
-de documentos obligatorios que pidió la PO (Ismael). Cuando estén, se agregan aquí
-`TS05_Sprint5-resumen.csv` y `TS05_Sprint5-JUnit.xml`, igual que en el Sprint 4.
+- **`c858cb5` (Ismael):** las dos historias.
+- **QA:** pruebas y casos de Katalon.
+- **Louis y Claude, el 13-10-2026:** las reglas que la PO agregó ese día (documentos
+  obligatorios, registro solo para el agente naviero y expediente de solo lectura) y la
+  corrección de SEC-08. Se hicieron así para poder presentar el sprint al día siguiente.
+
+**Estado:** Maven, cobertura, tamaño y Wfuzz son finales. En Katalon hay una corrida de
+12 de 12 (`TS05_Sprint5-resumen.csv` y `TS05_Sprint5-JUnit.xml`). **Falta la corrida con
+los 15 casos.**
 
 ## 1. Migración V6 (13-10-2026, base de desarrollo de Louis)
 
@@ -27,15 +33,36 @@ Después de la V6 (`./mvnw verify` la aplicó; `flyway_schema_history` versión 
 
 ## 2. Pruebas Maven (JUnit)
 
-`./mvnw verify` → **194/194 en verde**, `BUILD SUCCESS`.
+`./mvnw verify` → **205/205 en verde**, `BUILD SUCCESS` (versión final).
 
 | Clase | Pruebas | Autor |
 |---|---|---|
 | `EstadoTramiteTest` | 54 (7 transiciones válidas, 41 inválidas y reglas) | Ismael |
 | `AutorizacionTramiteTest` | 47 (matriz rol × acción × dueño) | Ismael |
-| `TramiteIntegrationTest` | 20 | Ismael |
+| `TramiteIntegrationTest` | 29: las 20 de Ismael más 9 de las reglas de la PO y SEC-08 | Ismael; Louis y Claude |
 | `TramiteInvariantesIntegrationTest` | 15 | QA (Louis) |
+| `ManejadorGlobalDeErroresTest` | 2 (red de seguridad de SEC-08) | Louis y Claude |
 | Resto (Sprints 1–4) | 58 | — |
+
+Las 9 pruebas nuevas de `TramiteIntegrationTest`:
+
+- **Documentos obligatorios:**
+  - sin documentos, 409 con los 4 `faltantes` en orden;
+  - el orden es el oficial aunque se carguen en otro orden;
+  - un documento `OBSERVADO` cuenta como faltante;
+  - Subsanar también exige los documentos y pasa al corregirlos.
+- **Expediente de solo lectura:**
+  - con el trámite Aprobado o Desistido, documentos, propietario y agente dan 409, y leer
+    sigue permitido;
+  - al que no es dueño se le sigue respondiendo 403.
+- **Registro:** solo el agente naviero registra naves; la DGMM y el auditor reciben 403
+  (issue #10).
+- **SEC-08:** un carácter nulo en la observación o en `lugarConstruccion` da 400.
+
+Además se corrigieron:
+
+- `sinParametroLaListaNoCambia` (issue #9): ahora mira solo la nave de la prueba.
+- `DocumentoIntegrationTest.idorConNavePropiaYDocumentoAjeno`: usa un segundo agente.
 
 `TramiteInvariantesIntegrationTest` cubre lo que pedía el plan de pruebas y no estaba:
 
@@ -59,8 +86,8 @@ No depende de los datos de demo: crea sus usuarios y naves, y `@Transactional` l
 
 | | Línea | Rama |
 |---|---|---|
-| Total (63 clases) | **90.7 %** (916/1010) | **81.9 %** (195/238) |
-| Paquete `tramite` | 96.3 % (233/242) | 91.2 % (103/113) |
+| Total (67 clases) | **91.1 %** (978/1074) | **81.2 %** (216/266) |
+| Paquete `tramite` | 96.6 % (259/268) | 91.6 % (109/119) |
 | Sprint 4 (referencia) | 88.2 % | 73.5 % |
 
 Se alcanza la meta de 80 % de rama propuesta para el Sprint 5.
@@ -71,12 +98,22 @@ Se alcanza la meta de 80 % de rama propuesta para el Sprint 5.
 
 | | Sprint 4 | Ahora |
 |---|---|---|
-| LOC (blank + comment + code) | 5,370 | **6,861** |
-| ELOC (code) | 3,843 | **4,839** |
+| LOC (blank + comment + code) | 5,370 | **7,111** |
+| ELOC (code) | 3,843 | **4,993** |
 
-Medición intermedia: la línea base oficial va en `qa/metricas/base-sprint-5.md` al cierre.
+La línea base completa está en `qa/metricas/base-sprint-5.md`.
 
-## 5. Katalon — `TS05_Sprint5` (por correr)
+## 5. Katalon — `TS05_Sprint5`
+
+| | |
+|---|---|
+| Corrida | 13-10-2026 23:14 (Louis, Katalon Studio) |
+| Casos corridos | 12 (TC-33, TC-38 y TC-39 aún con `isRun=false`) |
+| Resultado | **12/12 PASSED**, 12.209 s |
+| Archivos | `TS05_Sprint5-resumen.csv` y `TS05_Sprint5-JUnit.xml`, depurados como en el Sprint 4: sin pasos ni consola, porque el reporte completo registra la contraseña de demo (SEC-03) |
+
+**Pendiente:** correr TS05 con los 15 casos, ya activos en la suite, y TC-24 en TS04, que se
+ajustó. Las 15 aserciones se replicaron por HTTP contra la versión final: **15/15**.
 
 Mismo formato que TS04: casos por API, con los helpers al inicio de cada script.
 
@@ -104,25 +141,35 @@ Auxiliares (no van en la suite):
 - `TC_AUX_Nave_Con_Documentos`: nave con los 4 documentos obligatorios.
 
 TC-31 y TC-32 cargan los 4 documentos antes de admitir, así que pasan antes y después de
-la regla nueva. **TC-33, TC-38 y TC-39 van con `isRun=false`** hasta que Ismael suba las
-reglas; se confirmó que hoy fallan por la razón esperada (la DGMM registra con 201; se carga
-un documento con el trámite Aprobado con 201).
+la regla nueva.
+
+TC-33, TC-38 y TC-39 se activaron cuando las reglas quedaron implementadas, y TS05 queda
+con 15 casos activos. Antes de implementarlas se confirmó que fallaban por la razón
+esperada: la DGMM registraba con 201 y se cargaba un documento con el trámite Aprobado con
+201. TC-39 verifica el **mensaje** de solo lectura y no solo el 409, porque un 409 por otra
+regla (la participación del propietario) no prueba que el expediente esté cerrado.
 
 **TC-24 (`TC_HU08_04_Descarga_Nave_Ajena`, Sprint 4) se ajustó:** el "otro usuario" que
 registra una nave para probar el IDOR ahora es un segundo agente (`TC_AUX_Crear_Segundo_Agente`)
 y no `revisor@`, que con la regla de TC-38 ya no podrá registrar. Verificado hoy: 403 / 404 / 403.
 
-**Réplica previa sin Katalon** (13-10-2026): las aserciones de los 12 casos activos se
-replicaron por HTTP contra `localhost:8080`, con resultado **12/12**. Esto no reemplaza
-la corrida de Katalon: solo confirma que lo esperado coincide con el comportamiento actual.
+**Réplica sin Katalon** (13-10-2026): las aserciones se replicaron por HTTP contra
+`localhost:8080`, con dos resultados:
+
+- **12/12** con el código de Ismael;
+- **15/15** con la versión final, incluidos TC-33, TC-38 y TC-39.
+
+Esto no reemplaza la corrida de Katalon: solo confirma que lo esperado coincide con el
+comportamiento actual.
 
 ## 6. Hallazgos de este bloque
 
 | # | Hallazgo | Tipo | Estado |
 |---|---|---|---|
-| 1 | La DGMM puede registrar una nave y luego admitirla y aprobarla ella misma (reproducido: nave 291, historial `PRESENTAR` / `ADMITIR` / `APROBAR`, todo por `revisor@`). `POST /api/naves` no exige el rol `AGENTE_NAVIERO`. | Regla de negocio (D1) | Issue #10 (Ismael); PO (13-10): solo el agente registra; TC-38 |
-| 2 | `TramiteIntegrationTest.sinParametroLaListaNoCambia` exige que todas las naves de `agente@` estén en `REGISTRADA`: depende de los datos de la base (mismo patrón que el issue #4). | Defecto de prueba | Issue #9 (Ismael) |
-| 3 | Criterio de documentos obligatorios (PO, 13-10-2026) sin implementar. | Pendiente | Ismael; TC-33 |
-| 6 | Con el trámite Aprobado, Rechazado o Desistido, el agente aún cambia documentos, propietarios y agente residente. PO (13-10): solo lectura, 409. | Pendiente | Ismael; TC-39 |
-| 4 | Con la regla de documentos, casi todo `TramiteIntegrationTest` (admite naves sin documentos) pasará a dar 409. Con la de registro, `DocumentoIntegrationTest:296` (registra una nave con `REVISOR`) fallará. | Riesgo | Ismael |
+| 1 | La DGMM puede registrar una nave y luego admitirla y aprobarla ella misma (reproducido: nave 291, historial `PRESENTAR` / `ADMITIR` / `APROBAR`, todo por `revisor@`). `POST /api/naves` no exige el rol `AGENTE_NAVIERO`. | Regla de negocio (D1) | **Corregido** (issue #10): solo el agente registra; TC-38 |
+| 2 | `TramiteIntegrationTest.sinParametroLaListaNoCambia` exige que todas las naves de `agente@` estén en `REGISTRADA`: depende de los datos de la base (mismo patrón que el issue #4). | Defecto de prueba | **Corregido** (issue #9) |
+| 3 | Criterio de documentos obligatorios (PO, 13-10-2026). | Regla nueva | **Implementado**; TC-33 |
+| 6 | Con el trámite Aprobado, Rechazado o Desistido, el agente aún cambiaba documentos, propietarios y agente residente. PO (13-10): solo lectura, 409. | Regla nueva | **Implementado**; TC-39 |
+| 4 | Con las reglas nuevas, `TramiteIntegrationTest` y `DocumentoIntegrationTest` iban a fallar: admitían naves sin documentos y registraban una nave con `REVISOR`. | Riesgo | **Resuelto**: las pruebas cargan el expediente completo y usan un segundo agente |
+| 7 | SEC-08: carácter nulo en los textos (500). Ver `seguridad/evidencia-sprint5.md`. | Seguridad | **Corregido**; Wfuzz final con 0 respuestas 500 |
 | 5 | En la respuesta del cambio de estado, `creadoEn` viene en UTC (`Z`) y `actualizadoEn` en hora local (`-05:00`). | Menor (cosmético) | Informativo |
