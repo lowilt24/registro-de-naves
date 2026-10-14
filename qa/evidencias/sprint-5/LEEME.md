@@ -9,9 +9,8 @@ HU-09 (estado del trámite) y HU-10 (naves por estado del trámite), sobre la ra
   obligatorios, registro solo para el agente naviero y expediente de solo lectura) y la
   corrección de SEC-08. Se hicieron así para poder presentar el sprint al día siguiente.
 
-**Estado:** Maven, cobertura, tamaño y Wfuzz son finales. En Katalon hay una corrida de
-12 de 12 (`TS05_Sprint5-resumen.csv` y `TS05_Sprint5-JUnit.xml`). **Falta la corrida con
-los 15 casos.**
+**Estado: final.** Maven, cobertura, tamaño, Wfuzz y Katalon (TS05 15/15 y regresión de
+TS04 8/8).
 
 ## 1. Migración V6 (13-10-2026, base de desarrollo de Louis)
 
@@ -105,15 +104,26 @@ La línea base completa está en `qa/metricas/base-sprint-5.md`.
 
 ## 5. Katalon — `TS05_Sprint5`
 
-| | |
-|---|---|
-| Corrida | 13-10-2026 23:14 (Louis, Katalon Studio) |
-| Casos corridos | 12 (TC-33, TC-38 y TC-39 aún con `isRun=false`) |
-| Resultado | **12/12 PASSED**, 12.209 s |
-| Archivos | `TS05_Sprint5-resumen.csv` y `TS05_Sprint5-JUnit.xml`, depurados como en el Sprint 4: sin pasos ni consola, porque el reporte completo registra la contraseña de demo (SEC-03) |
+| Suite | Corrida | Casos | Resultado | Archivos |
+|---|---|---:|---|---|
+| `TS05_Sprint5` | 14-10-2026 00:02 | 15 | **15/15 PASSED** (11.17 s) | `TS05_Sprint5-resumen.csv`, `TS05_Sprint5-JUnit.xml` |
+| `TS04_Sprint4` (regresión, con el TC-24 ajustado) | 13-10-2026 23:42 | 8 | **8/8 PASSED** | `TS04_Sprint4-resumen.csv`, `TS04_Sprint4-JUnit.xml` |
 
-**Pendiente:** correr TS05 con los 15 casos, ya activos en la suite, y TC-24 en TS04, que se
-ajustó. Las 15 aserciones se replicaron por HTTP contra la versión final: **15/15**.
+Las corrió Louis en Katalon Studio. Los archivos están depurados como en el Sprint 4: sin
+pasos ni consola, porque el reporte completo registra la contraseña de demo (SEC-03).
+
+**Corridas anteriores (no son la evidencia final):**
+
+- **13-10 a las 23:14 y 23:43: 12/12.** TC-33, TC-38 y TC-39 no corrieron. En la de las
+  23:43, Katalon Studio tenía abierta la versión vieja de la suite y **la guardó encima de
+  la nueva**, devolviendo esos tres casos a `isRun=false`. Se restauró desde git.
+  *Lección:* antes de correr una suite que cambió en el disco, cerrar sus pestañas sin
+  guardar y refrescar el proyecto.
+- **13-10 a las 23:57: 14/15.** Falló TC-38 por un defecto del caso, no de la aplicación:
+  los dos registros dieron 403, pero el caso además exigía que la DGMM no tuviera ninguna
+  nave con ese prefijo de nombre, y en la base había una creada antes de la regla. Se
+  corrigió para comparar el total de naves de cada usuario antes y después del intento. La
+  corrida siguiente dio 15/15.
 
 Mismo formato que TS04: casos por API, con los helpers al inicio de cada script.
 

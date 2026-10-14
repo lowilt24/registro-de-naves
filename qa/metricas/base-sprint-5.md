@@ -13,18 +13,13 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
 | ELOC | **4,993** | 3,843 |
 | Cobertura de líneas (JaCoCo) | **91.1 %** (978 de 1,074 líneas) | 88.2 % |
 | Cobertura de ramas (JaCoCo), adicional | **81.2 %** (216 de 266 ramas) | 73.5 % |
-| Casos de prueba pasados: Katalon (TS05) | **12 de 12** (100 %)\* | 8 de 8 (TS04) |
+| Casos de prueba pasados: Katalon (TS05) | **15 de 15** (100 %); regresión de TS04: 8 de 8 | 8 de 8 (TS04) |
 | Casos de prueba pasados: Maven (JUnit) | **205 de 205** (100 %) | 58 de 58 |
 | Defectos encontrados | **2** (#9, #10) | 4 |
 | Defectos abiertos | **0** | 2 |
 | Densidad de defectos (encontrados) | **0.40** por KELOC (2 ÷ 4.993) | 1.04 |
 | Densidad de defectos (abiertos) | **0.00** por KELOC | 0.52 |
 | Vulnerabilidades encontradas (Wfuzz) | **1** (SEC-08), corregida; corrida final: **0** respuestas 500 | 0 |
-
-\* La corrida de Katalon del 13-10-2026 a las 23:14 tuvo 12 casos: TC-33, TC-38 y TC-39
-estaban con `isRun=false` porque sus reglas aún no existían. **Falta la corrida con los 15
-casos** (y la de TC-24 en TS04, que se ajustó en este sprint). Las 15 aserciones ya se
-replicaron por HTTP contra la versión final: 15 de 15.
 
 **Cómo se obtuvo cada cifra**
 
@@ -43,8 +38,12 @@ replicaron por HTTP contra la versión final: 15 de 15.
 
 | Suite | Historias | Casos | Pasados | Corrida |
 |---|---|---:|---:|---|
-| `TS05_Sprint5` | HU-09, HU-10 (y HU-03: TC-38) | 15 | 12 de 12 corridos | 13-10-2026 23:14 (evidencia en `qa/evidencias/sprint-5/`) |
-| `TS01`–`TS04` | HU-01 a HU-08 | 28 | 28 | Sprint 4 (sin cambios, salvo TC-24) |
+| `TS05_Sprint5` | HU-09, HU-10 (y HU-03: TC-38) | 15 | 15 | 14-10-2026 00:02 (evidencia en `qa/evidencias/sprint-5/`) |
+| `TS04_Sprint4` | HU-07, HU-08 (regresión; TC-24 ajustado) | 8 | 8 | 13-10-2026 23:42 (evidencia en `qa/evidencias/sprint-5/`) |
+| `TS01`–`TS03` | HU-01 a HU-06 | 20 | 20 | Sprint 4 (sin cambios) |
+
+Antes de la corrida final hubo corridas de 12/12 y una de 14/15, en la que falló un caso por
+un defecto del propio caso. El detalle está en `qa/evidencias/sprint-5/LEEME.md`.
 
 ## Registro de defectos
 

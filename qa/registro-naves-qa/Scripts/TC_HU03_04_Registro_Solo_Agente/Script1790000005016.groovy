@@ -97,13 +97,17 @@ String dgmm = iniciarSesion('revisor@navesitas.pa')
 String auditor = iniciarSesion('auditor@navesitas.pa')
 String agente = iniciarSesion('agente@navesitas.pa')
 
+// Se compara el total de naves de cada usuario antes y despues del intento,
+// sin depender de lo que ya haya en la base (la DGMM pudo registrar naves
+// antes de que existiera la regla).
 for (String cookie : [dgmm, auditor]) {
+    int antes = json(consultar(cookie, '/api/naves')).size()
     ResponseObject r = registrarNave(cookie, 'Registro No Agente')
     println('No agente: ' + r.getStatusCode() + ' ' + r.getResponseBodyContent())
     WS.verifyResponseStatusCode(r, 403)
+    WS.verifyEqual(json(r).mensaje, 'Solo un agente naviero puede registrar naves.')
+    WS.verifyEqual(json(consultar(cookie, '/api/naves')).size(), antes)
 }
-// Ninguna de las dos quedo registrada: el conteo de la DGMM sigue igual de vacio.
-WS.verifyEqual(json(consultar(dgmm, '/api/naves?estado=SOLICITUD_PRESENTADA'))*.nombre.findAll { it.startsWith('Registro No Agente') }, [])
 
 // Control: el agente si registra.
 WS.verifyResponseStatusCode(registrarNave(agente, 'Registro Agente'), 201)
