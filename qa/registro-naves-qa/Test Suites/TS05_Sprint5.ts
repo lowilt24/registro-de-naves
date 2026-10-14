@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestSuiteEntity>
-   <description>Casos de calidad del Sprint 5: HU-09 (estado del tramite) y HU-10 (naves por estado del tramite). TC-25 a TC-37. TC-33 (documentos obligatorios) queda con isRun=false hasta que exista la regla.</description>
+   <description>Casos de calidad del Sprint 5: HU-09 (estado del tramite) y HU-10 (naves por estado del tramite). TC-25 a TC-39. TC-33 (documentos obligatorios), TC-38 (solo el agente registra) y TC-39 (expediente final de solo lectura) quedan con isRun=false hasta que existan las reglas.</description>
    <name>TS05_Sprint5</name>
    <tag></tag>
    <isRerun>false</isRerun>
@@ -102,6 +102,20 @@
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/TC_HU10_04_Sin_Resultados_Y_Aislamiento</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>3722435c-774a-52f1-8fe2-aab831d152d4</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU03_04_Registro_Solo_Agente</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>6f69a04e-fe81-54e0-91ba-032b3497cd25</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU09_10_Expediente_Final_Solo_Lectura</testCaseId>
       <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
    </testCaseLink>
 </TestSuiteEntity>

@@ -95,6 +95,8 @@ Mismo formato que TS04: casos por API, con los helpers al inicio de cada script.
 | TC-35 | `TC_HU10_02_Conteo_Por_Estado` | HU-10 | 6 estados, suma = total, cada número = filtro | 200 |
 | TC-36 | `TC_HU10_03_Estado_Invalido_400` | HU-10 | `VOLANDO`, minúsculas, numérico, inyección, `REGISTRADA` | 400 |
 | TC-37 | `TC_HU10_04_Sin_Resultados_Y_Aislamiento` | HU-10 | Agente nuevo con todo en cero; aislamiento entre agentes | 200 |
+| TC-38 | `TC_HU03_04_Registro_Solo_Agente` | HU-03/09 | Decisión de la PO: la DGMM y el auditor no registran naves | 403 |
+| TC-39 | `TC_HU09_10_Expediente_Final_Solo_Lectura` | HU-09 | Decisión de la PO: con el trámite Aprobado o Desistido no se cargan documentos, propietarios ni agente | 409 |
 
 Auxiliares (no van en la suite):
 
@@ -102,7 +104,13 @@ Auxiliares (no van en la suite):
 - `TC_AUX_Nave_Con_Documentos`: nave con los 4 documentos obligatorios.
 
 TC-31 y TC-32 cargan los 4 documentos antes de admitir, así que pasan antes y después de
-la regla nueva. **TC-33 va con `isRun=false`** hasta que Ismael suba la regla.
+la regla nueva. **TC-33, TC-38 y TC-39 van con `isRun=false`** hasta que Ismael suba las
+reglas; se confirmó que hoy fallan por la razón esperada (la DGMM registra con 201; se carga
+un documento con el trámite Aprobado con 201).
+
+**TC-24 (`TC_HU08_04_Descarga_Nave_Ajena`, Sprint 4) se ajustó:** el "otro usuario" que
+registra una nave para probar el IDOR ahora es un segundo agente (`TC_AUX_Crear_Segundo_Agente`)
+y no `revisor@`, que con la regla de TC-38 ya no podrá registrar. Verificado hoy: 403 / 404 / 403.
 
 **Réplica previa sin Katalon** (13-10-2026): las aserciones de los 12 casos activos se
 replicaron por HTTP contra `localhost:8080`, con resultado **12/12**. Esto no reemplaza
@@ -112,8 +120,9 @@ la corrida de Katalon: solo confirma que lo esperado coincide con el comportamie
 
 | # | Hallazgo | Tipo | Estado |
 |---|---|---|---|
-| 1 | La DGMM puede registrar una nave y luego admitirla y aprobarla ella misma (reproducido: nave 291, historial `PRESENTAR` / `ADMITIR` / `APROBAR`, todo por `revisor@`). `POST /api/naves` no exige el rol `AGENTE_NAVIERO`. | Regla de negocio (D1) | Para la PO / Ismael |
+| 1 | La DGMM puede registrar una nave y luego admitirla y aprobarla ella misma (reproducido: nave 291, historial `PRESENTAR` / `ADMITIR` / `APROBAR`, todo por `revisor@`). `POST /api/naves` no exige el rol `AGENTE_NAVIERO`. | Regla de negocio (D1) | Issue #10 (Ismael); PO (13-10): solo el agente registra; TC-38 |
 | 2 | `TramiteIntegrationTest.sinParametroLaListaNoCambia` exige que todas las naves de `agente@` estén en `REGISTRADA`: depende de los datos de la base (mismo patrón que el issue #4). | Defecto de prueba | Issue #9 (Ismael) |
-| 3 | Criterio de documentos obligatorios (PO, 13-10-2026) sin implementar. | Pendiente | Ismael |
-| 4 | Con la nueva regla, casi todo `TramiteIntegrationTest` (admite naves sin documentos) pasará a dar 409. | Riesgo | Ismael |
+| 3 | Criterio de documentos obligatorios (PO, 13-10-2026) sin implementar. | Pendiente | Ismael; TC-33 |
+| 6 | Con el trámite Aprobado, Rechazado o Desistido, el agente aún cambia documentos, propietarios y agente residente. PO (13-10): solo lectura, 409. | Pendiente | Ismael; TC-39 |
+| 4 | Con la regla de documentos, casi todo `TramiteIntegrationTest` (admite naves sin documentos) pasará a dar 409. Con la de registro, `DocumentoIntegrationTest:296` (registra una nave con `REVISOR`) fallará. | Riesgo | Ismael |
 | 5 | En la respuesta del cambio de estado, `creadoEn` viene en UTC (`Z`) y `actualizadoEn` en hora local (`-05:00`). | Menor (cosmético) | Informativo |

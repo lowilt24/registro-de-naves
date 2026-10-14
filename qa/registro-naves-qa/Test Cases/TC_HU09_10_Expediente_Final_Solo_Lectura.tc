@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-39 HU-09 (decision de la PO del 13-10-2026): con el tramite Aprobado o Desistido el expediente es de solo lectura; cargar documentos, propietarios o agente responde 409. Activar en la suite cuando exista la regla.</description>
+   <name>TC_HU09_10_Expediente_Final_Solo_Lectura</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>50a7332b-1825-5ccf-9ca7-2bcfb7f3e032</testCaseGuid>
+</TestCaseEntity>
