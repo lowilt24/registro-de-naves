@@ -6,6 +6,7 @@ import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.common.ValidacionCampoException;
 import pa.amp.registro_naves.nave.AccesoNave;
 import pa.amp.registro_naves.nave.Nave;
+import pa.amp.registro_naves.tramite.TramiteService;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.math.BigDecimal;
@@ -20,15 +21,18 @@ public class PropietarioService {
     private final NavePropietarioRepository vinculos;
     private final UsuarioRepository usuarios;
     private final AccesoNave accesoNave;
+    private final TramiteService tramites;
 
     public PropietarioService(PropietarioRepository propietarios,
                               NavePropietarioRepository vinculos,
                               UsuarioRepository usuarios,
-                              AccesoNave accesoNave) {
+                              AccesoNave accesoNave,
+                              TramiteService tramites) {
         this.propietarios = propietarios;
         this.vinculos = vinculos;
         this.usuarios = usuarios;
         this.accesoNave = accesoNave;
+        this.tramites = tramites;
     }
 
     /** HU-05 — registrar un propietario y vincularlo a una nave propia. */
@@ -37,6 +41,8 @@ public class PropietarioService {
 
         // 404 si la nave no existe, 403 si es de otro usuario.
         Nave nave = accesoNave.exigirPropia(peticion.naveId(), correoUsuario);
+        // Sprint 5 (PO): con el tramite terminado el expediente es de solo lectura.
+        tramites.exigirExpedienteAbierto(nave.getId());
 
         // Regla condicional de HU-05: la sociedad necesita pais de constitucion.
         String paisConstitucion = limpiar(peticion.paisConstitucion());

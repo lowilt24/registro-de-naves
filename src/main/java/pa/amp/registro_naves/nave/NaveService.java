@@ -3,6 +3,7 @@ package pa.amp.registro_naves.nave;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pa.amp.registro_naves.common.AccesoDenegadoException;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.tramite.EstadoTramite;
@@ -64,6 +65,9 @@ public class NaveService {
      * Sprint 5 (D3): en la misma transaccion nace el tramite de la nave,
      * en SOLICITUD_PRESENTADA (P1: presentar equivale a registrar). Si algo
      * falla, no queda ni la nave ni el tramite.
+     *
+     * Sprint 5 (PO, issue #10): solo el agente naviero registra naves. Si la
+     * DGMM pudiera registrar, podria admitir y aprobar su propia solicitud.
      */
     @Transactional
     public NaveResponse registrar(NaveRequest peticion, String correoUsuario) {
@@ -71,6 +75,10 @@ public class NaveService {
         Usuario usuario = usuarios.findByCorreoIgnoreCase(correoUsuario)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se pudo identificar al usuario de la sesión."));
+
+        if (usuario.getRol() != Rol.AGENTE_NAVIERO) {
+            throw new AccesoDenegadoException("Solo un agente naviero puede registrar naves.");
+        }
 
         if (naves.existsByNombreNormalizado(Nave.normalizar(peticion.nombre()))) {
             throw new ReglaDeNegocioException(
@@ -103,13 +111,23 @@ public class NaveService {
         try {
             guardada = naves.saveAndFlush(nave);
         } catch (DataIntegrityViolationException ex) {
-            // Dos usuarios enviaron el mismo nombre casi al mismo tiempo.
-            throw new ReglaDeNegocioException(
-                    "Nombre no disponible. Ya existe una nave registrada con ese nombre.");
+            // Dos usuarios enviaron el mismo nombre casi al mismo tiempo. Solo
+            // ese choque es "nombre no disponible" (SEC-08: antes cualquier
+            // error de integridad respondia asi, con un mensaje enganoso).
+            if (esNombreDuplicado(ex)) {
+                throw new ReglaDeNegocioException(
+                        "Nombre no disponible. Ya existe una nave registrada con ese nombre.");
+            }
+            throw ex;
         }
 
         Tramite tramite = tramites.crearPara(guardada, usuario);
         return NaveResponse.de(guardada, tramite.getEstado());
+    }
+
+    private static boolean esNombreDuplicado(DataIntegrityViolationException ex) {
+        String detalle = ex.getMostSpecificCause().getMessage();
+        return detalle != null && detalle.contains("uk_nave_nombre_normalizado");
     }
 
     /** Solo las naves del usuario de la sesion. */

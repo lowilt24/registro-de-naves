@@ -1,5 +1,6 @@
 package pa.amp.registro_naves.common;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pa.amp.registro_naves.tramite.DocumentosFaltantesException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,9 +49,15 @@ public class ManejadorGlobalDeErrores {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> cuerpoIlegible(HttpMessageNotReadableException ex) {
+        // SEC-08: el lector de JSON rechaza el caracter nulo (TextoSinNulosConfig).
+        if (ex.getMostSpecificCause() instanceof TextoConCaracterNuloException) {
+            return ResponseEntity.badRequest().body(Map.of("mensaje", TEXTO_NO_PERMITIDO));
+        }
         return ResponseEntity.badRequest().body(Map.of(
                 "mensaje", "El cuerpo de la solicitud no tiene un formato válido."));
     }
+
+    static final String TEXTO_NO_PERMITIDO = "El texto contiene caracteres no permitidos.";
 
     @ExceptionHandler(ValidacionCampoException.class)
     public ResponseEntity<Map<String, Object>> campoInvalido(ValidacionCampoException ex) {
@@ -161,6 +169,41 @@ public class ManejadorGlobalDeErrores {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("mensaje",
                         "El trámite cambió mientras tanto. Recargue la página e intente de nuevo."));
+    }
+
+    /**
+     * PO, 13-10-2026: faltan documentos obligatorios para pasar a "En
+     * revision". La lista va aparte del mensaje, en el orden oficial.
+     */
+    @ExceptionHandler(DocumentosFaltantesException.class)
+    public ResponseEntity<Map<String, Object>> documentosFaltantes(DocumentosFaltantesException ex) {
+        Map<String, Object> cuerpo = new LinkedHashMap<>();
+        cuerpo.put("mensaje", ex.getMessage());
+        cuerpo.put("faltantes", ex.getFaltantes());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(cuerpo);
+    }
+
+    /**
+     * SEC-08, red de seguridad: un texto con caracter nulo que no paso por
+     * el lector de JSON (formulario, multipart) llega a PostgreSQL, que no
+     * acepta 0x00 (SQLState 22021). Es un dato invalido del cliente: 400,
+     * no 500. Cualquier otro error de integridad sigue siendo inesperado.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> integridad(DataIntegrityViolationException ex) {
+        if (esCaracterNoValido(ex)) {
+            return ResponseEntity.badRequest().body(Map.of("mensaje", TEXTO_NO_PERMITIDO));
+        }
+        return inesperado(ex);
+    }
+
+    static boolean esCaracterNoValido(Throwable ex) {
+        for (Throwable t = ex; t != null; t = t.getCause()) {
+            if (t instanceof java.sql.SQLException sql && "22021".equals(sql.getSQLState())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @ExceptionHandler(Exception.class)

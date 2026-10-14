@@ -6,6 +6,7 @@ import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.nave.AccesoNave;
 import pa.amp.registro_naves.nave.Nave;
+import pa.amp.registro_naves.tramite.TramiteService;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.util.List;
@@ -18,15 +19,18 @@ public class AgenteService {
     private final NavePropietarioRepository vinculos;
     private final UsuarioRepository usuarios;
     private final AccesoNave accesoNave;
+    private final TramiteService tramites;
 
     public AgenteService(AgenteResidenteRepository agentes,
                          NavePropietarioRepository vinculos,
                          UsuarioRepository usuarios,
-                         AccesoNave accesoNave) {
+                         AccesoNave accesoNave,
+                         TramiteService tramites) {
         this.agentes = agentes;
         this.vinculos = vinculos;
         this.usuarios = usuarios;
         this.accesoNave = accesoNave;
+        this.tramites = tramites;
     }
 
     /**
@@ -41,6 +45,8 @@ public class AgenteService {
     public AgenteResponse designar(Long naveId, AgenteRequest peticion, String correoUsuario) {
 
         Nave nave = accesoNave.exigirPropia(naveId, correoUsuario);
+        // Sprint 5 (PO): con el tramite terminado el expediente es de solo lectura.
+        tramites.exigirExpedienteAbierto(naveId);
 
         // Precondicion de HU-06.
         if (!vinculos.existsByNaveId(naveId)) {

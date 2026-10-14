@@ -144,8 +144,7 @@ async function ejecutarAccion(accion) {
     // 400 observacion, 403 rol o nave ajena, 409 transicion invalida o
     // cambio simultaneo. En 409 el estado pudo cambiar: se recarga.
     pintarErrores(datos, form);
-    mostrar($('aviso-tramite'), 'ocupado',
-      (datos && datos.mensaje) || 'No se pudo cambiar el estado del trámite.');
+    mostrar($('aviso-tramite'), 'ocupado', mensajeDeError(datos));
     if (estado === 409) {
       const aviso = $('aviso-tramite').textContent;
       await cargarTramite();
@@ -160,6 +159,20 @@ async function ejecutarAccion(accion) {
     accionEnCurso = false;
     $('botones-tramite').querySelectorAll('button').forEach(b => b.disabled = false);
   }
+}
+
+/**
+ * Sprint 5 (PO): el 409 de documentos faltantes trae la lista aparte.
+ * Se nombran como en la camara 5 (TIPOS_DOCUMENTO, de documentos.js).
+ */
+function mensajeDeError(datos) {
+  if (datos && Array.isArray(datos.faltantes) && datos.faltantes.length) {
+    const nombres = datos.faltantes.map(t =>
+      (TIPOS_DOCUMENTO.find(d => d.valor === t) || { nombre: t }).nombre);
+    return 'Faltan documentos obligatorios: ' + nombres.join(', ')
+         + '. Cárguelos en la sección Documentos antes de continuar.';
+  }
+  return (datos && datos.mensaje) || 'No se pudo cambiar el estado del trámite.';
 }
 
 // ---------------------------------------------------------------

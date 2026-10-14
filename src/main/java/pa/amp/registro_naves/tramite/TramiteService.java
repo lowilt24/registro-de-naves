@@ -5,6 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 import pa.amp.registro_naves.common.ReglaDeNegocioException;
 import pa.amp.registro_naves.common.ValidacionCampoException;
+import pa.amp.registro_naves.documento.Documento;
+import pa.amp.registro_naves.documento.DocumentoRepository;
+import pa.amp.registro_naves.documento.EstadoDocumento;
+import pa.amp.registro_naves.documento.TipoDocumento;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
 import pa.amp.registro_naves.tramite.TramiteDtos.CambioEstadoRequest;
@@ -16,9 +20,12 @@ import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * HU-09: estado del tramite. HU-10: conteo de las naves por estado.
@@ -28,7 +35,8 @@ import java.util.Map;
  *   404 la nave no existe
  *   403 el rol o la relacion con la nave no dan la accion
  *   409 la transicion no existe desde el estado actual
- *   400 falta la observacion obligatoria (P5, propuesta)
+ *   409 faltan documentos obligatorios para pasar a "En revision" (PO)
+ *   400 falta la observacion obligatoria (P5)
  * Un cuerpo mal formado (accion vacia o inventada) es 400 antes de todo,
  * porque falla al leerlo.
  */
@@ -40,17 +48,24 @@ public class TramiteService {
     private final NaveRepository naves;
     private final UsuarioRepository usuarios;
     private final AutorizacionTramite autorizacion;
+    private final DocumentoRepository documentos;
+
+    /** PO: un documento vigente cuenta si esta pendiente de revision o aprobado. */
+    private static final Set<EstadoDocumento> DOCUMENTO_PRESENTE =
+            EnumSet.of(EstadoDocumento.PENDIENTE, EstadoDocumento.APROBADO);
 
     public TramiteService(TramiteRepository tramites,
                           HistorialEstadoRepository historial,
                           NaveRepository naves,
                           UsuarioRepository usuarios,
-                          AutorizacionTramite autorizacion) {
+                          AutorizacionTramite autorizacion,
+                          DocumentoRepository documentos) {
         this.tramites = tramites;
         this.historial = historial;
         this.naves = naves;
         this.usuarios = usuarios;
         this.autorizacion = autorizacion;
+        this.documentos = documentos;
     }
 
     /**
@@ -98,6 +113,12 @@ public class TramiteService {
                                 ? "El trámite ya terminó (" + nombre(anterior) + "); no admite más cambios."
                                 : "No se puede " + AutorizacionTramite.frase(accion)
                                   + " cuando está en " + nombre(anterior) + "."));
+
+        // PO: admitir y subsanar llevan a "En revision"; las dos pasan por
+        // la misma regla de documentos obligatorios.
+        if (nuevo == EstadoTramite.EN_REVISION) {
+            exigirDocumentosObligatorios(nave.getId());           // 409
+        }
 
         String observacion = limpiar(peticion.observacion());
         if (accion.exigeObservacion() && observacion == null) {  // 400
@@ -154,6 +175,42 @@ public class TramiteService {
             estados.put(t.getNave().getId(), t.getEstado());
         }
         return estados;
+    }
+
+    /**
+     * PO (13-10-2026): no se pasa a "En revision" mientras falte alguno de
+     * TipoDocumento.OBLIGATORIOS. Cuenta un documento vigente en PENDIENTE
+     * o APROBADO; uno OBSERVADO (o cualquier estado futuro) es faltante:
+     * si no, se podria subsanar sin corregir justo lo observado.
+     */
+    public void exigirDocumentosObligatorios(Long naveId) {
+        Set<TipoDocumento> presentes = documentos.findByNaveIdAndVigenteTrue(naveId).stream()
+                .filter(d -> DOCUMENTO_PRESENTE.contains(d.getEstado()))
+                .map(Documento::getTipo)
+                .collect(Collectors.toSet());
+        List<TipoDocumento> faltantes = TipoDocumento.OBLIGATORIOS.stream()
+                .filter(t -> !presentes.contains(t))
+                .toList();
+        if (!faltantes.isEmpty()) {
+            throw new DocumentosFaltantesException(faltantes);
+        }
+    }
+
+    /**
+     * PO (13-10-2026): con el tramite Aprobado, Rechazado o Desistido el
+     * expediente es de solo lectura. Lo llaman las escrituras del expediente
+     * (documentos, propietarios, agente residente) despues de su control de
+     * acceso, para que a quien no es dueno se le responda 403 y no 409.
+     */
+    @Transactional(readOnly = true)
+    public void exigirExpedienteAbierto(Long naveId) {
+        tramites.findByNaveId(naveId)
+                .map(Tramite::getEstado)
+                .filter(EstadoTramite::esFinal)
+                .ifPresent(estado -> {
+                    throw new ReglaDeNegocioException("El trámite ya terminó (" + nombre(estado)
+                            + "); el expediente es de solo lectura.");
+                });
     }
 
     // ------------------------------------------------------------------

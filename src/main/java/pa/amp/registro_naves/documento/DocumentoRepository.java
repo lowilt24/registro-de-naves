@@ -30,6 +30,9 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long> {
 
     Optional<Documento> findByNaveIdAndTipoAndVigenteTrue(Long naveId, TipoDocumento tipo);
 
+    /** Sprint 5: los vigentes de la nave, para la regla de documentos obligatorios. */
+    List<Documento> findByNaveIdAndVigenteTrue(Long naveId);
+
     /** La descarga exige que el documento sea de la nave de la ruta (IDOR). */
     Optional<Documento> findByIdAndNaveId(Long id, Long naveId);
 }

@@ -13,6 +13,7 @@ import pa.amp.registro_naves.nave.AccesoNave;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.persona.AgenteResidenteRepository;
 import pa.amp.registro_naves.persona.NavePropietarioRepository;
+import pa.amp.registro_naves.tramite.TramiteService;
 import pa.amp.registro_naves.usuario.Usuario;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
@@ -40,19 +41,22 @@ public class DocumentoService {
     private final NavePropietarioRepository vinculos;
     private final AgenteResidenteRepository agentes;
     private final UsuarioRepository usuarios;
+    private final TramiteService tramites;
 
     public DocumentoService(DocumentoRepository documentos,
                             AlmacenArchivos almacen,
                             AccesoNave accesoNave,
                             NavePropietarioRepository vinculos,
                             AgenteResidenteRepository agentes,
-                            UsuarioRepository usuarios) {
+                            UsuarioRepository usuarios,
+                            TramiteService tramites) {
         this.documentos = documentos;
         this.almacen = almacen;
         this.accesoNave = accesoNave;
         this.vinculos = vinculos;
         this.agentes = agentes;
         this.usuarios = usuarios;
+        this.tramites = tramites;
     }
 
     // ------------------------------------------------------------------
@@ -63,6 +67,7 @@ public class DocumentoService {
      * El orden de las comprobaciones es parte del contrato
      * (CONTRATO-DOCUMENTOS.md) para que las pruebas sean deterministas:
      * 404/403 nave -> 400 campos -> 413 tamano -> 415 firma -> 409 precondicion.
+     * Sprint 5: la primera precondicion es que el tramite no haya terminado.
      * La sesion (401) la resuelve Spring Security antes de llegar aqui.
      */
     @Transactional
@@ -83,6 +88,9 @@ public class DocumentoService {
         if (!empiezaConFirmaPdf(archivo)) {
             throw new FormatoNoSoportadoException("El archivo no es un PDF valido.");
         }
+
+        // Sprint 5 (PO): con el tramite terminado el expediente es de solo lectura.
+        tramites.exigirExpedienteAbierto(naveId);
 
         // HU-07, criterio 8: precondicion encadenada con el Sprint 3.
         if (!vinculos.existsByNaveId(naveId)

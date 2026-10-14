@@ -6,10 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+import pa.amp.registro_naves.documento.DocumentoRepository;
+import pa.amp.registro_naves.documento.EstadoDocumento;
+import pa.amp.registro_naves.documento.TipoDocumento;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
 import pa.amp.registro_naves.usuario.Rol;
@@ -17,6 +22,7 @@ import pa.amp.registro_naves.usuario.Usuario;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,6 +30,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +60,8 @@ class TramiteIntegrationTest {
     @Autowired UsuarioRepository usuarios;
     @Autowired TramiteRepository tramites;
     @Autowired HistorialEstadoRepository historial;
+    @Autowired JdbcTemplate jdbc;
+    @Autowired DocumentoRepository documentos;
 
     Long nave;
 
@@ -68,6 +77,8 @@ class TramiteIntegrationTest {
             usuarios.save(otro);
         }
         nave = crearNave("Tramite Prueba", AGENTE);
+        // PO (13-10-2026): sin los 4 documentos obligatorios no se admite.
+        completarExpediente(nave, AGENTE);
     }
 
     // ------------------------------------------------------------------
@@ -314,6 +325,7 @@ class TramiteIntegrationTest {
     @Test
     void elFiltroSoloDevuelveNavesDelAgente() throws Exception {
         Long ajena = crearNave("Tramite Ajeno", OTRO_AGENTE);
+        completarExpediente(ajena, OTRO_AGENTE);
         accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
         accion(ajena, DGMM, "ADMITIR", null).andExpect(status().isOk());
 
@@ -329,6 +341,11 @@ class TramiteIntegrationTest {
            .andExpect(jsonPath("$[0].id").value(ajena));
     }
 
+    /**
+     * Issue #9: antes exigia que TODAS las naves de agente@ estuvieran en
+     * REGISTRADA y fallaba si la base de desarrollo tenia otra. Ahora mira
+     * solo la nave de la prueba: el estado de la nave no lo toca el tramite.
+     */
     @Test
     void sinParametroLaListaNoCambia() throws Exception {
         accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
@@ -337,12 +354,14 @@ class TramiteIntegrationTest {
         mvc.perform(get("/api/naves").with(user(AGENTE)))
            .andExpect(status().isOk())
            .andExpect(jsonPath("$", hasSize(todas)))
-           .andExpect(jsonPath("$[*].estado", everyItem(is("REGISTRADA"))));
+           .andExpect(jsonPath("$[?(@.id == " + nave + ")].estado", contains("REGISTRADA")))
+           .andExpect(jsonPath("$[?(@.id == " + nave + ")].estadoTramite", contains("EN_REVISION")));
     }
 
     @Test
     void elConteoCoincideConLasNaves() throws Exception {
         Long segunda = crearNave("Tramite Conteo", OTRO_AGENTE);
+        completarExpediente(segunda, OTRO_AGENTE);
         Long tercera = crearNave("Tramite Conteo B", OTRO_AGENTE);
         crearNave("Tramite Conteo C", OTRO_AGENTE);
         accion(segunda, DGMM, "ADMITIR", null).andExpect(status().isOk());
@@ -373,6 +392,160 @@ class TramiteIntegrationTest {
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$.mensaje").exists());
         }
+    }
+
+    // ------------------------------------------------------------------
+    // Reglas de la PO (13-10-2026) y SEC-08
+    // ------------------------------------------------------------------
+
+    @Test
+    void admitirSinDocumentosDa409ConLosFaltantesEnOrden() throws Exception {
+        Long sinDocs = crearNave("Tramite Sin Documentos", AGENTE);
+
+        accion(sinDocs, DGMM, "ADMITIR", null)
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.mensaje").value(
+                        "Faltan documentos obligatorios: CERTIFICADO_PROPIEDAD, PODER_NOTARIAL, ITC, SMC"))
+                .andExpect(jsonPath("$.faltantes", contains(
+                        "CERTIFICADO_PROPIEDAD", "PODER_NOTARIAL", "ITC", "SMC")));
+        assertThat(estado(sinDocs)).isEqualTo(EstadoTramite.SOLICITUD_PRESENTADA);
+        assertThat(historial.countByTramiteId(tramites.findByNaveId(sinDocs).orElseThrow().getId()))
+                .isEqualTo(1);
+    }
+
+    @Test
+    void losFaltantesSalenEnElOrdenOficialSinImportarElDeCarga() throws Exception {
+        Long parcial = crearNave("Tramite Parcial", AGENTE);
+        completarExpediente(parcial, AGENTE);
+        // Quedan vigentes solo SMC y CERTIFICADO_PROPIEDAD.
+        jdbc.update("UPDATE documentos SET vigente = false WHERE nave_id = ? AND tipo IN ('ITC', 'PODER_NOTARIAL')",
+                parcial);
+
+        accion(parcial, DGMM, "ADMITIR", null)
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.faltantes", contains("PODER_NOTARIAL", "ITC")));
+    }
+
+    @Test
+    void unDocumentoObservadoCuentaComoFaltante() throws Exception {
+        observar("ITC");
+
+        accion(nave, DGMM, "ADMITIR", null)
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.faltantes", contains("ITC")));
+    }
+
+    /** La misma regla en las dos transiciones que llevan a "En revision". */
+    @Test
+    void subsanarTambienExigeLosDocumentosYPasaAlCorregirlos() throws Exception {
+        accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
+        accion(nave, DGMM, "OBSERVAR", "El ITC no corresponde.").andExpect(status().isOk());
+        observar("ITC");
+
+        accion(nave, AGENTE, "SUBSANAR", null)
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.faltantes", contains("ITC")));
+        assertThat(estado(nave)).isEqualTo(EstadoTramite.OBSERVADA);
+
+        // El agente carga la version corregida (vigente, PENDIENTE) y subsana.
+        cargarDocumento(nave, AGENTE, "ITC").andExpect(status().isCreated());
+        accion(nave, AGENTE, "SUBSANAR", null)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estado").value("EN_REVISION"));
+    }
+
+    @Test
+    void conElTramiteTerminadoElExpedienteEsDeSoloLectura() throws Exception {
+        accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
+        accion(nave, DGMM, "APROBAR", null).andExpect(status().isOk());
+        verificarSoloLectura(nave, "Aprobada");
+
+        Long desistida = crearNave("Tramite Desistido", AGENTE);
+        completarExpediente(desistida, AGENTE);
+        accion(desistida, AGENTE, "DESISTIR", null).andExpect(status().isOk());
+        verificarSoloLectura(desistida, "Desistida");
+    }
+
+    /** Quien no es dueno sigue recibiendo 403, no se le cuenta que el tramite termino. */
+    @Test
+    void enUnExpedienteCerradoAjenoSigueSiendo403() throws Exception {
+        accion(nave, AGENTE, "DESISTIR", null).andExpect(status().isOk());
+        cargarDocumento(nave, OTRO_AGENTE, "ITC").andExpect(status().isForbidden());
+    }
+
+    /** Issue #10: si la DGMM registrara naves, podria aprobar su propia solicitud. */
+    @Test
+    void soloElAgenteNavieroRegistraNaves() throws Exception {
+        for (String usuario : new String[] {DGMM, AUDITOR}) {
+            String nombre = unico("No Agente");
+            mvc.perform(post("/api/naves").with(user(usuario))
+                            .contentType(MediaType.APPLICATION_JSON).content(naveJson(nombre)))
+               .andExpect(status().isForbidden())
+               .andExpect(jsonPath("$.mensaje").value("Solo un agente naviero puede registrar naves."));
+            assertThat(naves.findByNombreNormalizado(Nave.normalizar(nombre))).isEmpty();
+        }
+    }
+
+    /** SEC-08: el caracter nulo ya no llega a PostgreSQL (antes, 500). */
+    @Test
+    void unaObservacionConCaracterNuloEs400() throws Exception {
+        accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
+
+        accion(nave, DGMM, "OBSERVAR", "nulo\\u0000intermedio")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensaje").value("El texto contiene caracteres no permitidos."));
+        assertThat(estado(nave)).isEqualTo(EstadoTramite.EN_REVISION);
+    }
+
+    /** SEC-08: antes respondia 409 "Nombre no disponible", un mensaje enganoso. */
+    @Test
+    void unCampoDeLaNaveConCaracterNuloEs400() throws Exception {
+        String cuerpo = naveJson(unico("Nulo Lugar"))
+                .replace("Astillero de prueba", "Astillero\\u0000X");
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON).content(cuerpo))
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.mensaje").value("El texto contiene caracteres no permitidos."));
+    }
+
+    /**
+     * Por JPA y no por SQL: el documento ya esta en la sesion de esta
+     * transaccion y un UPDATE directo no se veria. (Que la DGMM observe
+     * documentos llega en el Sprint 6.)
+     */
+    private void observar(String tipo) {
+        var documento = documentos.findByNaveIdAndTipoAndVigenteTrue(nave, TipoDocumento.valueOf(tipo))
+                .orElseThrow();
+        documento.setEstado(EstadoDocumento.OBSERVADO);
+        documentos.saveAndFlush(documento);
+    }
+
+    private void verificarSoloLectura(Long naveId, String estado) throws Exception {
+        String mensaje = "El trámite ya terminó (" + estado + "); el expediente es de solo lectura.";
+        cargarDocumento(naveId, AGENTE, "ITC")
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.mensaje").value(mensaje));
+        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                               {"nombre": "Naviera Tarde S.A.", "tipo": "JURIDICA",
+                                "nacionalidad": "Panamena", "domicilio": "Calle 50",
+                                "paisConstitucion": "Panama", "naveId": %d, "porcentaje": 1}
+                               """.formatted(naveId)))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.mensaje").value(mensaje));
+        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                               {"nombre": "Bufete Tarde", "idoneidad": "IDN-1010",
+                                "telefono": "+507 200-1234", "correo": "tarde@bufete.com.pa"}
+                               """))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.mensaje").value(mensaje));
+        // Leer sigue permitido.
+        mvc.perform(get("/api/naves/" + naveId + "/documentos").with(user(AGENTE)))
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$", hasSize(4)));
     }
 
     // ------------------------------------------------------------------
@@ -429,5 +602,37 @@ class TramiteIntegrationTest {
                  "potenciaKw": 3100.00
                }
                """.formatted(nombre);
+    }
+
+    /**
+     * Deja la nave lista para pasar a "En revision": propietario, agente
+     * residente (precondicion de HU-07) y los 4 documentos obligatorios.
+     */
+    private void completarExpediente(Long naveId, String usuario) throws Exception {
+        mvc.perform(post("/api/propietarios").with(user(usuario))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                               {"nombre": "Naviera Tramite S.A.", "tipo": "JURIDICA",
+                                "nacionalidad": "Panamena", "domicilio": "Calle 50",
+                                "paisConstitucion": "Panama", "naveId": %d}
+                               """.formatted(naveId)))
+           .andExpect(status().isCreated());
+        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(usuario))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                               {"nombre": "Bufete Tramite", "idoneidad": "IDN-0909",
+                                "telefono": "+507 200-1234", "correo": "tramite@bufete.com.pa"}
+                               """))
+           .andExpect(status().isCreated());
+        for (TipoDocumento tipo : TipoDocumento.OBLIGATORIOS) {
+            cargarDocumento(naveId, usuario, tipo.name()).andExpect(status().isCreated());
+        }
+    }
+
+    private ResultActions cargarDocumento(Long naveId, String usuario, String tipo) throws Exception {
+        MockMultipartFile pdf = new MockMultipartFile("archivo", tipo.toLowerCase() + ".pdf",
+                "application/pdf", ("%PDF-1.4\n%" + tipo + "\n%%EOF\n").getBytes());
+        return mvc.perform(multipart("/api/naves/" + naveId + "/documentos")
+                .file(pdf).param("tipo", tipo).with(user(usuario)));
     }
 }
