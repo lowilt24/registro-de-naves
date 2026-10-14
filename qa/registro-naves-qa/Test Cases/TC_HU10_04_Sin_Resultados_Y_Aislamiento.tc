@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-37 HU-10: un agente sin naves recibe conteo en cero y listas vacias; cada agente ve solo sus naves.</description>
+   <name>TC_HU10_04_Sin_Resultados_Y_Aislamiento</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>5a6f965b-13ea-504f-86c2-697e9a665630</testCaseGuid>
+</TestCaseEntity>

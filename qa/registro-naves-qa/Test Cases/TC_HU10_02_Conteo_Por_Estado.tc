@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-35 HU-10: el conteo trae los 6 estados, suma el total de naves del agente y cada numero coincide con el filtro.</description>
+   <name>TC_HU10_02_Conteo_Por_Estado</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>2384a78f-97d1-5b62-9d5d-e996532c2f94</testCaseGuid>
+</TestCaseEntity>

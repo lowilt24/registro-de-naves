@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-34 HU-10: el filtro por estado del tramite devuelve solo las naves del agente en ese estado; sin filtro, la lista de siempre.</description>
+   <name>TC_HU10_01_Filtro_Por_Estado</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>aa7bfb09-4861-5b49-9fc7-399b56b6aa43</testCaseGuid>
+</TestCaseEntity>

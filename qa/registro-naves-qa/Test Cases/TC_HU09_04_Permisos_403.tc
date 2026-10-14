@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-28 HU-09: agente que aprueba o rechaza, DGMM que desiste y agente ajeno reciben 403; el estado no cambia.</description>
+   <name>TC_HU09_04_Permisos_403</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>04927228-810d-58b5-9e3c-0753cd8a3833</testCaseGuid>
+</TestCaseEntity>

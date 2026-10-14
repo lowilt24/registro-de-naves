@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-31 HU-09: admitir, observar (obligatoria la observacion), subsanar y aprobar; el historial registra cada paso con usuario, accion, estados y observacion.</description>
+   <name>TC_HU09_07_Flujo_Revision_Completo</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>46b40b50-e4dd-5f17-83a1-f6be6babbc79</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-29 HU-09: transicion fuera de la maquina (aprobar sin admitir, subsanar sin observar) responde 409 y no deja historial.</description>
+   <name>TC_HU09_05_Transicion_Invalida_409</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>b1272188-7af3-52b1-bf5c-a0461e6be36a</testCaseGuid>
+</TestCaseEntity>
