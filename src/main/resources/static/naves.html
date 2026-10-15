@@ -167,12 +167,20 @@
   </section>
 
   <!-- ============ Naves del usuario ============ -->
-  <section class="tarjeta">
+  <section class="tarjeta" id="seccion-mis-naves">
     <h3>Mis naves</h3>
-    <div class="tabla-desplazable">
+
+    <!-- HU-10: filtro por estado del tramite, con cuantas naves hay en cada uno.
+         Lo pinta naves.js con /api/naves/conteo-por-estado. -->
+    <div class="chips-filtro" id="filtro-estado" role="group"
+         aria-label="Filtrar por estado del trámite"></div>
+
+    <p class="vacio oculto" id="sin-resultados" role="status" aria-live="polite"></p>
+
+    <div class="tabla-desplazable" id="caja-lista-naves">
       <table class="apilable">
         <thead>
-          <tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Estado</th><th>Expediente</th></tr>
+          <tr><th>Nombre</th><th>Tipo</th><th>TRB</th><th>Estado de la nave</th><th>Estado del trámite</th><th>Expediente</th></tr>
         </thead>
         <tbody id="lista-naves"></tbody>
       </table>

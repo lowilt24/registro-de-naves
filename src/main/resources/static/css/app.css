@@ -630,8 +630,9 @@ table .enlace-fila { font-weight: 700; }
 
   #lista-naves td:nth-child(2)::before { content: "Tipo"; }
   #lista-naves td:nth-child(3)::before { content: "TRB"; }
-  #lista-naves td:nth-child(4)::before { content: "Estado"; }
-  #lista-naves td:nth-child(5)::before { content: "Expediente"; }
+  #lista-naves td:nth-child(4)::before { content: "Estado de la nave"; }
+  #lista-naves td:nth-child(5)::before { content: "Estado del trámite"; }
+  #lista-naves td:nth-child(6)::before { content: "Expediente"; }
   #lista-propietarios td:nth-child(2)::before { content: "Tipo"; }
   #lista-propietarios td:nth-child(3)::before { content: "Nacionalidad"; }
   #lista-propietarios td:nth-child(4)::before { content: "Participación"; }
@@ -723,6 +724,103 @@ input[type="file"] {
   #lista-documentos td:nth-child(5)::before { content: "Estado"; }
   #lista-documentos td:nth-child(6)::before { content: "Acción"; }
 }
+
+/* =====================================================================
+   Tramite (HU-09, HU-10): camara 6 y filtro por estado. Sprint 5.
+   Pendiente de visto bueno del equipo (el plan pide consultar antes de
+   agregar CSS para la linea de tiempo). Solo reutiliza tokens existentes.
+   ===================================================================== */
+
+/* Estado del tramite. Es otra forma que la etiqueta verde del estado de la
+   nave, para que "REGISTRADA" y "Aprobada" no se lean como el mismo dato.
+   Siempre con texto; el rojo queda para observada y rechazada, que son la
+   senal de alto del tramite. */
+.tramite-estado {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: var(--radio);
+  font-size: .8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.tramite-estado[data-estado="SOLICITUD_PRESENTADA"] { color: var(--tinta);       border-color: var(--filete-campo); background: var(--neutro-fondo); }
+.tramite-estado[data-estado="EN_REVISION"]          { color: var(--agua);        border-color: var(--agua);         background: var(--agua-clara); }
+.tramite-estado[data-estado="OBSERVADA"]            { color: var(--alto-tinta);  border-color: var(--alto);         background: var(--alto-fondo); }
+.tramite-estado[data-estado="APROBADA"]             { color: var(--siga-tinta);  border-color: var(--siga);         background: var(--siga-fondo); }
+.tramite-estado[data-estado="RECHAZADA"]            { color: var(--alto-tinta);  border-color: var(--alto);         background: var(--superficie); }
+.tramite-estado[data-estado="DESISTIDA"]            { color: var(--tinta-suave); border: 1px dashed var(--filete-campo); background: var(--hormigon-alto); }
+
+#tramite-actual th { width: 34%; color: var(--tinta-suave); font-weight: 600; }
+#tramite-actual .nota { margin: var(--e3) 0 0; }
+#form-tramite .campo { max-width: 40rem; }
+#nota-final { margin: var(--e3) 0 0; }
+
+/* La camara 6 se cruza cuando el tramite llega a un estado final. */
+#seccion-tramite[data-final="si"] .placa {
+  background: var(--agua);
+  border-color: var(--agua);
+  color: #fff;
+}
+
+/* Linea de tiempo: la mas reciente arriba, unida por un filete. */
+.linea-tiempo {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--e4);
+  border-left: 1px solid var(--filete);
+}
+.linea-tiempo > li { position: relative; padding: 0 0 var(--e4); }
+.linea-tiempo > li:last-child { padding-bottom: 0; }
+.linea-tiempo > li::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * var(--e4) - 5px);
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--muro);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+.linea-tiempo > li:first-child::before { background: var(--agua); border-color: var(--agua); }
+.linea-tiempo > li.vacio::before { display: none; }
+.linea-tiempo p { margin: 0; }
+.linea-encabezado { display: flex; flex-wrap: wrap; gap: var(--e1) var(--e3); align-items: baseline; }
+.linea-encabezado time { font-size: .9375rem; color: var(--tinta-suave); }
+.linea-detalle { margin-top: var(--e1) !important; font-size: .9375rem; }
+.linea-observacion {
+  margin-top: var(--e2) !important;
+  padding: var(--e2) var(--e3);
+  background: var(--hormigon-alto);
+  border-radius: var(--radio);
+  font-size: .9375rem;
+  max-width: 64ch;
+}
+
+/* HU-10: chips de filtro. Son botones que se activan con aria-pressed. */
+.chips-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin-bottom: var(--e3);
+}
+.chips-filtro:empty { display: none; }
+button.chip {
+  min-height: var(--alto-control);
+  padding: 0 var(--e3);
+  background: var(--superficie);
+  color: var(--tinta);
+  border: 1px solid var(--filete-campo);
+  font-weight: 600;
+}
+button.chip:hover:not(:disabled) { background: var(--hormigon-alto); border-color: var(--tinta); color: var(--tinta); }
+button.chip[aria-pressed="true"],
+button.chip[aria-pressed="true"]:hover { background: var(--agua); border-color: var(--agua); color: #fff; }
+button.chip .cifra { font-weight: 700; margin-left: var(--e1); }
+
+#sin-resultados { padding: var(--e3) 0 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }

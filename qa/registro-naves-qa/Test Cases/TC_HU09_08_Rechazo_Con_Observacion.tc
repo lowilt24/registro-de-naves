@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-32 HU-09: rechazar exige observacion (400 sin ella); Rechazada es final.</description>
+   <name>TC_HU09_08_Rechazo_Con_Observacion</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>db63981b-8306-55f7-acad-15803308f2f2</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-33 HU-09 (criterio de la PO del 13-10-2026): admitir o subsanar con documentos obligatorios faltantes responde 409 con la lista ordenada. Activo desde el 13-10-2026.</description>
+   <name>TC_HU09_09_Admitir_Sin_Documentos</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>6148db06-4b5e-5985-9045-b738247388a4</testCaseGuid>
+</TestCaseEntity>

@@ -108,13 +108,16 @@ WS.verifyResponseStatusCode(propia, 200)
 assert propia.getResponseBodyContent().startsWith('%PDF-') : 'La descarga no devolvio un PDF'
 
 // --- Otro usuario ---
-String cookieAjeno = iniciarSesion('revisor@navesitas.pa')
-assert cookieAjeno : 'No se pudo iniciar sesion con revisor@navesitas.pa'
+// Sprint 5: otro AGENTE_NAVIERO, no revisor@. Desde la decision de la PO
+// del 13-10-2026 solo el agente naviero registra naves, y el paso b)
+// necesita que el otro usuario tenga una nave propia.
+def otro = WebUI.callTestCase(findTestCase('Test Cases/TC_AUX_Crear_Segundo_Agente'), [:], FailureHandling.STOP_ON_FAILURE)
+String cookieAjeno = otro.cookie
 
 // a) por la ruta de la nave duena
 WS.verifyResponseStatusCode(consultar(cookieAjeno, rutaArchivo), 403)
 
-// b) IDOR: el revisor registra una nave suya y cuelga de ella el id ajeno
+// b) IDOR: el otro agente registra una nave suya y cuelga de ella el id ajeno
 RequestObject naveRevisor = new RequestObject('naveRevisor')
 naveRevisor.setRestUrl(base + '/api/naves')
 naveRevisor.setRestRequestMethod('POST')

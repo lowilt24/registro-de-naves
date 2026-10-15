@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pa.amp.registro_naves.tramite.EstadoTramite;
+import pa.amp.registro_naves.tramite.TramiteDtos.ConteoPorEstadoResponse;
+import pa.amp.registro_naves.tramite.TramiteService;
 
 import java.util.List;
 
@@ -15,9 +18,11 @@ import java.util.List;
 public class NaveController {
 
     private final NaveService servicio;
+    private final TramiteService tramites;
 
-    public NaveController(NaveService servicio) {
+    public NaveController(NaveService servicio, TramiteService tramites) {
         this.servicio = servicio;
+        this.tramites = tramites;
     }
 
     /** HU-04 — GET /api/naves/disponibilidad?nombre=... */
@@ -37,9 +42,21 @@ public class NaveController {
         return servicio.registrar(peticion, autenticacion.getName());
     }
 
+    /**
+     * Naves del usuario. HU-10: ?estado=EN_REVISION filtra por el estado
+     * del tramite; es opcional y sin el la respuesta no cambia. Un estado
+     * que no existe es 400 (MethodArgumentTypeMismatchException), nunca 500.
+     */
     @GetMapping
-    public List<NaveResponse> listar(Authentication autenticacion) {
-        return servicio.listarPropias(autenticacion.getName());
+    public List<NaveResponse> listar(@RequestParam(name = "estado", required = false) EstadoTramite estado,
+                                     Authentication autenticacion) {
+        return servicio.listarPropias(autenticacion.getName(), estado);
+    }
+
+    /** HU-10 — cuantas naves del usuario hay en cada estado del tramite. */
+    @GetMapping("/conteo-por-estado")
+    public ConteoPorEstadoResponse conteoPorEstado(Authentication autenticacion) {
+        return tramites.contarPorEstado(autenticacion.getName());
     }
 
     @GetMapping("/{id}")

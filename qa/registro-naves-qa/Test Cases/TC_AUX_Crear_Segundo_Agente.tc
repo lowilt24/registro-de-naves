@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Auxiliar Sprint 5 (no va en suites): registra un AGENTE_NAVIERO nuevo, valida su correo con el enlace de Mailpit e inicia sesion. Devuelve [correo, cookie].</description>
+   <name>TC_AUX_Crear_Segundo_Agente</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>817c6d88-2485-5145-b309-78ed56a64c98</testCaseGuid>
+</TestCaseEntity>

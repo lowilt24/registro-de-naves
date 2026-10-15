@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-27 HU-09: sin sesion 401; nave inexistente 404.</description>
+   <name>TC_HU09_03_Sin_Sesion_E_Inexistente</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>18aefb88-921f-5662-92fb-0457bb63490e</testCaseGuid>
+</TestCaseEntity>

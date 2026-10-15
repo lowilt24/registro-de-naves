@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
+import pa.amp.registro_naves.usuario.Rol;
+import pa.amp.registro_naves.usuario.Usuario;
+import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,6 +50,7 @@ class DocumentoIntegrationTest {
     @Autowired NaveRepository naves;
     @Autowired AlmacenArchivos almacen;
     @Autowired DocumentoRepository documentos;
+    @Autowired UsuarioRepository usuarios;
 
     /** Nave con propietario y agente: cumple la precondicion de HU-07. */
     Long nave;
@@ -285,17 +289,30 @@ class DocumentoIntegrationTest {
     }
 
     /**
-     * TC-24, IDOR: el revisor tiene una nave propia y pide el documento
+     * TC-24, IDOR: otro agente tiene una nave propia y pide el documento
      * ajeno colgado de ella. Pasa el control de la nave, pero el documento
      * no es de esa nave: 404.
+     *
+     * Sprint 5: el "otro" es un segundo agente y no el revisor, porque desde
+     * el issue #10 la DGMM no registra naves.
      */
     @Test
     void idorConNavePropiaYDocumentoAjeno() throws Exception {
         Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)))
                 .andReturn());
-        Long naveDelRevisor = crearNave("Nave Del Revisor Docs", REVISOR);
+        String otro = "otro.agente.docs@navesitas.pa";
+        if (!usuarios.existsByCorreoIgnoreCase(otro)) {
+            Usuario u = new Usuario();
+            u.setCorreo(otro);
+            u.setPasswordHash("!solo-pruebas");
+            u.setNombreCompleto("Otro Agente Documentos");
+            u.setRol(Rol.AGENTE_NAVIERO);
+            u.setCorreoValidado(true);
+            usuarios.save(u);
+        }
+        Long naveDelOtro = crearNave("Nave Del Otro Agente Docs", otro);
 
-        mvc.perform(get(rutaArchivo(naveDelRevisor, id)).with(user(REVISOR)))
+        mvc.perform(get(rutaArchivo(naveDelOtro, id)).with(user(otro)))
            .andExpect(status().isNotFound());
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-25 HU-09/HU-03: registrar la nave crea su tramite en Solicitud presentada con una entrada inicial en el historial.</description>
+   <name>TC_HU09_01_Tramite_Nace_Al_Registrar</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>8a9bc76b-60c9-5d13-b42c-394f0b2dc1bf</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-26 HU-09: cada rol recibe solo las acciones que le tocan en Solicitud presentada; el auditor solo lee.</description>
+   <name>TC_HU09_02_Acciones_Por_Rol</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>aae91b32-e0c9-5740-85ce-c81eb7a478e0</testCaseGuid>
+</TestCaseEntity>

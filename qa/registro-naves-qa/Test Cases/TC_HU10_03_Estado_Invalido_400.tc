@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-36 HU-10: un estado invalido en el filtro responde 400 con mensaje, nunca 500.</description>
+   <name>TC_HU10_03_Estado_Invalido_400</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>3be168bb-0b21-5296-af46-9c5986fdcb41</testCaseGuid>
+</TestCaseEntity>

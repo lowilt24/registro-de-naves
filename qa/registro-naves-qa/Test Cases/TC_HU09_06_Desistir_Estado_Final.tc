@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-30 HU-09: el agente desiste desde Solicitud presentada; Desistida es final y rechaza cualquier accion con 409.</description>
+   <name>TC_HU09_06_Desistir_Estado_Final</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>ce05b6fa-51ae-5aa2-8844-096f487face4</testCaseGuid>
+</TestCaseEntity>

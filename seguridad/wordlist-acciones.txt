@@ -1,0 +1,22 @@
+ADMITIR
+OBSERVAR
+APROBAR
+RECHAZAR
+SUBSANAR
+DESISTIR
+PRESENTAR
+MIGRACION
+admitir
+Aprobar
+ APROBAR
+VOLAR
+APROBAR
+APROBAR\u0000
+' OR '1'='1
+'; DROP TABLE historial_estados;--
+<script>alert(1)</script>
+${jndi:ldap://127.0.0.1/x}
+","accion":"APROBAR
+\"
+\\
+0
