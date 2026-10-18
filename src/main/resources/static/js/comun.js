@@ -11,17 +11,32 @@ function escapar(texto) {
   return d.innerHTML;
 }
 
+/** Lee el valor de una cookie por su nombre (SEC-05). */
+function getCookie(nombre) {
+  const match = document.cookie.match(new RegExp('(^| )' + nombre + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 /**
  * Llama a la API y normaliza el resultado.
  * Si el servidor responde 401 manda al login: la sesion vencio o nunca
  * existio, y no tiene sentido seguir mostrando la pantalla.
  */
 async function api(ruta, opciones = {}) {
+  const metodo = opciones.metodo || 'GET';
+  const cabeceras = opciones.cuerpo ? { 'Content-Type': 'application/json' } : {};
+
+  // SEC-05: Inyectar token CSRF para peticiones mutables
+  if (metodo !== 'GET' && metodo !== 'HEAD') {
+    const csrfToken = getCookie('XSRF-TOKEN');
+    if (csrfToken) cabeceras['X-XSRF-TOKEN'] = csrfToken;
+  }
+
   // Sprint 4: opciones.formulario lleva un FormData (carga de archivos).
   // No se fija Content-Type a mano: el navegador lo pone con el boundary.
   const respuesta = await fetch(ruta, {
-    headers: opciones.cuerpo ? { 'Content-Type': 'application/json' } : {},
-    method: opciones.metodo || 'GET',
+    headers: cabeceras,
+    method: metodo,
     body: opciones.formulario
       ? opciones.formulario
       : (opciones.cuerpo ? JSON.stringify(opciones.cuerpo) : undefined)
@@ -85,6 +100,17 @@ async function pintarSesion() {
         const f = document.createElement('form');
         f.method = 'post';
         f.action = '/api/auth/logout';
+        
+        // SEC-05: Inyectar token CSRF como input oculto en el formulario de salida
+        const csrfToken = getCookie('XSRF-TOKEN');
+        if (csrfToken) {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = '_csrf';
+          input.value = csrfToken;
+          f.appendChild(input);
+        }
+        
         document.body.appendChild(f);
         f.submit();
       });
