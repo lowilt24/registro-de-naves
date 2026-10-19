@@ -76,6 +76,24 @@ public class AutorizacionTramite {
         return permitidas;
     }
 
+    /**
+     * HU-11 (D1 del Sprint 6): la bandeja de todos los tramites la ve la
+     * DGMM, que decide, y el auditor, que solo lee. El agente no: el ve sus
+     * naves en HU-10.
+     */
+    public boolean puedeVerBandeja(Usuario usuario) {
+        return usuario != null
+                && (usuario.getRol() == Rol.FUNCIONARIO_DGMM || usuario.getRol() == Rol.AUDITOR);
+    }
+
+    /** 403 si no puede ver la bandeja. */
+    public void exigirBandeja(Usuario usuario) {
+        if (!puedeVerBandeja(usuario)) {
+            throw new AccesoDenegadoException(
+                    "La bandeja de trámites es de la DGMM. Sus naves están en «Mis naves».");
+        }
+    }
+
     /** 403 si no puede ver el tramite. */
     public void exigirLectura(Usuario usuario, Nave nave) {
         if (!puedeLeer(usuario, nave)) {

@@ -822,6 +822,20 @@ button.chip .cifra { font-weight: 700; margin-left: var(--e1); }
 
 #sin-resultados { padding: var(--e3) 0 0; }
 
+/* =====================================================================
+   Bandeja de la DGMM (HU-11). Sprint 6. Reutiliza los chips de HU-10.
+   ===================================================================== */
+
+#bandeja-vacia { padding: var(--e3) 0 0; }
+
+@media (max-width: 720px) {
+  #lista-bandeja td:nth-child(2)::before { content: "Agente"; }
+  #lista-bandeja td:nth-child(3)::before { content: "Estado del trámite"; }
+  #lista-bandeja td:nth-child(4)::before { content: "Última acción"; }
+  #lista-bandeja td:nth-child(5)::before { content: "En espera"; }
+  #lista-bandeja td:nth-child(6)::before { content: "Expediente"; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

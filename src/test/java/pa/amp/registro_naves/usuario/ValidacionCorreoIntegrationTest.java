@@ -158,7 +158,8 @@ class ValidacionCorreoIntegrationTest {
         mvc.perform(formLogin("/api/auth/login")
                         .userParameter("correo").passwordParam("password")
                         .user("auditor@navesitas.pa").password("Navesitas2026*"))
-           .andExpect(redirectedUrl("/naves.html"));
+           // Sprint 6 (HU-11): el auditor entra a la bandeja de tramites.
+           .andExpect(redirectedUrl("/bandeja.html"));
     }
 
     /** Nadie se registra solo como auditor o administrador. */

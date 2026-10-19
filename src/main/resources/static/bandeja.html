@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bandeja de trámites — Navesitas</title>
+<link rel="preload" href="/css/fuentes/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Registro de naves comerciales &middot; DGMM</span>
+  <span class="derecha" id="sesion"></span>
+</header>
+
+<main>
+  <h2>Bandeja de trámites</h2>
+  <p class="sumario">
+    Los trámites de todas las naves que esperan una decisión de la DGMM,
+    el que lleva más tiempo esperando primero. Abra el expediente para
+    admitir, observar, aprobar o rechazar.
+  </p>
+
+  <p class="veredicto" id="aviso-bandeja" role="status" aria-live="polite"></p>
+
+  <!-- HU-11: chips con conteo. "Por atender" es la vista por defecto
+       (Solicitud presentada + En revision); los demas filtran un estado. -->
+  <section class="tarjeta" id="seccion-bandeja">
+    <div class="chips-filtro" id="filtro-bandeja" role="group"
+         aria-label="Filtrar trámites por estado"></div>
+
+    <p class="vacio oculto" id="bandeja-vacia" role="status" aria-live="polite"></p>
+
+    <div class="tabla-desplazable" id="caja-bandeja">
+      <table class="apilable">
+        <thead>
+          <tr><th>Nave</th><th>Agente</th><th>Estado del trámite</th><th>Última acción</th><th>En espera</th><th>Expediente</th></tr>
+        </thead>
+        <tbody id="lista-bandeja"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="/js/comun.js"></script>
+<script src="/js/bandeja.js"></script>
+</body>
+</html>

@@ -11,6 +11,7 @@ import pa.amp.registro_naves.documento.EstadoDocumento;
 import pa.amp.registro_naves.documento.TipoDocumento;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
+import pa.amp.registro_naves.tramite.TramiteDtos.BandejaItem;
 import pa.amp.registro_naves.tramite.TramiteDtos.CambioEstadoRequest;
 import pa.amp.registro_naves.tramite.TramiteDtos.ConteoPorEstadoResponse;
 import pa.amp.registro_naves.tramite.TramiteDtos.HistorialResponse;
@@ -18,6 +19,10 @@ import pa.amp.registro_naves.tramite.TramiteDtos.TramiteResponse;
 import pa.amp.registro_naves.usuario.Usuario;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -151,12 +156,64 @@ public class TramiteService {
     /** HU-10: los seis estados, con cero los que no tienen naves del agente. */
     @Transactional(readOnly = true)
     public ConteoPorEstadoResponse contarPorEstado(String correo) {
+        return conteo(tramites.contarPorEstado(correo));
+    }
+
+    // ------------------------------------------------------------------
+    // HU-11 — bandeja de la DGMM
+    // ------------------------------------------------------------------
+
+    /** Sin filtro, la bandeja muestra lo que espera una decision de la DGMM (D1). */
+    static final List<EstadoTramite> POR_ATENDER =
+            List.of(EstadoTramite.SOLICITUD_PRESENTADA, EstadoTramite.EN_REVISION);
+
+    /** Los dias en espera se cuentan en dias de calendario de Panama. */
+    static final ZoneId ZONA = ZoneId.of("America/Panama");
+
+    /**
+     * GET /api/tramites. Tramites de todas las naves (D4 del Sprint 5: se
+     * filtra por TRAMITES, nunca por nave.estado), el que lleva mas tiempo
+     * esperando primero. Solo DGMM y auditor; el agente recibe 403.
+     */
+    @Transactional(readOnly = true)
+    public List<BandejaItem> bandeja(String correo, EstadoTramite estado) {
+        autorizacion.exigirBandeja(usuario(correo));                // 403
+        List<EstadoTramite> estados = estado == null ? POR_ATENDER : List.of(estado);
+        LocalDate hoy = LocalDate.now(ZONA);
+        return tramites.bandeja(estados).stream()
+                .map(t -> new BandejaItem(
+                        t.getNave().getId(),
+                        t.getNave().getNombre(),
+                        t.getNave().getRegistradoPor().getNombreCompleto(),
+                        t.getEstado(),
+                        t.getActualizadoEn(),
+                        diasEntre(t.getActualizadoEn(), hoy)))
+                .toList();
+    }
+
+    /** GET /api/tramites/conteo-por-estado: los seis estados, de todas las naves. */
+    @Transactional(readOnly = true)
+    public ConteoPorEstadoResponse contarBandeja(String correo) {
+        autorizacion.exigirBandeja(usuario(correo));                // 403
+        return conteo(tramites.contarTodosPorEstado());
+    }
+
+    static long diasEntre(OffsetDateTime desde, LocalDate hoy) {
+        if (desde == null) {
+            return 0;
+        }
+        long dias = ChronoUnit.DAYS.between(desde.atZoneSameInstant(ZONA).toLocalDate(), hoy);
+        return Math.max(dias, 0);
+    }
+
+    /** Los seis estados en el orden de la maquina, con cero los que no aparecen. */
+    private static ConteoPorEstadoResponse conteo(List<Object[]> filas) {
         Map<EstadoTramite, Long> conteo = new EnumMap<>(EstadoTramite.class);
         for (EstadoTramite estado : EstadoTramite.values()) {
             conteo.put(estado, 0L);
         }
         long total = 0;
-        for (Object[] fila : tramites.contarPorEstado(correo)) {
+        for (Object[] fila : filas) {
             long cantidad = ((Number) fila[1]).longValue();
             conteo.put((EstadoTramite) fila[0], cantidad);
             total += cantidad;

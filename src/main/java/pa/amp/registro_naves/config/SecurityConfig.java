@@ -73,7 +73,14 @@ public class SecurityConfig {
                 .loginProcessingUrl("/api/auth/login")
                 .usernameParameter("correo")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/naves.html", true)
+                // Sprint 6 (HU-11): la DGMM y el auditor entran a la bandeja
+                // de tramites; el agente, a sus naves, como siempre.
+                .successHandler((peticion, respuesta, autenticacion) -> respuesta.sendRedirect(
+                        autenticacion.getAuthorities().stream().anyMatch(a ->
+                                "ROLE_FUNCIONARIO_DGMM".equals(a.getAuthority())
+                                || "ROLE_AUDITOR".equals(a.getAuthority()))
+                                ? "/bandeja.html"
+                                : "/naves.html"))
                 // Sprint 4: una cuenta sin correo validado llega aqui como
                 // DisabledException; se le dice que confirme el correo en vez
                 // de "contrasena incorrecta", que la mandaria a reintentar.

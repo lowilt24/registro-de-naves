@@ -64,6 +64,12 @@ function bloquearTodo() {
  * camaras no se muestran.
  */
 function vistaDeConsulta(rol) {
+  // Sprint 6 (HU-11): la DGMM y el auditor vuelven a su bandeja, no a "Mis naves".
+  const migas = document.querySelector('.migas a');
+  if (migas && (rol === 'FUNCIONARIO_DGMM' || rol === 'AUDITOR')) {
+    migas.href = '/bandeja.html';
+    migas.lastChild.textContent = 'Bandeja de trámites';
+  }
   ['seccion-propietarios', 'seccion-agente', 'seccion-documentos']
     .forEach(id => $(id).classList.add('oculto'));
   mostrar($('aviso-nave'), 'neutro', rol === 'FUNCIONARIO_DGMM'
