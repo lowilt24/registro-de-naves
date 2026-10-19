@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @Configuration
 public class SecurityConfig {
@@ -41,6 +42,9 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
             )
+            // SEC-05: sin esto la cookie XSRF-TOKEN nunca se escribe (el token
+            // es perezoso) y ningun POST pasa, ni el login. Ver CsrfCookieFilter.
+            .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
 
             .authorizeHttpRequests(auth -> auth
                 // Publico: entrar, crear cuenta y el chequeo de salud.
