@@ -160,21 +160,13 @@ public class NaveService {
      *
      * Sprint 5: la DGMM actua sobre cualquier tramite (D1) y abre el
      * expediente por el ID de la nave mientras no exista su bandeja (P7);
-     * el AUDITOR lee (P8). Los dos ven la ficha de cualquier nave. Las
-     * demas camaras (propietarios, agente, documentos) siguen siendo solo
-     * del agente que la registro.
+     * el AUDITOR lee (P8). Los dos ven la ficha de cualquier nave.
+     * Sprint 6: la regla vive en AccesoNave#exigirLectura, que tambien usan
+     * los documentos (HU-12).
      */
     @Transactional(readOnly = true)
     public NaveResponse obtener(Long id, String correoUsuario) {
-        Rol rol = usuarios.findByCorreoIgnoreCase(correoUsuario)
-                .map(Usuario::getRol)
-                .orElse(null);
-
-        Nave nave = (rol == Rol.FUNCIONARIO_DGMM || rol == Rol.AUDITOR)
-                ? naves.findById(id).orElseThrow(() ->
-                        new RecursoNoEncontradoException("La nave indicada no existe."))
-                : accesoNave.exigirPropia(id, correoUsuario);
-
+        Nave nave = accesoNave.exigirLectura(id, correoUsuario);
         return NaveResponse.de(nave, tramites.estadosDe(List.of(nave.getId())).get(nave.getId()));
     }
 }

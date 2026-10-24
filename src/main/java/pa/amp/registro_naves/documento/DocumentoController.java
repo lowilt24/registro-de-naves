@@ -59,4 +59,13 @@ public class DocumentoController {
                         .toString())
                 .body(new FileSystemResource(d.archivo()));
     }
+
+    /** HU-12 — la DGMM aprueba u observa un documento: { "decision", "observacion" }. */
+    @PostMapping(value = "/{documentoId}/revision", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public DocumentoResponse revisar(@PathVariable Long naveId,
+                                     @PathVariable Long documentoId,
+                                     @RequestBody RevisionRequest peticion,
+                                     Authentication autenticacion) {
+        return servicio.revisar(naveId, documentoId, peticion, autenticacion.getName());
+    }
 }

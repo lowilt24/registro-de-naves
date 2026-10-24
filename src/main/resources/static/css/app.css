@@ -836,6 +836,34 @@ button.chip .cifra { font-weight: 700; margin-left: var(--e1); }
   #lista-bandeja td:nth-child(6)::before { content: "Expediente"; }
 }
 
+/* =====================================================================
+   Revision de documentos (HU-12). Sprint 6.
+   ===================================================================== */
+
+/* La observacion de la DGMM, debajo del estado del documento. */
+.doc-observacion {
+  display: block;
+  margin-top: var(--e1);
+  padding: var(--e1) var(--e2);
+  border-left: 2px solid var(--alto);
+  background: var(--hormigon-alto);
+  font-size: .875rem;
+  max-width: 40ch;
+  overflow-wrap: anywhere;
+}
+.doc-revisado { display: block; margin-top: var(--e1); font-size: .8125rem; }
+
+/* Aprobar y Observar, debajo de "Descargar". */
+.acciones-fila { display: flex; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e2); }
+.acciones-fila button { padding: 0 var(--e3); font-size: .9375rem; }  /* 44 px, como todo control (DESIGN.md) */
+
+#nota-revision { margin: var(--e3) 0 0; }
+#form-revision .campo { max-width: 40rem; }
+#aviso-revision { margin-top: var(--e3); }
+
+/* D5: la nave rechazada se lee como alto; la abanderada sigue en verde. */
+.estado-etiqueta[data-estado="RECHAZADA"] { color: var(--alto-tinta); border-color: var(--alto); background: var(--alto-fondo); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

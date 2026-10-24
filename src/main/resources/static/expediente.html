@@ -244,6 +244,26 @@
       </table>
     </div>
 
+    <!-- HU-12: revision de la DGMM. Aprobar va directo desde la fila;
+         Observar abre este formulario, porque exige decir que corregir. -->
+    <p class="nota oculto" id="nota-revision"></p>
+    <form id="form-revision" class="subformulario oculto" novalidate>
+      <fieldset>
+        <legend id="leyenda-revision">Observar documento</legend>
+        <div class="campo">
+          <label for="r-observacion">Observación <span class="pista">(obligatoria: qué debe corregir el agente)</span></label>
+          <input type="text" id="r-observacion" maxlength="1000"
+                 placeholder="Ej. El ITC está vencido; cargue el vigente.">
+          <span class="error-campo" data-error="observacion"></span>
+        </div>
+        <div class="acciones">
+          <button type="submit" id="btn-revision">Guardar observación</button>
+          <button type="button" class="secundario" id="btn-cancelar-revision">Cancelar</button>
+        </div>
+      </fieldset>
+    </form>
+    <p class="veredicto" id="aviso-revision" role="status" aria-live="polite"></p>
+
     <!-- HU-07: carga -->
     <form id="form-documento" class="subformulario" novalidate>
       <p class="cerrojo" id="cerrojo-documentos">

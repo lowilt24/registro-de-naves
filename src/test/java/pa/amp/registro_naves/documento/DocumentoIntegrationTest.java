@@ -253,7 +253,11 @@ class DocumentoIntegrationTest {
     /** Criterio 6 */
     @Test
     void consultaDeNaveAjenaOSinSesion() throws Exception {
-        mvc.perform(get(rutaLista(nave)).with(user(REVISOR))).andExpect(status().isForbidden());
+        // Sprint 6 (HU-12): la DGMM y el auditor si leen los documentos de
+        // cualquier nave; el que recibe 403 es otro agente.
+        mvc.perform(get(rutaLista(nave)).with(user(otroAgente()))).andExpect(status().isForbidden());
+        mvc.perform(get(rutaLista(nave)).with(user(REVISOR))).andExpect(status().isOk());
+        mvc.perform(get(rutaLista(nave)).with(user("auditor@navesitas.pa"))).andExpect(status().isOk());
         mvc.perform(get(rutaLista(nave))).andExpect(status().isUnauthorized());
         mvc.perform(get("/api/naves/abc/documentos").with(user(AGENTE))).andExpect(status().isBadRequest());
     }
@@ -284,8 +288,10 @@ class DocumentoIntegrationTest {
         Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)))
                 .andReturn());
 
-        mvc.perform(get(rutaArchivo(nave, id)).with(user(REVISOR))).andExpect(status().isForbidden());
+        mvc.perform(get(rutaArchivo(nave, id)).with(user(otroAgente()))).andExpect(status().isForbidden());
         mvc.perform(get(rutaArchivo(nave, id))).andExpect(status().isUnauthorized());
+        // Sprint 6 (HU-12): la DGMM descarga lo que va a revisar.
+        mvc.perform(get(rutaArchivo(nave, id)).with(user(REVISOR))).andExpect(status().isOk());
     }
 
     /**
@@ -300,16 +306,7 @@ class DocumentoIntegrationTest {
     void idorConNavePropiaYDocumentoAjeno() throws Exception {
         Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)))
                 .andReturn());
-        String otro = "otro.agente.docs@navesitas.pa";
-        if (!usuarios.existsByCorreoIgnoreCase(otro)) {
-            Usuario u = new Usuario();
-            u.setCorreo(otro);
-            u.setPasswordHash("!solo-pruebas");
-            u.setNombreCompleto("Otro Agente Documentos");
-            u.setRol(Rol.AGENTE_NAVIERO);
-            u.setCorreoValidado(true);
-            usuarios.save(u);
-        }
+        String otro = otroAgente();
         Long naveDelOtro = crearNave("Nave Del Otro Agente Docs", otro);
 
         mvc.perform(get(rutaArchivo(naveDelOtro, id)).with(user(otro)))
@@ -358,6 +355,21 @@ class DocumentoIntegrationTest {
 
     private static String sha256(byte[] datos) throws Exception {
         return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(datos));
+    }
+
+    /** Un segundo agente naviero, deshecho al terminar (@Transactional). */
+    private String otroAgente() {
+        String otro = "otro.agente.docs@navesitas.pa";
+        if (!usuarios.existsByCorreoIgnoreCase(otro)) {
+            Usuario u = new Usuario();
+            u.setCorreo(otro);
+            u.setPasswordHash("!solo-pruebas");
+            u.setNombreCompleto("Otro Agente Documentos");
+            u.setRol(Rol.AGENTE_NAVIERO);
+            u.setCorreoValidado(true);
+            usuarios.save(u);
+        }
+        return otro;
     }
 
     private Long crearNave(String nombre, String usuario) throws Exception {

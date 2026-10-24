@@ -1,5 +1,14 @@
 # Diseño de la V7 — revisión de documentos (HU-12)
 
+> **Estado (24-10-2026): implementado.** La V7 está en
+> `db/migration/V7__revision_de_documentos.sql`. Abajo, al final, la
+> respuesta a cada observación de la revisión de QA
+> (`qa/evidencias/sprint-6/revision-diseno-v7.md`). Lo que quedó fijado
+> manda sobre el texto original de este diseño: en particular, el **orden de
+> los errores** es el del plan (401 → 404 → 403 → 409 → 400), no el que se
+> proponía aquí. El contrato definitivo está en `CONTRATO-DOCUMENTOS.md`,
+> sección 4.
+
 **Para que Louis lo revise antes de que la migración exista.** Una vez que la
 V7 llegue a `main` ya no se puede editar: cualquier corrección iría en una V8.
 Por eso este documento va primero y el archivo `V7__revision_de_documentos.sql`
@@ -112,3 +121,21 @@ Cámara 5 del expediente:
   observación).
 - Hoy la DGMM no ve la cámara 5 (`vistaDeConsulta` la oculta). Con HU-12 se
   le muestra en modo revisión: ve el listado y descarga, pero no carga.
+
+## Respuesta a la revisión de QA (Louis, 23-10-2026)
+
+| # | Observación | Qué se hizo |
+|---|---|---|
+| 1 | Dos órdenes de errores distintos | Se usa el del criterio de HU-12 aceptado por la PO: **401 → 404 → 403 → 409 → 400**, igual que HU-09. Para lograrlo, `decision` y `observacion` llegan como texto y las valida el servicio al final. Solo un JSON roto (o el carácter nulo de SEC-08) da 400 antes, porque no se puede leer. TC-46 queda tal como está |
+| 2 | La DGMM recibía 403 al listar y descargar | `AccesoNave.exigirLectura`: la DGMM y el auditor leen la ficha, listan y descargan documentos de cualquier nave. Escribir sigue pidiendo `exigirPropia`. `GET /api/naves/{id}` usa la misma regla, sin duplicarla |
+| 3 | `TramiteIntegrationTest.observar()` violaba los `CHECK` | El método ahora pone observación, revisor y fecha (`Documento#marcarRevisado`). Dos pruebas de esa clase y dos de `DocumentoIntegrationTest` se ajustaron a D4 y a la observación 2 |
+| 4 | Dos revisiones simultáneas se pisaban | `UPDATE … WHERE id = ? AND vigente AND estado = 'PENDIENTE'` (`DocumentoRepository#revisar`). Si no cambia ninguna fila, 409. No se usó `@Version` porque `version` ya es el número de versión del documento. Prueba: `unaSegundaRevisionSimultaneaNoPisaLaPrimera` |
+| 5 | Observación al aprobar sin definir | Se guarda como nota opcional |
+| 6 | Formato de `revisadoPor` | El nombre del funcionario, no el correo |
+| 7 | D5 no cubría Desistida | La nave queda `REGISTRADA`. Prueba: `desistirDejaLaNaveRegistrada`. Falta que la PO lo confirme |
+| 8 | Reemplazar un documento aprobado | La versión nueva entra `PENDIENTE` y D4 vuelve a bloquear la aprobación. Prueba: `reemplazarUnAprobadoVuelveABloquearYRechazarMarcaLaNave` (espejo de TC-49) |
+| 9 | Menores | Índice `idx_documentos_revisado_por`. El 409 de D4 dice "sin aprobar". El #13 se corrigió en `NaveService`, sin migración |
+
+Los campos son los que esperan TC_HU12_01 a 06 (`decision`, `observacion`,
+`revisadoPor`, `revisadoEn` y `faltantes`), así que se pueden activar sin
+cambios.

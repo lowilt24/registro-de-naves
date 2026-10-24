@@ -42,7 +42,7 @@ async function cargarNave() {
     <div><span>Servicio</span><b>${datos.servicio}</b></div>
     <div><span>Tonelaje bruto</span><b class="cifra">${datos.tonelajeBruto}</b></div>
     <div><span>Eslora</span><b class="cifra">${datos.eslora} m</b></div>
-    <div><span>Estado de la nave</span><b><span class="estado-etiqueta">${escapar(datos.estado)}</span></b></div>
+    <div><span>Estado de la nave</span><b><span class="estado-etiqueta" data-estado="${escapar(datos.estado)}">${escapar(datos.estado)}</span></b></div>
     <div><span>Estado del trámite</span><b id="ficha-estado-tramite">${etiquetaTramite(datos.estadoTramite)}</b></div>
     <div><span>Fecha de registro</span><b class="cifra">${fechaHora(datos.creadoEn || datos.fechaRegistro)}</b></div>`;
 
@@ -70,12 +70,15 @@ function vistaDeConsulta(rol) {
     migas.href = '/bandeja.html';
     migas.lastChild.textContent = 'Bandeja de trámites';
   }
-  ['seccion-propietarios', 'seccion-agente', 'seccion-documentos']
+  // Sprint 6 (HU-12): la camara 5 (documentos) ya se muestra; la DGMM los
+  // revisa y el auditor los lee. Propietarios y agente siguen siendo del agente.
+  ['seccion-propietarios', 'seccion-agente']
     .forEach(id => $(id).classList.add('oculto'));
+  configurarModoDocumentos(rol);
   mostrar($('aviso-nave'), 'neutro', rol === 'FUNCIONARIO_DGMM'
-    ? 'Vista de la DGMM: aquí ve la ficha de la nave y gestiona el estado de su trámite. '
-      + 'Propietarios, agente residente y documentos los gestiona el agente que registró la nave.'
-    : 'Vista de consulta: puede leer el estado del trámite y su línea de tiempo, sin cambiarlos.');
+    ? 'Vista de la DGMM: revise los documentos (paso 5) y decida el trámite (paso 6). '
+      + 'Propietarios y agente residente los gestiona el agente que registró la nave.'
+    : 'Vista de consulta: puede leer los documentos, el estado del trámite y su línea de tiempo, sin cambiarlos.');
 }
 
 async function rolDeSesion() {
@@ -308,11 +311,15 @@ $('form-agente').addEventListener('submit', async (e) => {
 
   const rol = await rolDeSesion();
   if (rol === 'AGENTE_NAVIERO') {
+    configurarModoDocumentos(rol);
     await cargarPropietarios();
     await cargarAgente();
     await cargarDocumentos();
+    await cargarTramite();
   } else {
     vistaDeConsulta(rol);
+    // El tramite primero: los botones de revision dependen de su estado (D2).
+    await cargarTramite();
+    await cargarDocumentos();
   }
-  await cargarTramite();
 })();

@@ -94,6 +94,21 @@ public class AutorizacionTramite {
         }
     }
 
+    /**
+     * HU-12: solo la DGMM aprueba u observa documentos. El agente los carga
+     * y el auditor solo lee.
+     */
+    public boolean puedeRevisarDocumentos(Usuario usuario) {
+        return usuario != null && usuario.getRol() == Rol.FUNCIONARIO_DGMM;
+    }
+
+    /** 403 si no puede revisar documentos. */
+    public void exigirRevisionDeDocumentos(Usuario usuario) {
+        if (!puedeRevisarDocumentos(usuario)) {
+            throw new AccesoDenegadoException("Solo un funcionario de la DGMM puede revisar documentos.");
+        }
+    }
+
     /** 403 si no puede ver el tramite. */
     public void exigirLectura(Usuario usuario, Nave nave) {
         if (!puedeLeer(usuario, nave)) {

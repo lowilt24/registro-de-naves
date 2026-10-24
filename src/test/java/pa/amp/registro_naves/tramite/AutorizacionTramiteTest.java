@@ -167,4 +167,18 @@ class AutorizacionTramiteTest {
                 .isInstanceOf(AccesoDenegadoException.class);
         assertThatNoException().isThrownBy(() -> autorizacion.exigirLectura(auditor, nave));
     }
+
+    /** HU-12: solo la DGMM revisa documentos; el agente dueno y el auditor no. */
+    @Test
+    void soloLaDgmmRevisaDocumentos() {
+        assertThat(autorizacion.puedeRevisarDocumentos(dgmm)).isTrue();
+        assertThat(autorizacion.puedeRevisarDocumentos(agenteDueno)).isFalse();
+        assertThat(autorizacion.puedeRevisarDocumentos(otroAgente)).isFalse();
+        assertThat(autorizacion.puedeRevisarDocumentos(auditor)).isFalse();
+        assertThat(autorizacion.puedeRevisarDocumentos(admin)).isFalse();
+        assertThat(autorizacion.puedeRevisarDocumentos(null)).isFalse();
+        assertThatThrownBy(() -> autorizacion.exigirRevisionDeDocumentos(auditor))
+                .isInstanceOf(AccesoDenegadoException.class);
+        assertThatNoException().isThrownBy(() -> autorizacion.exigirRevisionDeDocumentos(dgmm));
+    }
 }

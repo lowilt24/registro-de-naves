@@ -9,6 +9,7 @@ import pa.amp.registro_naves.documento.Documento;
 import pa.amp.registro_naves.documento.DocumentoRepository;
 import pa.amp.registro_naves.documento.EstadoDocumento;
 import pa.amp.registro_naves.documento.TipoDocumento;
+import pa.amp.registro_naves.nave.EstadoNave;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
 import pa.amp.registro_naves.tramite.TramiteDtos.BandejaItem;
@@ -124,6 +125,11 @@ public class TramiteService {
         if (nuevo == EstadoTramite.EN_REVISION) {
             exigirDocumentosObligatorios(nave.getId());           // 409
         }
+        // Sprint 6 (HU-12, D4): aprobar exige los cuatro obligatorios
+        // vigentes en APROBADO.
+        if (nuevo == EstadoTramite.APROBADA) {
+            exigirDocumentosAprobados(nave.getId());              // 409
+        }
 
         String observacion = limpiar(peticion.observacion());
         if (accion.exigeObservacion() && observacion == null) {  // 400
@@ -135,6 +141,18 @@ public class TramiteService {
         // El flush hace saltar aqui el bloqueo optimista si otro usuario
         // cambio el tramite entre la lectura y la escritura (-> 409).
         tramites.saveAndFlush(tramite);
+
+        // Sprint 6 (HU-12, D5): la decision de la DGMM llega a la nave, en
+        // esta misma transaccion. Desistida no la toca: queda REGISTRADA
+        // (observacion 7 de QA). TRAMITES sigue siendo la fuente del estado
+        // del tramite; nave.estado solo se escribe aqui.
+        if (nuevo == EstadoTramite.APROBADA) {
+            nave.setEstado(EstadoNave.ABANDERADA);
+            naves.save(nave);
+        } else if (nuevo == EstadoTramite.RECHAZADA) {
+            nave.setEstado(EstadoNave.RECHAZADA);
+            naves.save(nave);
+        }
         historial.save(new HistorialEstado(tramite, usuario, accion, anterior, nuevo, observacion));
 
         return TramiteResponse.de(tramite,
@@ -251,6 +269,30 @@ public class TramiteService {
         if (!faltantes.isEmpty()) {
             throw new DocumentosFaltantesException(faltantes);
         }
+    }
+
+    /**
+     * Sprint 6 (HU-12, D4): para aprobar, los cuatro obligatorios vigentes
+     * tienen que estar APROBADOS. Uno pendiente u observado cuenta como
+     * "sin aprobar". La lista sale en el orden de TipoDocumento.OBLIGATORIOS.
+     */
+    public void exigirDocumentosAprobados(Long naveId) {
+        Set<TipoDocumento> aprobados = documentos.findByNaveIdAndVigenteTrue(naveId).stream()
+                .filter(d -> d.getEstado() == EstadoDocumento.APROBADO)
+                .map(Documento::getTipo)
+                .collect(Collectors.toSet());
+        List<TipoDocumento> sinAprobar = TipoDocumento.OBLIGATORIOS.stream()
+                .filter(t -> !aprobados.contains(t))
+                .toList();
+        if (!sinAprobar.isEmpty()) {
+            throw DocumentosFaltantesException.sinAprobar(sinAprobar);
+        }
+    }
+
+    /** HU-12: estado actual del tramite de la nave (404 si no tiene). */
+    @Transactional(readOnly = true)
+    public EstadoTramite estadoDe(Nave nave) {
+        return tramiteDe(nave).getEstado();
     }
 
     /**

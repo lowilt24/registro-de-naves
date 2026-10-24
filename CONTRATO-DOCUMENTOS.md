@@ -1,4 +1,4 @@
-# Contrato de API — documentos de la nave (HU-07 y HU-08)
+# Contrato de API — documentos de la nave (HU-07, HU-08 y HU-12)
 
 Lo que la pantalla de documentos (cámara 5) y los casos de Katalon TC-17 a
 TC-24 esperan del backend. Si algo de esto cambia, hay que cambiar también
@@ -162,11 +162,85 @@ control de propiedad porque la nave de la ruta sí es suya.
   "version": 2,
   "vigente": true,
   "estado": "PENDIENTE",
-  "creadoEn": "2026-10-06T14:32:10-05:00"
+  "creadoEn": "2026-10-06T14:32:10-05:00",
+  "observacion": null,
+  "revisadoPor": null,
+  "revisadoEn": null
 }
 ```
 
 `vigente` es `true` solo en la versión más alta de cada tipo.
+
+Sprint 6 (HU-12): `observacion`, `revisadoPor` y `revisadoEn` son `null`
+mientras el documento está `PENDIENTE`. Con `OBSERVADO`, `observacion`
+siempre trae texto; con `APROBADO` puede traer una nota. `revisadoPor` es el
+**nombre** del funcionario, no su correo.
+
+---
+
+## 4. Revisar documento — HU-12 (Sprint 6)
+
+```
+POST /api/naves/{naveId}/documentos/{documentoId}/revision
+Content-Type: application/json
+
+{ "decision": "OBSERVAR", "observacion": "El ITC está vencido." }
+```
+
+- `decision`: `APROBAR` u `OBSERVAR` (no distingue mayúsculas).
+- `observacion`: obligatoria al observar; opcional al aprobar, donde se
+  guarda como nota. Hasta 1000 caracteres; los espacios al borde se quitan.
+
+Responde **200** con el `DocumentoResponse` ya revisado:
+
+```json
+{ "id": 42, "tipo": "ITC", "version": 2, "vigente": true, "estado": "OBSERVADO",
+  "observacion": "El ITC está vencido.",
+  "revisadoPor": "Funcionario Revisor DGMM",
+  "revisadoEn": "2026-10-24T10:15:00-05:00", "...": "..." }
+```
+
+### Quién y cuándo
+
+- Solo **FUNCIONARIO_DGMM**. El agente dueño y el auditor reciben 403.
+- Solo con el trámite **En revisión** (D2).
+- Solo la versión **vigente** y **PENDIENTE**. Una vez aprobada u observada,
+  esa versión ya no cambia; la corrección entra como versión nueva (HU-07),
+  que vuelve a estar `PENDIENTE`.
+- Revisar un documento **no mueve el trámite** (D3).
+- La DGMM y el auditor ahora también **listan y descargan** los documentos
+  de cualquier nave (secciones 2 y 3). El agente sigue viendo solo los suyos.
+
+### Orden de los errores
+
+Criterio de HU-12 aceptado por la PO, el mismo de HU-09. Con dos errores a la
+vez sale el primero:
+
+| Código | Cuándo |
+|---|---|
+| 401 | Sin sesión |
+| 400 | El cuerpo no es JSON válido (no se puede leer), o trae el carácter nulo (SEC-08) |
+| 404 | La nave no existe; el documento no existe o es de **otra** nave (IDOR) |
+| 403 | No es FUNCIONARIO_DGMM |
+| 409 | El trámite no está En revisión; el documento ya no es la versión vigente; ya fue revisado; otro funcionario lo revisó en ese mismo instante |
+| 400 | `decision` vacía o inventada (`campos.decision`); observar sin observación o con más de 1000 caracteres (`campos.observacion`) |
+
+Ejemplos del orden: un agente con `decision: "BORRAR"` recibe **403**, no 400.
+La DGMM que observa sin observación con el trámite en Solicitud presentada
+recibe **409**, no 400.
+
+### Cambios en el trámite (D4 y D5)
+
+- **Aprobar el trámite** (`POST /api/naves/{id}/tramite/estado` con
+  `APROBAR`) exige los cuatro obligatorios vigentes en `APROBADO`. Si no, 409:
+  ```json
+  { "mensaje": "Para aprobar el trámite faltan documentos obligatorios sin aprobar: SMC",
+    "faltantes": ["SMC"] }
+  ```
+  `faltantes` va en el orden oficial: CERTIFICADO_PROPIEDAD, PODER_NOTARIAL, ITC, SMC.
+- Trámite **Aprobado** → `nave.estado = ABANDERADA`. **Rechazado** →
+  `nave.estado = RECHAZADA`. En la misma transacción. **Desistido** no
+  toca la nave (queda `REGISTRADA`).
 
 ---
 

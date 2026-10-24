@@ -54,6 +54,20 @@ public class Documento {
     @JoinColumn(name = "creado_por", nullable = false)
     private Usuario creadoPor;
 
+    // --- Sprint 6 (HU-12, V7): revision de la DGMM ---
+
+    /** Obligatoria al observar; nota opcional al aprobar. */
+    @Column(length = 1000)
+    private String observacion;
+
+    /** Funcionario que reviso. Nulo mientras esta PENDIENTE (ck_documentos_revision). */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "revisado_por")
+    private Usuario revisadoPor;
+
+    @Column(name = "revisado_en")
+    private OffsetDateTime revisadoEn;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -89,4 +103,21 @@ public class Documento {
 
     public Usuario getCreadoPor() { return creadoPor; }
     public void setCreadoPor(Usuario creadoPor) { this.creadoPor = creadoPor; }
+
+    public String getObservacion() { return observacion; }
+    public Usuario getRevisadoPor() { return revisadoPor; }
+    public OffsetDateTime getRevisadoEn() { return revisadoEn; }
+
+    /**
+     * Solo para pruebas y datos de demo: en la aplicacion la revision se
+     * escribe con DocumentoRepository#revisar, un UPDATE condicional que
+     * evita que dos funcionarios se pisen (observacion 4 de QA).
+     */
+    public void marcarRevisado(EstadoDocumento estado, String observacion, Usuario revisor,
+                               OffsetDateTime cuando) {
+        this.estado = estado;
+        this.observacion = observacion;
+        this.revisadoPor = revisor;
+        this.revisadoEn = cuando;
+    }
 }

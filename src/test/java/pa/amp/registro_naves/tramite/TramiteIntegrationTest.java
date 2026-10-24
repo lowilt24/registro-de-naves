@@ -214,6 +214,7 @@ class TramiteIntegrationTest {
     @Test
     void unEstadoFinalNoAdmiteMasCambios() throws Exception {
         accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
+        aprobarDocumentos(nave);   // Sprint 6 (HU-12, D4)
         accion(nave, DGMM, "APROBAR", null)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("APROBADA"))
@@ -457,6 +458,7 @@ class TramiteIntegrationTest {
     @Test
     void conElTramiteTerminadoElExpedienteEsDeSoloLectura() throws Exception {
         accion(nave, DGMM, "ADMITIR", null).andExpect(status().isOk());
+        aprobarDocumentos(nave);   // Sprint 6 (HU-12, D4)
         accion(nave, DGMM, "APROBAR", null).andExpect(status().isOk());
         verificarSoloLectura(nave, "Aprobada");
 
@@ -510,13 +512,19 @@ class TramiteIntegrationTest {
 
     /**
      * Por JPA y no por SQL: el documento ya esta en la sesion de esta
-     * transaccion y un UPDATE directo no se veria. (Que la DGMM observe
-     * documentos llega en el Sprint 6.)
+     * transaccion y un UPDATE directo no se veria.
+     *
+     * Sprint 6: la V7 exige que un documento OBSERVADO tenga observacion,
+     * quien lo reviso y cuando (ck_documentos_revision y
+     * ck_documentos_observacion; observacion 3 de la revision de QA). Estas
+     * pruebas son de HU-09, asi que se pone directo; el endpoint de
+     * revision de HU-12 lo prueba DocumentoRevisionIntegrationTest.
      */
     private void observar(String tipo) {
         var documento = documentos.findByNaveIdAndTipoAndVigenteTrue(nave, TipoDocumento.valueOf(tipo))
                 .orElseThrow();
-        documento.setEstado(EstadoDocumento.OBSERVADO);
+        documento.marcarRevisado(EstadoDocumento.OBSERVADO, "Observado en la prueba.",
+                usuarios.findByCorreoIgnoreCase(DGMM).orElseThrow(), java.time.OffsetDateTime.now());
         documentos.saveAndFlush(documento);
     }
 
@@ -626,6 +634,20 @@ class TramiteIntegrationTest {
            .andExpect(status().isCreated());
         for (TipoDocumento tipo : TipoDocumento.OBLIGATORIOS) {
             cargarDocumento(naveId, usuario, tipo.name()).andExpect(status().isCreated());
+        }
+    }
+
+    /**
+     * Sprint 6 (HU-12, D4): aprobar el tramite exige los cuatro documentos
+     * aprobados. La DGMM los aprueba con el endpoint de revision, con el
+     * tramite En revision.
+     */
+    private void aprobarDocumentos(Long naveId) throws Exception {
+        for (var documento : documentos.findByNaveIdAndVigenteTrue(naveId)) {
+            mvc.perform(post("/api/naves/" + naveId + "/documentos/" + documento.getId() + "/revision")
+                            .with(user(DGMM)).contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"decision\":\"APROBAR\"}"))
+               .andExpect(status().isOk());
         }
     }
 
