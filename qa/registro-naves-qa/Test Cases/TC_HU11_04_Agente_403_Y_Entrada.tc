@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-43 HU-11 (D1): el agente recibe 403 en la bandeja y sin sesion es 401; tras el login la DGMM y el auditor van a bandeja.html y el agente a naves.html.</description>
+   <name>TC_HU11_04_Agente_403_Y_Entrada</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>feda3997-5a82-4a03-b05a-effeb275c0eb</testCaseGuid>
+</TestCaseEntity>

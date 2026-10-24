@@ -47,8 +47,8 @@ class Http {
             return
         }
         String token = tokenNuevo()
-        TestObjectProperty actual = cabeceras.find { it.getName().equalsIgnoreCase('Cookie') }
-        String valor = actual ? actual.getValue() + '; XSRF-TOKEN=' + token : 'XSRF-TOKEN=' + token
+        String previa = cabeceras.find { it.getName().equalsIgnoreCase('Cookie') }?.getValue()
+        String valor = previa ? previa + '; XSRF-TOKEN=' + token : 'XSRF-TOKEN=' + token
         cabeceras.removeAll { it.getName().equalsIgnoreCase('Cookie') }
         cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, valor)
         cabeceras << new TestObjectProperty('X-XSRF-TOKEN', ConditionType.EQUALS, token)

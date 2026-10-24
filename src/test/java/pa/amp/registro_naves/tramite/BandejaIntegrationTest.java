@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
+import pa.amp.registro_naves.usuario.Rol;
+import pa.amp.registro_naves.usuario.Usuario;
+import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -29,8 +32,10 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,10 +61,12 @@ class BandejaIntegrationTest {
     static final String AGENTE  = "agente@navesitas.pa";
     static final String DGMM    = "revisor@navesitas.pa";
     static final String AUDITOR = "auditor@navesitas.pa";
+    static final String ADMIN   = "qa-admin-s6@navesitas.pa";
     static final String CLAVE_DEMO = "Navesitas2026*";
 
     @Autowired MockMvc mvc;
     @Autowired NaveRepository naves;
+    @Autowired UsuarioRepository usuarios;
     @Autowired JdbcTemplate jdbc;
     @Autowired EntityManager em;
 
@@ -94,9 +101,84 @@ class BandejaIntegrationTest {
            .andExpect(status().isUnauthorized());
     }
 
+    /** QA Sprint 6: el contrato dice que el administrador tambien recibe 403 (D1 no lo incluye). */
+    @Test
+    void elAdministradorTambienRecibe403() throws Exception {
+        crearUsuario(ADMIN, Rol.ADMINISTRADOR);
+        for (String ruta : List.of("/api/tramites", "/api/tramites/conteo-por-estado")) {
+            mvc.perform(get(ruta).with(user(ADMIN)))
+               .andExpect(status().isForbidden())
+               .andExpect(jsonPath("$.mensaje").exists());
+        }
+    }
+
+    /** QA Sprint 6: la bandeja solo lee; otro metodo da 405 con mensaje, nunca 500. */
+    @Test
+    void otrosMetodosDan405() throws Exception {
+        mvc.perform(post("/api/tramites").with(user(DGMM)))
+           .andExpect(status().isMethodNotAllowed())
+           .andExpect(jsonPath("$.mensaje").exists());
+        mvc.perform(put("/api/tramites").with(user(DGMM)))
+           .andExpect(status().isMethodNotAllowed());
+        mvc.perform(delete("/api/tramites/conteo-por-estado").with(user(DGMM)))
+           .andExpect(status().isMethodNotAllowed());
+    }
+
     // ------------------------------------------------------------------
     // Contenido y filtros
     // ------------------------------------------------------------------
+
+    /**
+     * QA Sprint 6: ?estado= vacio o en blanco se trata como sin filtro (Spring
+     * convierte "" en null), igual que en HU-10. Fija el comportamiento: si se
+     * decide que sea 400, esta prueba debe cambiar junto con el codigo.
+     */
+    @Test
+    void unEstadoVacioSeTrataComoSinFiltro() throws Exception {
+        Long presentada = crearNave("Bandeja Vacio Presentada");
+        Long aprobada   = crearNave("Bandeja Vacio Aprobada");
+        ponerEstado(presentada, EstadoTramite.SOLICITUD_PRESENTADA, 1);
+        ponerEstado(aprobada,   EstadoTramite.APROBADA, 1);
+
+        for (String vacio : new String[] {"", " "}) {
+            mvc.perform(get("/api/tramites").param("estado", vacio).with(user(DGMM)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$[*].estado", everyItem(is(in(List.of("SOLICITUD_PRESENTADA", "EN_REVISION"))))))
+               .andExpect(jsonPath("$[*].naveId", hasItem(presentada.intValue())))
+               .andExpect(jsonPath("$[*].naveId", not(hasItem(aprobada.intValue()))));
+        }
+    }
+
+    /**
+     * QA Sprint 6: con los datos que haya en la base, cada numero del conteo
+     * es el largo de la lista filtrada por ese estado, y sin filtro salen
+     * exactamente Solicitud presentada + En revision.
+     */
+    @Test
+    void elConteoCoincideConLaListaEnCadaEstado() throws Exception {
+        for (EstadoTramite estado : EstadoTramite.values()) {
+            ponerEstado(crearNave("Bandeja Cuadre " + estado.name().replace("_", " ")), estado, 1);
+        }
+
+        String conteo = mvc.perform(get("/api/tramites/conteo-por-estado").with(user(DGMM)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        long suma = 0;
+        for (EstadoTramite estado : EstadoTramite.values()) {
+            int esperado = com.jayway.jsonpath.JsonPath.read(conteo, "$.estados." + estado.name());
+            assertThat(esperado).as("hay al menos la nave creada en " + estado).isPositive();
+            mvc.perform(get("/api/tramites").param("estado", estado.name()).with(user(DGMM)))
+               .andExpect(jsonPath("$", hasSize(esperado)));
+            suma += esperado;
+        }
+        int total = com.jayway.jsonpath.JsonPath.read(conteo, "$.total");
+        assertThat((long) total).isEqualTo(suma);
+
+        int porAtender = com.jayway.jsonpath.JsonPath.<Integer>read(conteo, "$.estados.SOLICITUD_PRESENTADA")
+                + com.jayway.jsonpath.JsonPath.<Integer>read(conteo, "$.estados.EN_REVISION");
+        mvc.perform(get("/api/tramites").with(user(DGMM)))
+           .andExpect(jsonPath("$", hasSize(porAtender)));
+    }
 
     @Test
     void cadaFilaTraeNaveAgenteEstadoUltimaAccionYDias() throws Exception {
@@ -295,6 +377,19 @@ class BandejaIntegrationTest {
                      where nave_id = ?
                     """, estado.name(), diasAtras, naveId);
         em.clear();
+    }
+
+    private void crearUsuario(String correo, Rol rol) {
+        if (usuarios.existsByCorreoIgnoreCase(correo)) {
+            return;
+        }
+        Usuario u = new Usuario();
+        u.setCorreo(correo);
+        u.setPasswordHash("!solo-pruebas");
+        u.setNombreCompleto("QA Sprint 6 " + rol.name());
+        u.setRol(rol);
+        u.setCorreoValidado(true);
+        usuarios.save(u);
     }
 
     private void vaciarTramites() {

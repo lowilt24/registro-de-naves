@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-41 HU-11: el conteo trae los seis estados de todas las naves (tambien en cero), el total es la suma, cada numero coincide con la lista filtrada y se mueve al registrar y al desistir.</description>
+   <name>TC_HU11_02_Conteo_Por_Estado</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>7d0a3101-6dff-4912-9d49-2d74ba4beb8b</testCaseGuid>
+</TestCaseEntity>
