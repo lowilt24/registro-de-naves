@@ -101,6 +101,27 @@ class PropietarioIntegrationTest {
            .andExpect(jsonPath("$.porcentaje").value(40.00));
     }
 
+    /**
+     * QA Sprint 6 (T5), criterio de HU-05: no se registran dos propietarios con
+     * la misma identificacion, sin importar mayusculas ni espacios (409).
+     */
+    @Test
+    void rechazaIdentificacionDuplicada() throws Exception {
+        String cedula = "8-QA-" + System.nanoTime();
+        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(propietario(naveDelAgente, "Ana Original", "NATURAL",
+                                ", \"identificacion\": \"" + cedula + "\", \"porcentaje\": 20.00")))
+           .andExpect(status().isCreated());
+
+        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(propietario(naveDelAgente, "Ana Copia", "NATURAL",
+                                ", \"identificacion\": \"  " + cedula.toLowerCase() + " \", \"porcentaje\": 20.00")))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.mensaje").value("Ya existe un propietario registrado con esa identificacion."));
+    }
+
     /** Positivo: persona juridica con pais de constitucion. */
     @Test
     void registraPropietarioJuridicoConPaisDeConstitucion() throws Exception {

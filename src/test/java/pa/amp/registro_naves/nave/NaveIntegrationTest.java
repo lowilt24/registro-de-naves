@@ -182,4 +182,54 @@ class NaveIntegrationTest {
                         .content(naveValida("Nave Sin Sesion")))
            .andExpect(status().isUnauthorized());
     }
+
+    // ------------------------------------------------------------------
+    // QA Sprint 6 (T5): ramas de HU-03 sin prueba en Maven
+    // ------------------------------------------------------------------
+
+    static final String DGMM = "revisor@navesitas.pa";
+    static final String AUDITOR = "auditor@navesitas.pa";
+
+    private String conTonelaje(String nombre, String bruto, String neto) {
+        return naveValida(nombre)
+                .replace("\"tonelajeBruto\": 12000.00", "\"tonelajeBruto\": " + bruto)
+                .replace("\"tonelajeNeto\": 6400.00", "\"tonelajeNeto\": " + neto);
+    }
+
+    /** Criterio de HU-03: el tonelaje neto no puede superar al bruto (409); igual si se puede. */
+    @Test
+    void tonelajeNetoMayorQueBrutoEsRechazado() throws Exception {
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(conTonelaje(nombreUnico("Neto Mayor"), "5000.00", "5000.01")))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.mensaje").value("El tonelaje neto no puede ser mayor que el tonelaje bruto."));
+
+        // Limite: neto igual al bruto es valido.
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(conTonelaje(nombreUnico("Neto Igual"), "5000.00", "5000.00")))
+           .andExpect(status().isCreated());
+    }
+
+    /** Decision de la PO (13-10-2026): la DGMM y el auditor ven la ficha de cualquier nave; si no existe, 404. */
+    @Test
+    void laDgmmYElAuditorVenLaFichaDeCualquierNave() throws Exception {
+        String cuerpo = mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida(nombreUnico("Ficha Ajena"))))
+           .andExpect(status().isCreated())
+           .andReturn().getResponse().getContentAsString();
+        Number id = com.jayway.jsonpath.JsonPath.read(cuerpo, "$.id");
+
+        for (String quien : new String[] {DGMM, AUDITOR}) {
+            mvc.perform(get("/api/naves/" + id).with(user(quien)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(id.intValue()))
+               .andExpect(jsonPath("$.estadoTramite").value("SOLICITUD_PRESENTADA"));
+            mvc.perform(get("/api/naves/999999999").with(user(quien)))
+               .andExpect(status().isNotFound())
+               .andExpect(jsonPath("$.mensaje").exists());
+        }
+    }
 }
