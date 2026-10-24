@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TS02_Sprint2" time="1.956" tests="5" passed="5" failures="0" errors="0" incompleted="0" skipped="0">
+   <testsuite name="TS02_Sprint2" tests="5" passed="5" failures="0" errors="0" incompleted="0" skipped="0" time="1.956" timestamp="2026-10-24T17:48:54.391Z" hostname="lowilt - macbookpro.lan" id="Test Suites/TS02_Sprint2" status="PASSED">
+      <testcase name="Test Cases/TC_HU03_01_Registro_Nave_Valida" time="0.861" classname="Test Cases/TC_HU03_01_Registro_Nave_Valida" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU03_03_Tonelaje_Invalido" time="0.254" classname="Test Cases/TC_HU03_03_Tonelaje_Invalido" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU03_02_Nombre_Duplicado" time="0.255" classname="Test Cases/TC_HU03_02_Nombre_Duplicado" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU04_01_Nombre_Disponible" time="0.218" classname="Test Cases/TC_HU04_01_Nombre_Disponible" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU04_02_Nombre_No_Disponible" time="0.235" classname="Test Cases/TC_HU04_02_Nombre_No_Disponible" status="PASSED">
+         </testcase>
+   </testsuite>
+</testsuites>

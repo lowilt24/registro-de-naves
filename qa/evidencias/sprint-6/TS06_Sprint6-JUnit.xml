@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TS06_Sprint6" time="9.734" tests="10" passed="10" failures="0" errors="0" incompleted="0" skipped="0">
+   <testsuite name="TS06_Sprint6" tests="10" passed="10" failures="0" errors="0" incompleted="0" skipped="0" time="9.734" timestamp="2026-10-24T17:51:24.951Z" hostname="lowilt - macbookpro.lan" id="Test Suites/TS06_Sprint6" status="PASSED">
+      <testcase name="Test Cases/TC_HU11_01_Filtro_Por_Estado" time="2.104" classname="Test Cases/TC_HU11_01_Filtro_Por_Estado" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU11_02_Conteo_Por_Estado" time="0.503" classname="Test Cases/TC_HU11_02_Conteo_Por_Estado" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU11_03_Estado_Invalido_Y_Vacio" time="0.223" classname="Test Cases/TC_HU11_03_Estado_Invalido_Y_Vacio" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU11_04_Agente_403_Y_Entrada" time="0.569" classname="Test Cases/TC_HU11_04_Agente_403_Y_Entrada" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_01_Aprobar_Documento" time="0.819" classname="Test Cases/TC_HU12_01_Aprobar_Documento" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_02_Observar_Y_Nueva_Version" time="1.045" classname="Test Cases/TC_HU12_02_Observar_Y_Nueva_Version" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_03_Acceso_Y_Errores" time="1.823" classname="Test Cases/TC_HU12_03_Acceso_Y_Errores" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_04_Tramite_No_En_Revision" time="0.868" classname="Test Cases/TC_HU12_04_Tramite_No_En_Revision" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_05_Aprobar_Tramite_Exige_Aprobados" time="0.933" classname="Test Cases/TC_HU12_05_Aprobar_Tramite_Exige_Aprobados" status="PASSED">
+         </testcase>
+      <testcase name="Test Cases/TC_HU12_06_Rechazo_Y_Reemplazo" time="0.773" classname="Test Cases/TC_HU12_06_Rechazo_Y_Reemplazo" status="PASSED">
+         </testcase>
+   </testsuite>
+</testsuites>

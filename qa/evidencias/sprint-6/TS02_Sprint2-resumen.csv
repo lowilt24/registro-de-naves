@@ -1,0 +1,7 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS02_Sprint2,,,,24-10-2026 12:48:54,24-10-2026 12:48:56,1.979s,PASSED
+Test Cases/TC_HU03_01_Registro_Nave_Valida,,,,24-10-2026 12:48:54,24-10-2026 12:48:55,0.861s,PASSED
+Test Cases/TC_HU03_03_Tonelaje_Invalido,,,,24-10-2026 12:48:55,24-10-2026 12:48:55,0.254s,PASSED
+Test Cases/TC_HU03_02_Nombre_Duplicado,,,,24-10-2026 12:48:55,24-10-2026 12:48:55,0.255s,PASSED
+Test Cases/TC_HU04_01_Nombre_Disponible,,,,24-10-2026 12:48:55,24-10-2026 12:48:56,0.218s,PASSED
+Test Cases/TC_HU04_02_Nombre_No_Disponible,,,,24-10-2026 12:48:56,24-10-2026 12:48:56,0.235s,PASSED

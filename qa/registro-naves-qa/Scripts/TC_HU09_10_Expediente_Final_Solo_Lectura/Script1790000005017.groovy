@@ -57,6 +57,20 @@ def postJson = { String cookie, String ruta, String cuerpo ->
 
 def json = { ResponseObject r -> new JsonSlurper().parseText(r.getResponseBodyContent()) }
 
+/**
+ * Sprint 6 (HU-12, D4): aprobar el tramite exige los cuatro obligatorios
+ * vigentes en APROBADO. La DGMM los aprueba uno por uno (trámite En revision).
+ */
+def aprobarDocumentos = { String cookie, def naveId ->
+    def vigentes = json(consultar(cookie, '/api/naves/' + naveId + '/documentos'))
+    assert vigentes.size() == 4 : 'Se esperaban 4 documentos vigentes y hay ' + vigentes.size()
+    vigentes.each { d ->
+        ResponseObject r = postJson(cookie, '/api/naves/' + naveId + '/documentos/' + d.id + '/revision',
+            '{"decision":"APROBAR"}')
+        WS.verifyResponseStatusCode(r, 200)
+    }
+}
+
 /** HU-09: POST /api/naves/{id}/tramite/estado con la accion y, si hay, la observacion. */
 def accion = { String cookie, def naveId, String nombre, String observacion = null ->
     Map cuerpo = [accion: nombre]
@@ -176,6 +190,7 @@ def aprobada = WebUI.callTestCase(findTestCase('Test Cases/TC_AUX_Nave_Con_Docum
 WS.verifyResponseStatusCode(cargarDocumento(aprobada.cookie, aprobada.naveId, 'ITC',
         crearArchivo('itc-v2.pdf', pdfValido('v2'))), 201)
 WS.verifyResponseStatusCode(accion(dgmm, aprobada.naveId, 'ADMITIR'), 200)
+aprobarDocumentos(dgmm, aprobada.naveId)   // Sprint 6 (HU-12, D4)
 WS.verifyResponseStatusCode(accion(dgmm, aprobada.naveId, 'APROBAR'), 200)
 verificarSoloLectura(aprobada.cookie, aprobada.naveId, 'Aprobada')
 
