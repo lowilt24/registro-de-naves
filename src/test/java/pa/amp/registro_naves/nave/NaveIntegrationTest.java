@@ -46,6 +46,26 @@ class NaveIntegrationTest {
         return base + " " + System.nanoTime();
     }
 
+    /**
+     * Issue #13: 61 "ß" son 61 caracteres (pasa @Size(max = 120)), pero en
+     * mayusculas son 122 ("SS"): no caben en nombre_normalizado. Antes era
+     * 500; ahora 400 en el campo nombre. Un nombre de 120 "a" sigue pasando.
+     */
+    @Test
+    void unNombreQueCreceAlPasarAMayusculasEs400NoUn500() throws Exception {
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida("ß".repeat(61))))
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.campos.nombre").exists());
+
+        String justo = "a".repeat(108) + System.nanoTime() % 1_000_000_000_000L;
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida(justo.substring(0, Math.min(120, justo.length())))))
+           .andExpect(status().isCreated());
+    }
+
     private String naveValida(String nombre) {
         return """
                {
