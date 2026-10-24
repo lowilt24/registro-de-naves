@@ -6,6 +6,7 @@ import com.kms.katalon.core.testobject.FormDataBodyParameter
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
 import com.kms.katalon.core.testobject.impl.HttpFormDataBodyContent
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.model.FailureHandling
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
@@ -25,8 +26,8 @@ def iniciarSesion = { String correo ->
     ])
     login.setBodyContent(new HttpTextBodyContent(
         'correo=' + correo + '&password=Navesitas2026*'))
-    ResponseObject r = WS.sendRequest(login)
-    return r.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+    ResponseObject r = Http.enviar(login)
+    return Http.sesion(r)
 }
 
 /** Crea un archivo temporal con el contenido dado. */
@@ -66,7 +67,7 @@ def cargarDocumento = { String cookie, def naveId, String tipo, File archivo ->
     cabeceras << new TestObjectProperty('Content-Type', ConditionType.EQUALS, cuerpo.getContentType())
     carga.setHttpHeaderProperties(cabeceras)
     carga.setBodyContent(cuerpo)
-    return WS.sendRequest(carga)
+    return Http.enviar(carga)
 }
 
 /** GET con la cookie de sesion (o sin ella si es null). */
@@ -77,7 +78,7 @@ def consultar = { String cookie, String ruta ->
     List<TestObjectProperty> cabeceras = []
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
     get.setHttpHeaderProperties(cabeceras)
-    return WS.sendRequest(get)
+    return Http.enviar(get)
 }
 
 def json = { ResponseObject r -> new JsonSlurper().parseText(r.getResponseBodyContent()) }

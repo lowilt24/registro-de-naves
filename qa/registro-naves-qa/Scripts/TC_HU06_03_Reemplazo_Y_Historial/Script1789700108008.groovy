@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -28,8 +29,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String sufijo = System.currentTimeMillis()
 
@@ -58,7 +59,7 @@ crearNave.setHttpHeaderProperties([
 ])
 crearNave.setBodyContent(new HttpTextBodyContent(cuerpoNave))
 
-ResponseObject rNave = WS.sendRequest(crearNave)
+ResponseObject rNave = Http.enviar(crearNave)
 WS.verifyResponseStatusCode(rNave, 201)
 def naveId = new JsonSlurper().parseText(rNave.getResponseBodyContent()).id
 
@@ -80,7 +81,7 @@ crearProp.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 crearProp.setBodyContent(new HttpTextBodyContent(cuerpoPropietario))
-WS.verifyResponseStatusCode(WS.sendRequest(crearProp), 201)
+WS.verifyResponseStatusCode(Http.enviar(crearProp), 201)
 
 // --- Primer agente ---
 String primerAgente = """{
@@ -102,7 +103,7 @@ designar1.setHttpHeaderProperties([
 ])
 designar1.setBodyContent(new HttpTextBodyContent(primerAgente))
 
-ResponseObject r1 = WS.sendRequest(designar1)
+ResponseObject r1 = Http.enviar(designar1)
 println('Primer agente status: ' + r1.getStatusCode())
 WS.verifyResponseStatusCode(r1, 201)
 def agenteAnterior = new JsonSlurper().parseText(r1.getResponseBodyContent())
@@ -127,7 +128,7 @@ designar2.setHttpHeaderProperties([
 ])
 designar2.setBodyContent(new HttpTextBodyContent(segundoAgente))
 
-ResponseObject r2 = WS.sendRequest(designar2)
+ResponseObject r2 = Http.enviar(designar2)
 println('Segundo agente status: ' + r2.getStatusCode())
 println('Respuesta: ' + r2.getResponseBodyContent())
 WS.verifyResponseStatusCode(r2, 201)
@@ -142,7 +143,7 @@ consultar.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 
-ResponseObject rConsulta = WS.sendRequest(consultar)
+ResponseObject rConsulta = Http.enviar(consultar)
 WS.verifyResponseStatusCode(rConsulta, 200)
 def vigente = new JsonSlurper().parseText(rConsulta.getResponseBodyContent())
 WS.verifyEqual(vigente.id, agenteNuevo.id)
@@ -156,7 +157,7 @@ historial.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 
-ResponseObject rHistorial = WS.sendRequest(historial)
+ResponseObject rHistorial = Http.enviar(historial)
 println('Historial: ' + rHistorial.getResponseBodyContent())
 
 WS.verifyResponseStatusCode(rHistorial, 200)

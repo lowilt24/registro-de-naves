@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -27,8 +28,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String sufijo = System.currentTimeMillis()
 
@@ -57,7 +58,7 @@ crearNave.setHttpHeaderProperties([
 ])
 crearNave.setBodyContent(new HttpTextBodyContent(cuerpoNave))
 
-ResponseObject rNave = WS.sendRequest(crearNave)
+ResponseObject rNave = Http.enviar(crearNave)
 WS.verifyResponseStatusCode(rNave, 201)
 def naveId = new JsonSlurper().parseText(rNave.getResponseBodyContent()).id
 
@@ -80,7 +81,7 @@ crearProp.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 crearProp.setBodyContent(new HttpTextBodyContent(cuerpoPropietario))
-WS.verifyResponseStatusCode(WS.sendRequest(crearProp), 201)
+WS.verifyResponseStatusCode(Http.enviar(crearProp), 201)
 
 // --- Consulta del vigente: 404 ---
 RequestObject consultar = new RequestObject('consultarAgente')
@@ -90,7 +91,7 @@ consultar.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 
-ResponseObject r = WS.sendRequest(consultar)
+ResponseObject r = Http.enviar(consultar)
 println('Consulta status: ' + r.getStatusCode())
 println('Respuesta: ' + r.getResponseBodyContent())
 
@@ -105,7 +106,7 @@ historial.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 
-ResponseObject rHistorial = WS.sendRequest(historial)
+ResponseObject rHistorial = Http.enviar(historial)
 println('Historial: ' + rHistorial.getResponseBodyContent())
 
 WS.verifyResponseStatusCode(rHistorial, 200)

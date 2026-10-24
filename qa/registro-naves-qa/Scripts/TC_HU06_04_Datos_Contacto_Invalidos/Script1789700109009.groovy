@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -25,8 +26,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String sufijo = System.currentTimeMillis()
 
@@ -55,7 +56,7 @@ crearNave.setHttpHeaderProperties([
 ])
 crearNave.setBodyContent(new HttpTextBodyContent(cuerpoNave))
 
-ResponseObject rNave = WS.sendRequest(crearNave)
+ResponseObject rNave = Http.enviar(crearNave)
 WS.verifyResponseStatusCode(rNave, 201)
 def naveId = new JsonSlurper().parseText(rNave.getResponseBodyContent()).id
 
@@ -77,7 +78,7 @@ crearProp.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 crearProp.setBodyContent(new HttpTextBodyContent(cuerpoPropietario))
-WS.verifyResponseStatusCode(WS.sendRequest(crearProp), 201)
+WS.verifyResponseStatusCode(Http.enviar(crearProp), 201)
 
 // Telefono con letras y correo sin arroba.
 String cuerpoAgente = """{
@@ -99,7 +100,7 @@ designar.setHttpHeaderProperties([
 ])
 designar.setBodyContent(new HttpTextBodyContent(cuerpoAgente))
 
-ResponseObject r = WS.sendRequest(designar)
+ResponseObject r = Http.enviar(designar)
 println('Designacion status: ' + r.getStatusCode())
 println('Respuesta: ' + r.getResponseBodyContent())
 
@@ -116,4 +117,4 @@ consultar.setRestRequestMethod('GET')
 consultar.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
-WS.verifyResponseStatusCode(WS.sendRequest(consultar), 404)
+WS.verifyResponseStatusCode(Http.enviar(consultar), 404)

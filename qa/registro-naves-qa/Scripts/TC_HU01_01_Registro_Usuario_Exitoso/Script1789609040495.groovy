@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -23,7 +24,7 @@ registro.setHttpHeaderProperties([
 ])
 registro.setBodyContent(new HttpTextBodyContent(cuerpo))
 
-ResponseObject r = WS.sendRequest(registro)
+ResponseObject r = Http.enviar(registro)
 println('Status: ' + r.getStatusCode())
 println('Respuesta: ' + r.getResponseBodyContent())
 

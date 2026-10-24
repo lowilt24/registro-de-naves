@@ -6,6 +6,7 @@ import com.kms.katalon.core.testobject.FormDataBodyParameter
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
 import com.kms.katalon.core.testobject.impl.HttpFormDataBodyContent
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.model.FailureHandling
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
@@ -25,8 +26,8 @@ def iniciarSesion = { String correo ->
     ])
     login.setBodyContent(new HttpTextBodyContent(
         'correo=' + correo + '&password=Navesitas2026*'))
-    ResponseObject r = WS.sendRequest(login)
-    return r.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+    ResponseObject r = Http.enviar(login)
+    return Http.sesion(r)
 }
 
 /** GET con la cookie de sesion (o sin ella si es null). */
@@ -37,7 +38,7 @@ def consultar = { String cookie, String ruta ->
     List<TestObjectProperty> cabeceras = []
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
     get.setHttpHeaderProperties(cabeceras)
-    return WS.sendRequest(get)
+    return Http.enviar(get)
 }
 
 /** POST con cuerpo JSON y la cookie de sesion (o sin ella si es null). */
@@ -51,7 +52,7 @@ def postJson = { String cookie, String ruta, String cuerpo ->
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
     p.setHttpHeaderProperties(cabeceras)
     p.setBodyContent(new HttpTextBodyContent(cuerpo))
-    return WS.sendRequest(p)
+    return Http.enviar(p)
 }
 
 def json = { ResponseObject r -> new JsonSlurper().parseText(r.getResponseBodyContent()) }
@@ -109,12 +110,12 @@ for (int intento = 0; intento < 10 && !enlace; intento++) {
     RequestObject busqueda = new RequestObject('mailpitBuscar')
     busqueda.setRestUrl('http://localhost:8025/api/v1/search?query=' + URLEncoder.encode('to:' + correo, 'UTF-8'))
     busqueda.setRestRequestMethod('GET')
-    def mensajes = json(WS.sendRequest(busqueda)).messages
+    def mensajes = json(Http.enviar(busqueda)).messages
     if (mensajes) {
         RequestObject mensaje = new RequestObject('mailpitMensaje')
         mensaje.setRestUrl('http://localhost:8025/api/v1/message/' + mensajes[0].ID)
         mensaje.setRestRequestMethod('GET')
-        def m = (json(WS.sendRequest(mensaje)).Text =~ /https?:\/\/\S*validar\?token=[\w-]+/)
+        def m = (json(Http.enviar(mensaje)).Text =~ /https?:\/\/\S*validar\?token=[\w-]+/)
         enlace = m.find() ? m.group(0) : null
     }
     if (!enlace) Thread.sleep(500)
@@ -124,7 +125,7 @@ assert enlace : 'No llego a Mailpit el correo de validacion de ' + correo
 RequestObject validar = new RequestObject('validar')
 validar.setRestUrl(enlace)
 validar.setRestRequestMethod('GET')
-WS.sendRequest(validar)
+Http.enviar(validar)
 
 String cookie = iniciarSesion(correo)
 assert cookie : 'No se pudo iniciar sesion con ' + correo

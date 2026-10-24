@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -17,8 +18,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String nombre = 'Nave Duplicada ' + System.currentTimeMillis()
 
@@ -50,12 +51,12 @@ crear.setHttpHeaderProperties([
 crear.setBodyContent(new HttpTextBodyContent(cuerpo))
 
 // Primer registro: debe crearse
-ResponseObject r1 = WS.sendRequest(crear)
+ResponseObject r1 = Http.enviar(crear)
 println('Primer registro: ' + r1.getStatusCode())
 WS.verifyResponseStatusCode(r1, 201)
 
 // Segundo registro con el mismo nombre: debe rechazarse
-ResponseObject r2 = WS.sendRequest(crear)
+ResponseObject r2 = Http.enviar(crear)
 println('Segundo registro: ' + r2.getStatusCode())
 println('Respuesta: ' + r2.getResponseBodyContent())
 WS.verifyResponseStatusCode(r2, 409)

@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -17,8 +18,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String nombre = 'Nave Katalon ' + System.currentTimeMillis()
 
@@ -49,7 +50,7 @@ crear.setHttpHeaderProperties([
 ])
 crear.setBodyContent(new HttpTextBodyContent(cuerpo))
 
-ResponseObject rCrear = WS.sendRequest(crear)
+ResponseObject rCrear = Http.enviar(crear)
 println('Registro status: ' + rCrear.getStatusCode())
 println('Respuesta: ' + rCrear.getResponseBodyContent())
 
