@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-49 HU-12 (D4, D5): reemplazar un documento aprobado vuelve a bloquear la aprobacion (409, faltantes ITC). Rechazar deja la nave RECHAZADA.</description>
+   <name>TC_HU12_06_Rechazo_Y_Reemplazo</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>d6e2ca3d-7355-44f0-8ff5-10df5c856d83</testCaseGuid>
+</TestCaseEntity>

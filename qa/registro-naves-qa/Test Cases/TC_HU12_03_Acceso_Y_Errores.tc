@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-46 HU-12: solo la DGMM revisa. 401 sin sesion; 403 agente y auditor; 404 nave o documento inexistente o de otra nave; 400 decision invalida y caracter nulo (SEC-08). Orden segun el plan.</description>
+   <name>TC_HU12_03_Acceso_Y_Errores</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>167932dd-b6db-48c5-b11c-7e74314ed155</testCaseGuid>
+</TestCaseEntity>

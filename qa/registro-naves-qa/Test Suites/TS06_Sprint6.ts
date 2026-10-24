@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestSuiteEntity>
-   <description>Casos de calidad del Sprint 6: HU-11 (bandeja de tramites de la DGMM). TC-40 a TC-43. HU-12 se agrega cuando exista el codigo.</description>
+   <description>Casos de calidad del Sprint 6: HU-11 (bandeja de tramites de la DGMM). TC-40 a TC-43. HU-12 (revision de documentos): TC-44 a TC-49, con isRun=false hasta que exista el codigo.</description>
    <name>TS06_Sprint6</name>
    <tag></tag>
    <isRerun>false</isRerun>
@@ -39,6 +39,48 @@
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/TC_HU11_04_Agente_403_Y_Entrada</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>a58c3e4c-5565-4330-b3c7-fb93bce25835</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_01_Aprobar_Documento</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>6af79f1d-8df7-478d-a1e3-6ca65b28664b</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_02_Observar_Y_Nueva_Version</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>454f5318-b7b5-4931-8ef3-05acb960a2d3</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_03_Acceso_Y_Errores</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>27fde443-b25c-4c40-ac29-248e3fcece99</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_04_Tramite_No_En_Revision</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>b4d8124e-4864-4ac0-b1cf-7647a3dfa644</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_05_Aprobar_Tramite_Exige_Aprobados</testCaseId>
+      <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>465158b0-3cbd-43c9-97d6-340f4c8b28aa</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/TC_HU12_06_Rechazo_Y_Reemplazo</testCaseId>
       <usingDataBindingAtTestSuiteLevel>false</usingDataBindingAtTestSuiteLevel>
    </testCaseLink>
 </TestSuiteEntity>

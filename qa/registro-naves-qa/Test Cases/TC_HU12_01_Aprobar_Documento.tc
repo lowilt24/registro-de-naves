@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-44 HU-12: la DGMM aprueba un documento vigente y pendiente con el tramite En revision (200, con quien y cuando). No mueve el tramite. Revisar otra vez la misma version da 409.</description>
+   <name>TC_HU12_01_Aprobar_Documento</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>f6e4883c-0ffa-44aa-b33b-71d26fa2c3f2</testCaseGuid>
+</TestCaseEntity>

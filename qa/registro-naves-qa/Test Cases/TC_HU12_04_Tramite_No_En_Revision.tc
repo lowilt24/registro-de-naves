@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-47 HU-12 (D2): revisar documentos solo con el tramite En revision. En Solicitud presentada, Observada o Rechazada da 409; tras Subsanar se puede.</description>
+   <name>TC_HU12_04_Tramite_No_En_Revision</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a6334629-7077-44fc-97ce-7229dd560e84</testCaseGuid>
+</TestCaseEntity>

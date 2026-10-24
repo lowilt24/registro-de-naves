@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-48 HU-12 (D4, D5): aprobar el tramite exige los cuatro obligatorios APROBADOS (409 con faltantes en el orden del enum). Con los cuatro: Aprobada y nave ABANDERADA.</description>
+   <name>TC_HU12_05_Aprobar_Tramite_Exige_Aprobados</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>b05adcf4-2c2c-4522-bae4-8503ec8bd591</testCaseGuid>
+</TestCaseEntity>

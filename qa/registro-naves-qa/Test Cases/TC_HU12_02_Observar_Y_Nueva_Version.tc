@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-45 HU-12 (D2, D3): observar exige observacion (vacia o mas de 1000: 400). No mueve el tramite. La version nueva entra PENDIENTE y la anterior conserva su observacion; la anterior ya no se revisa (409).</description>
+   <name>TC_HU12_02_Observar_Y_Nueva_Version</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>6406ffd4-de1a-40b7-a8ab-6f603e17a949</testCaseGuid>
+</TestCaseEntity>
