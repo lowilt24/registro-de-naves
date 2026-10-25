@@ -51,3 +51,6 @@ seguridad/reportes/
 
 ### Sprint 4: PDF cargados por la aplicacion (HU-07). Nunca se versionan. ###
 almacen/
+
+# SEC-03: credenciales locales. Se sube solo .env.example.
+.env

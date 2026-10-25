@@ -3,8 +3,9 @@ services:
     image: postgres:17
     container_name: amp-db
     environment:
-      - POSTGRES_USER=registro
-      - POSTGRES_PASSWORD=RegistroSeguro2026!
+      # SEC-03: la contrasena sale de .env (docker compose lo lee solo).
+      - POSTGRES_USER=${DB_USER:-registro}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?Falta DB_PASSWORD: copie .env.example a .env}
       - POSTGRES_DB=registro_naves
     ports: ["5432:5432"]
     volumes: ["amp-data:/var/lib/postgresql/data"]
