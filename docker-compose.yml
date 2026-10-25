@@ -3,11 +3,11 @@ services:
     image: postgres:17
     container_name: amp-db
     environment:
-      POSTGRES_DB: registro_naves
-      POSTGRES_USER: registro
-      POSTGRES_PASSWORD: registro
+      - POSTGRES_USER=registro
+      - POSTGRES_PASSWORD=RegistroSeguro2026!
+      - POSTGRES_DB=registro_naves
     ports: ["5432:5432"]
-    volumes: [amp-data:/var/lib/postgresql/data]
+    volumes: ["amp-data:/var/lib/postgresql/data"]
 
   # Sprint 4: servidor de correo de desarrollo. Recibe los correos de
   # validacion y los muestra en http://localhost:8025 sin enviarlos a

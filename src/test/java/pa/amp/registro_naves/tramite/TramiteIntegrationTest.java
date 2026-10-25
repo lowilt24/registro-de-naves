@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -104,7 +105,7 @@ class TramiteIntegrationTest {
 
     @Test
     void laRespuestaDelRegistroRotulaLosDosEstadosPorSeparado() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveJson(unico("Dos Estados"))))
            .andExpect(status().isCreated())
@@ -252,7 +253,7 @@ class TramiteIntegrationTest {
         // Accion que no existe: falla al leer el cuerpo.
         accion(nave, DGMM, "VOLAR", null).andExpect(status().isBadRequest());
         // Sin accion.
-        mvc.perform(post(ruta(nave) + "/estado").with(user(DGMM))
+        mvc.perform(post(ruta(nave) + "/estado").with(user(DGMM)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).content("{}"))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.campos.accion").exists());
@@ -478,7 +479,7 @@ class TramiteIntegrationTest {
     void soloElAgenteNavieroRegistraNaves() throws Exception {
         for (String usuario : new String[] {DGMM, AUDITOR}) {
             String nombre = unico("No Agente");
-            mvc.perform(post("/api/naves").with(user(usuario))
+            mvc.perform(post("/api/naves").with(user(usuario)).with(csrf())
                             .contentType(MediaType.APPLICATION_JSON).content(naveJson(nombre)))
                .andExpect(status().isForbidden())
                .andExpect(jsonPath("$.mensaje").value("Solo un agente naviero puede registrar naves."));
@@ -502,7 +503,7 @@ class TramiteIntegrationTest {
     void unCampoDeLaNaveConCaracterNuloEs400() throws Exception {
         String cuerpo = naveJson(unico("Nulo Lugar"))
                 .replace("Astillero de prueba", "Astillero\\u0000X");
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).content(cuerpo))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.mensaje").value("El texto contiene caracteres no permitidos."));
@@ -525,21 +526,21 @@ class TramiteIntegrationTest {
         cargarDocumento(naveId, AGENTE, "ITC")
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.mensaje").value(mensaje));
-        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+        mvc.perform(post("/api/propietarios").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {"nombre": "Naviera Tarde S.A.", "tipo": "JURIDICA",
-                                "nacionalidad": "Panamena", "domicilio": "Calle 50",
-                                "paisConstitucion": "Panama", "naveId": %d, "porcentaje": 1}
-                               """.formatted(naveId)))
+                                {"nombre": "Naviera Tarde S.A.", "tipo": "JURIDICA",
+                                 "nacionalidad": "Panamena", "domicilio": "Calle 50",
+                                 "paisConstitucion": "Panama", "naveId": %d, "porcentaje": 1}
+                                """.formatted(naveId)))
            .andExpect(status().isConflict())
            .andExpect(jsonPath("$.mensaje").value(mensaje));
-        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(AGENTE))
+        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {"nombre": "Bufete Tarde", "idoneidad": "IDN-1010",
-                                "telefono": "+507 200-1234", "correo": "tarde@bufete.com.pa"}
-                               """))
+                                {"nombre": "Bufete Tarde", "idoneidad": "IDN-1010",
+                                 "telefono": "+507 200-1234", "correo": "tarde@bufete.com.pa"}
+                                """))
            .andExpect(status().isConflict())
            .andExpect(jsonPath("$.mensaje").value(mensaje));
         // Leer sigue permitido.
@@ -559,7 +560,7 @@ class TramiteIntegrationTest {
         String cuerpo = observacion == null
                 ? "{\"accion\":\"" + accion + "\"}"
                 : "{\"accion\":\"" + accion + "\",\"observacion\":\"" + observacion + "\"}";
-        var peticion = post(ruta(naveId) + "/estado")
+        var peticion = post(ruta(naveId) + "/estado").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(cuerpo);
         if (usuario != null) {
             peticion = peticion.with(user(usuario));
@@ -577,7 +578,7 @@ class TramiteIntegrationTest {
 
     private Long crearNave(String base, String usuario) throws Exception {
         String nombre = unico(base);
-        mvc.perform(post("/api/naves").with(user(usuario))
+        mvc.perform(post("/api/naves").with(user(usuario)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).content(naveJson(nombre)))
            .andExpect(status().isCreated());
         return naves.findByNombreNormalizado(Nave.normalizar(nombre))
@@ -586,22 +587,22 @@ class TramiteIntegrationTest {
 
     private static String naveJson(String nombre) {
         return """
-               {
-                 "nombre": "%s",
-                 "tipo": "CARGA",
-                 "servicio": "CABOTAJE",
-                 "tonelajeBruto": 5000.00,
-                 "tonelajeNeto": 2500.00,
-                 "eslora": 90.00,
-                 "manga": 14.00,
-                 "puntal": 8.00,
-                 "anioConstruccion": 2022,
-                 "lugarConstruccion": "Astillero de prueba",
-                 "materialCasco": "Acero",
-                 "tipoPropulsion": "Motor diesel",
-                 "potenciaKw": 3100.00
-               }
-               """.formatted(nombre);
+                {
+                  "nombre": "%s",
+                  "tipo": "CARGA",
+                  "servicio": "CABOTAJE",
+                  "tonelajeBruto": 5000.00,
+                  "tonelajeNeto": 2500.00,
+                  "eslora": 90.00,
+                  "manga": 14.00,
+                  "puntal": 8.00,
+                  "anioConstruccion": 2022,
+                  "lugarConstruccion": "Astillero de prueba",
+                  "materialCasco": "Acero",
+                  "tipoPropulsion": "Motor diesel",
+                  "potenciaKw": 3100.00
+                }
+                """.formatted(nombre);
     }
 
     /**
@@ -609,20 +610,20 @@ class TramiteIntegrationTest {
      * residente (precondicion de HU-07) y los 4 documentos obligatorios.
      */
     private void completarExpediente(Long naveId, String usuario) throws Exception {
-        mvc.perform(post("/api/propietarios").with(user(usuario))
+        mvc.perform(post("/api/propietarios").with(user(usuario)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {"nombre": "Naviera Tramite S.A.", "tipo": "JURIDICA",
-                                "nacionalidad": "Panamena", "domicilio": "Calle 50",
-                                "paisConstitucion": "Panama", "naveId": %d}
-                               """.formatted(naveId)))
+                                {"nombre": "Naviera Tramite S.A.", "tipo": "JURIDICA",
+                                 "nacionalidad": "Panamena", "domicilio": "Calle 50",
+                                 "paisConstitucion": "Panama", "naveId": %d}
+                                """.formatted(naveId)))
            .andExpect(status().isCreated());
-        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(usuario))
+        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(usuario)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {"nombre": "Bufete Tramite", "idoneidad": "IDN-0909",
-                                "telefono": "+507 200-1234", "correo": "tramite@bufete.com.pa"}
-                               """))
+                                {"nombre": "Bufete Tramite", "idoneidad": "IDN-0909",
+                                 "telefono": "+507 200-1234", "correo": "tramite@bufete.com.pa"}
+                                """))
            .andExpect(status().isCreated());
         for (TipoDocumento tipo : TipoDocumento.OBLIGATORIOS) {
             cargarDocumento(naveId, usuario, tipo.name()).andExpect(status().isCreated());
@@ -632,7 +633,7 @@ class TramiteIntegrationTest {
     private ResultActions cargarDocumento(Long naveId, String usuario, String tipo) throws Exception {
         MockMultipartFile pdf = new MockMultipartFile("archivo", tipo.toLowerCase() + ".pdf",
                 "application/pdf", ("%PDF-1.4\n%" + tipo + "\n%%EOF\n").getBytes());
-        return mvc.perform(multipart("/api/naves/" + naveId + "/documentos")
+        return mvc.perform(multipart("/api/naves/" + naveId + "/documentos").with(csrf())
                 .file(pdf).param("tipo", tipo).with(user(usuario)));
     }
 }
