@@ -28,6 +28,7 @@ import java.sql.Connection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -125,7 +126,7 @@ class TramiteInvariantesIntegrationTest {
             "DOCUMENTOS_CARGADOS, SOLICITUD_PRESENTADA",
             "EN_REVISION,         EN_REVISION",
             "ABANDERADA,          APROBADA",
-            "RECHAZADA,           RECHAZADA"
+            "RECHAZADA,          RECHAZADA"
     })
     void laV6RellenaSegunElEstadoDeLaNave(String estadoNave, EstadoTramite esperado) throws Exception {
         // Una nave "anterior a la V6": sin tramite y con el estado indicado.
@@ -283,14 +284,14 @@ class TramiteInvariantesIntegrationTest {
     }
 
     private ResultActions accion(Long naveId, String usuario, String accion) throws Exception {
-        return mvc.perform(post(ruta(naveId) + "/estado").with(user(usuario))
+        return mvc.perform(post(ruta(naveId) + "/estado").with(user(usuario)).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"accion\":\"" + accion + "\"}"));
     }
 
     private Long crearNave(String base) throws Exception {
         String nombre = base + " " + System.nanoTime();
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                  {

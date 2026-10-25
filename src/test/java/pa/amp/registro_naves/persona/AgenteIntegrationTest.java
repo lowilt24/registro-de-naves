@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,24 +47,24 @@ class AgenteIntegrationTest {
 
     private Long crearNave(String nombre, String usuario) throws Exception {
         String cuerpo = """
-               {
-                 "nombre": "%s",
-                 "tipo": "CARGA",
-                 "servicio": "CABOTAJE",
-                 "tonelajeBruto": 5000.00,
-                 "tonelajeNeto": 2500.00,
-                 "eslora": 90.00,
-                 "manga": 14.00,
-                 "puntal": 8.00,
-                 "anioConstruccion": 2022,
-                 "lugarConstruccion": "Astillero de prueba",
-                 "materialCasco": "Acero",
-                 "tipoPropulsion": "Motor diesel",
-                 "potenciaKw": 3100.00
-               }
-               """.formatted(nombre);
+                {
+                  "nombre": "%s",
+                  "tipo": "CARGA",
+                  "servicio": "CABOTAJE",
+                  "tonelajeBruto": 5000.00,
+                  "tonelajeNeto": 2500.00,
+                  "eslora": 90.00,
+                  "manga": 14.00,
+                  "puntal": 8.00,
+                  "anioConstruccion": 2022,
+                  "lugarConstruccion": "Astillero de prueba",
+                  "materialCasco": "Acero",
+                  "tipoPropulsion": "Motor diesel",
+                  "potenciaKw": 3100.00
+                }
+                """.formatted(nombre);
 
-        mvc.perform(post("/api/naves").with(user(usuario))
+        mvc.perform(post("/api/naves").with(user(usuario)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cuerpo))
            .andExpect(status().isCreated());
@@ -75,17 +76,17 @@ class AgenteIntegrationTest {
 
     private void vincularPropietario(Long naveId) throws Exception {
         String cuerpo = """
-               {
-                 "nombre": "Naviera de Prueba S.A.",
-                 "tipo": "JURIDICA",
-                 "nacionalidad": "Panamena",
-                 "domicilio": "Calle 50, Ciudad de Panama",
-                 "paisConstitucion": "Panama",
-                 "naveId": %d
-               }
-               """.formatted(naveId);
+                {
+                  "nombre": "Naviera de Prueba S.A.",
+                  "tipo": "JURIDICA",
+                  "nacionalidad": "Panamena",
+                  "domicilio": "Calle 50, Ciudad de Panama",
+                  "paisConstitucion": "Panama",
+                  "naveId": %d
+                }
+                """.formatted(naveId);
 
-        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+        mvc.perform(post("/api/propietarios").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cuerpo))
            .andExpect(status().isCreated());
@@ -93,22 +94,22 @@ class AgenteIntegrationTest {
 
     private String agente(String nombre, String idoneidad) {
         return """
-               {
-                 "nombre": "%s",
-                 "idoneidad": "%s",
-                 "telefono": "+507 200-1234",
-                 "correo": "contacto@bufete.com.pa",
-                 "poderNumero": "PG-2026-001",
-                 "poderFecha": "2026-03-15",
-                 "poderLugar": "Notaria Quinta del Circuito de Panama"
-               }
-               """.formatted(nombre, idoneidad);
+                {
+                  "nombre": "%s",
+                  "idoneidad": "%s",
+                  "telefono": "+507 200-1234",
+                  "correo": "contacto@bufete.com.pa",
+                  "poderNumero": "PG-2026-001",
+                  "poderFecha": "2026-03-15",
+                  "poderLugar": "Notaria Quinta del Circuito de Panama"
+                }
+                """.formatted(nombre, idoneidad);
     }
 
     /** Positivo: se designa el agente de una nave con propietario. */
     @Test
     void designaAgenteResidente() throws Exception {
-        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(AGENTE))
+        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Bufete Maritimo Balboa", "IDN-4521")))
            .andExpect(status().isCreated())
@@ -120,7 +121,7 @@ class AgenteIntegrationTest {
     /** Precondicion de HU-06: sin propietario vinculado no se puede designar. */
     @Test
     void noSeDesignaAgenteSinPropietarioVinculado() throws Exception {
-        mvc.perform(post("/api/naves/" + naveSinPropietario + "/agente-residente").with(user(AGENTE))
+        mvc.perform(post("/api/naves/" + naveSinPropietario + "/agente-residente").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Bufete Sin Nave", "IDN-0001")))
            .andExpect(status().isConflict())
@@ -132,12 +133,12 @@ class AgenteIntegrationTest {
     void laNuevaDesignacionReemplazaALaAnterior() throws Exception {
         String url = "/api/naves/" + naveConPropietario + "/agente-residente";
 
-        mvc.perform(post(url).with(user(AGENTE))
+        mvc.perform(post(url).with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Primer Bufete", "IDN-1111")))
            .andExpect(status().isCreated());
 
-        mvc.perform(post(url).with(user(AGENTE))
+        mvc.perform(post(url).with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Segundo Bufete", "IDN-2222")))
            .andExpect(status().isCreated())
@@ -166,7 +167,7 @@ class AgenteIntegrationTest {
     /** Negativo: faltan telefono y correo. */
     @Test
     void rechazaAgenteSinCamposObligatorios() throws Exception {
-        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(AGENTE))
+        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nombre\":\"Bufete Incompleto\"}"))
            .andExpect(status().isBadRequest())
@@ -177,7 +178,7 @@ class AgenteIntegrationTest {
     /** Criterio de HU-06: una peticion sin sesion es rechazada. */
     @Test
     void sinSesionEsRechazado() throws Exception {
-        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente")
+        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Bufete Anonimo", "IDN-9999")))
            .andExpect(status().isUnauthorized());
@@ -186,7 +187,7 @@ class AgenteIntegrationTest {
     /** No se puede designar agente a una nave ajena. */
     @Test
     void noSePuedeDesignarEnNaveAjena() throws Exception {
-        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(REVISOR))
+        mvc.perform(post("/api/naves/" + naveConPropietario + "/agente-residente").with(user(REVISOR)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(agente("Bufete Intruso", "IDN-8888")))
            .andExpect(status().isForbidden());

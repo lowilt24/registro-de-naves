@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -89,7 +90,7 @@ class NaveIntegrationTest {
     /** TC-01 (HU-03, positivo): una nave con todos los campos queda REGISTRADA. */
     @Test
     void registraNaveConDatosCompletos() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida(nombreUnico("Vientos de Chiriqui"))))
            .andExpect(status().isCreated())
@@ -100,7 +101,7 @@ class NaveIntegrationTest {
     /** TC-02 (HU-03, negativo): faltan campos obligatorios. */
     @Test
     void rechazaNaveSinCamposObligatorios() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nombre\":\"Nave Incompleta\"}"))
            .andExpect(status().isBadRequest())
@@ -115,7 +116,7 @@ class NaveIntegrationTest {
                 .replace("\"tonelajeBruto\": 12000.00", "\"tonelajeBruto\": -5")
                 .replace("\"anioConstruccion\": 2020", "\"anioConstruccion\": 1500");
 
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalida))
            .andExpect(status().isBadRequest())
@@ -144,7 +145,7 @@ class NaveIntegrationTest {
     /** TC-06 (HU-04, negativo): el bloqueo aplica tambien al guardar. */
     @Test
     void bloqueaRegistroConNombreDuplicado() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("Estrella del Istmo")))
            .andExpect(status().isConflict())
@@ -175,7 +176,7 @@ class NaveIntegrationTest {
      */
     @Test
     void rechazaNombreConSecuenciaDeComentarioSql() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("admin'--")))
            .andExpect(status().isBadRequest())
@@ -188,7 +189,7 @@ class NaveIntegrationTest {
      */
     @Test
     void cuerpoMalFormadoDevuelve400() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nombre\":\"Prueba\",\"tonelajeBruto\":abc}"))
            .andExpect(status().isBadRequest());
@@ -197,7 +198,7 @@ class NaveIntegrationTest {
     /** Remediacion de SEC-04: sin sesion no se entra. */
     @Test
     void sinSesionElRegistroEsRechazado() throws Exception {
-        mvc.perform(post("/api/naves")
+        mvc.perform(post("/api/naves").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("Nave Sin Sesion")))
            .andExpect(status().isUnauthorized());

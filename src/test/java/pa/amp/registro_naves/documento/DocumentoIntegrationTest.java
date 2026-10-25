@@ -25,6 +25,7 @@ import java.util.HexFormat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -70,7 +71,7 @@ class DocumentoIntegrationTest {
     @Test
     void cargaUnPdfValido() throws Exception {
         byte[] contenido = pdf("itc");
-        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", contenido)).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", contenido)).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isCreated())
            .andExpect(jsonPath("$.tipo").value("ITC"))
            .andExpect(jsonPath("$.version").value(1))
@@ -86,9 +87,9 @@ class DocumentoIntegrationTest {
     /** TC-17, criterio 7: recargar el mismo tipo crea version nueva y conserva la anterior. */
     @Test
     void recargarElMismoTipoCreaVersionNueva() throws Exception {
-        mvc.perform(cargar(nave, "ITC", archivo("v1.pdf", pdf("uno"))).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "ITC", archivo("v1.pdf", pdf("uno"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isCreated());
-        mvc.perform(cargar(nave, "ITC", archivo("v2.pdf", pdf("dos"))).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "ITC", archivo("v2.pdf", pdf("dos"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isCreated())
            .andExpect(jsonPath("$.version").value(2));
 
@@ -112,10 +113,10 @@ class DocumentoIntegrationTest {
         byte[] texto = "esto es texto plano".getBytes(StandardCharsets.UTF_8);
         byte[] ejecutable = {0x4D, 0x5A, (byte) 0x90, 0x00, 0x03};
 
-        mvc.perform(cargar(nave, "SMC", archivo("texto.pdf", texto)).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "SMC", archivo("texto.pdf", texto)).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isUnsupportedMediaType())
            .andExpect(jsonPath("$.campos.archivo").exists());
-        mvc.perform(cargar(nave, "SMC", archivo("programa.pdf", ejecutable)).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "SMC", archivo("programa.pdf", ejecutable)).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isUnsupportedMediaType());
 
         assertThat(documentos.buscar(nave, null, null, true)).isEmpty();
@@ -128,7 +129,7 @@ class DocumentoIntegrationTest {
         byte[] firma = "%PDF-1.4".getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(firma, 0, grande, 0, firma.length);
 
-        mvc.perform(cargar(nave, "CERTIFICADO_PROPIEDAD", archivo("grande.pdf", grande)).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "CERTIFICADO_PROPIEDAD", archivo("grande.pdf", grande)).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isContentTooLarge())
            .andExpect(jsonPath("$.mensaje").exists());
     }
@@ -140,16 +141,16 @@ class DocumentoIntegrationTest {
         byte[] firma = "%PDF-1.4".getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(firma, 0, justo, 0, firma.length);
 
-        mvc.perform(cargar(nave, "CERTIFICADO_PROPIEDAD", archivo("justo.pdf", justo)).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "CERTIFICADO_PROPIEDAD", archivo("justo.pdf", justo)).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isCreated());
     }
 
     /** TC-20: nave ajena 403, nave inexistente 404. */
     @Test
     void noSeCargaEnNaveAjenaNiInexistente() throws Exception {
-        mvc.perform(cargar(nave, "ITC", archivo("x.pdf", pdf("x"))).with(user(REVISOR)))
+        mvc.perform(cargar(nave, "ITC", archivo("x.pdf", pdf("x"))).with(user(REVISOR)).with(csrf()))
            .andExpect(status().isForbidden());
-        mvc.perform(cargar(999_999_999L, "ITC", archivo("x.pdf", pdf("x"))).with(user(AGENTE)))
+        mvc.perform(cargar(999_999_999L, "ITC", archivo("x.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isNotFound());
     }
 
@@ -159,20 +160,20 @@ class DocumentoIntegrationTest {
         Long sinAgente = crearNave("Nave Sin Agente Docs", AGENTE);
         vincularPropietario(sinAgente);
 
-        mvc.perform(cargar(sinAgente, "ITC", archivo("x.pdf", pdf("x"))).with(user(AGENTE)))
+        mvc.perform(cargar(sinAgente, "ITC", archivo("x.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isConflict());
     }
 
     /** Criterio 1: tipo fuera de la lista, o sin tipo, o sin archivo: 400 por campo. */
     @Test
     void validaTipoYArchivo() throws Exception {
-        mvc.perform(cargar(nave, "PASAPORTE", archivo("x.pdf", pdf("x"))).with(user(AGENTE)))
+        mvc.perform(cargar(nave, "PASAPORTE", archivo("x.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.campos.tipo").exists());
-        mvc.perform(multipart(rutaLista(nave)).file(archivo("x.pdf", pdf("x"))).with(user(AGENTE)))
+        mvc.perform(multipart(rutaLista(nave)).file(archivo("x.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.campos.tipo").exists());
-        mvc.perform(multipart(rutaLista(nave)).param("tipo", "ITC").with(user(AGENTE)))
+        mvc.perform(multipart(rutaLista(nave)).param("tipo", "ITC").with(user(AGENTE)).with(csrf()))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.campos.archivo").exists());
     }
@@ -184,7 +185,7 @@ class DocumentoIntegrationTest {
     @Test
     void elNombreDelClienteNoTocaElDisco() throws Exception {
         MvcResult r = mvc.perform(cargar(nave, "SMC",
-                        archivo("../../../etc/passwd.pdf", pdf("traversal"))).with(user(AGENTE)))
+                        archivo("../../../etc/passwd.pdf", pdf("traversal"))).with(user(AGENTE)).with(csrf()))
            .andExpect(status().isCreated())
            .andExpect(jsonPath("$.nombreArchivo").value("passwd.pdf"))
            .andReturn();
@@ -199,7 +200,7 @@ class DocumentoIntegrationTest {
     /** Enviar JSON al endpoint de carga es un error del cliente, no un 500. */
     @Test
     void jsonEnLugarDeMultipartDa415() throws Exception {
-        mvc.perform(post(rutaLista(nave)).with(user(AGENTE))
+        mvc.perform(post(rutaLista(nave)).with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"tipo\":\"ITC\"}"))
            .andExpect(status().isUnsupportedMediaType());
@@ -212,8 +213,8 @@ class DocumentoIntegrationTest {
     /** TC-21 */
     @Test
     void consultaConDocumentos() throws Exception {
-        mvc.perform(cargar(nave, "SMC", archivo("smc.pdf", pdf("smc"))).with(user(AGENTE)));
-        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("itc"))).with(user(AGENTE)));
+        mvc.perform(cargar(nave, "SMC", archivo("smc.pdf", pdf("smc"))).with(user(AGENTE)).with(csrf()));
+        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("itc"))).with(user(AGENTE)).with(csrf()));
 
         mvc.perform(get(rutaLista(nave)).with(user(AGENTE)))
            .andExpect(status().isOk())
@@ -234,8 +235,8 @@ class DocumentoIntegrationTest {
     /** TC-23 */
     @Test
     void filtraPorTipoYEstado() throws Exception {
-        mvc.perform(cargar(nave, "SMC", archivo("smc.pdf", pdf("smc"))).with(user(AGENTE)));
-        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("itc"))).with(user(AGENTE)));
+        mvc.perform(cargar(nave, "SMC", archivo("smc.pdf", pdf("smc"))).with(user(AGENTE)).with(csrf()));
+        mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("itc"))).with(user(AGENTE)).with(csrf()));
 
         mvc.perform(get(rutaLista(nave)).param("tipo", "ITC").with(user(AGENTE)))
            .andExpect(jsonPath("$", hasSize(1)))
@@ -270,7 +271,7 @@ class DocumentoIntegrationTest {
     @Test
     void elDuenoDescargaElArchivo() throws Exception {
         byte[] contenido = pdf("descarga");
-        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc final.pdf", contenido)).with(user(AGENTE)))
+        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc final.pdf", contenido)).with(user(AGENTE)).with(csrf()))
                 .andReturn());
 
         MvcResult r = mvc.perform(get(rutaArchivo(nave, id)).with(user(AGENTE)))
@@ -285,7 +286,7 @@ class DocumentoIntegrationTest {
     /** TC-24: otro usuario por la ruta de la nave duena -> 403; sin sesion -> 401. */
     @Test
     void otroUsuarioNoDescarga() throws Exception {
-        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)))
+        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
                 .andReturn());
 
         mvc.perform(get(rutaArchivo(nave, id)).with(user(otroAgente()))).andExpect(status().isForbidden());
@@ -304,7 +305,7 @@ class DocumentoIntegrationTest {
      */
     @Test
     void idorConNavePropiaYDocumentoAjeno() throws Exception {
-        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)))
+        Long id = idDe(mvc.perform(cargar(nave, "ITC", archivo("itc.pdf", pdf("x"))).with(user(AGENTE)).with(csrf()))
                 .andReturn());
         String otro = otroAgente();
         Long naveDelOtro = crearNave("Nave Del Otro Agente Docs", otro);
@@ -374,23 +375,23 @@ class DocumentoIntegrationTest {
 
     private Long crearNave(String nombre, String usuario) throws Exception {
         String cuerpo = """
-               {
-                 "nombre": "%s",
-                 "tipo": "CARGA",
-                 "servicio": "CABOTAJE",
-                 "tonelajeBruto": 5000.00,
-                 "tonelajeNeto": 2500.00,
-                 "eslora": 90.00,
-                 "manga": 14.00,
-                 "puntal": 8.00,
-                 "anioConstruccion": 2022,
-                 "lugarConstruccion": "Astillero de prueba",
-                 "materialCasco": "Acero",
-                 "tipoPropulsion": "Motor diesel",
-                 "potenciaKw": 3100.00
-               }
-               """.formatted(nombre);
-        mvc.perform(post("/api/naves").with(user(usuario))
+                {
+                  "nombre": "%s",
+                  "tipo": "CARGA",
+                  "servicio": "CABOTAJE",
+                  "tonelajeBruto": 5000.00,
+                  "tonelajeNeto": 2500.00,
+                  "eslora": 90.00,
+                  "manga": 14.00,
+                  "puntal": 8.00,
+                  "anioConstruccion": 2022,
+                  "lugarConstruccion": "Astillero de prueba",
+                  "materialCasco": "Acero",
+                  "tipoPropulsion": "Motor diesel",
+                  "potenciaKw": 3100.00
+                }
+                """.formatted(nombre);
+        mvc.perform(post("/api/naves").with(user(usuario)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).content(cuerpo))
            .andExpect(status().isCreated());
         return naves.findByNombreNormalizado(Nave.normalizar(nombre))
@@ -398,32 +399,32 @@ class DocumentoIntegrationTest {
     }
 
     private void vincularPropietario(Long naveId) throws Exception {
-        mvc.perform(post("/api/propietarios").with(user(AGENTE))
+        mvc.perform(post("/api/propietarios").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {
-                                 "nombre": "Naviera Documentos S.A.",
-                                 "tipo": "JURIDICA",
-                                 "nacionalidad": "Panamena",
-                                 "domicilio": "Calle 50, Ciudad de Panama",
-                                 "paisConstitucion": "Panama",
-                                 "naveId": %d
-                               }
-                               """.formatted(naveId)))
+                                {
+                                  "nombre": "Naviera Documentos S.A.",
+                                  "tipo": "JURIDICA",
+                                  "nacionalidad": "Panamena",
+                                  "domicilio": "Calle 50, Ciudad de Panama",
+                                  "paisConstitucion": "Panama",
+                                  "naveId": %d
+                                }
+                                """.formatted(naveId)))
            .andExpect(status().isCreated());
     }
 
     private void designarAgente(Long naveId) throws Exception {
-        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(AGENTE))
+        mvc.perform(post("/api/naves/" + naveId + "/agente-residente").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                               {
-                                 "nombre": "Bufete Documentos",
-                                 "idoneidad": "IDN-0707",
-                                 "telefono": "+507 200-1234",
-                                 "correo": "docs@bufete.com.pa"
-                               }
-                               """))
+                                {
+                                  "nombre": "Bufete Documentos",
+                                  "idoneidad": "IDN-0707",
+                                  "telefono": "+507 200-1234",
+                                  "correo": "docs@bufete.com.pa"
+                                }
+                                """))
            .andExpect(status().isCreated());
     }
 }
