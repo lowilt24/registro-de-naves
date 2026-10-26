@@ -70,7 +70,7 @@ No entra en la fila de casos pasados: está en el mismo LEEME, secciones 8 y 9.
 
 | Issue | Defecto | Severidad | Estado |
 |---|---|---|---|
-| [#12](https://github.com/lowilt24/registro-de-naves/issues/12) | Cualquiera puede registrarse como Funcionario DGMM y aprobar trámites ajenos | Alta | **Abierto**: decide la PO. Con este abierto no se cumple la DoD |
+| [#12](https://github.com/lowilt24/registro-de-naves/issues/12) | Cualquiera puede registrarse como Funcionario DGMM y aprobar trámites ajenos | Alta | **Abierto**: pasa al Sprint 7 como limitación conocida (decisión de la PO, 25-10) |
 | [#13](https://github.com/lowilt24/registro-de-naves/issues/13) | `POST /api/naves` da 500 si el nombre en mayúsculas pasa de 120 caracteres | Media | Corregido en el sprint (`78ae4c8`) |
 | [#14](https://github.com/lowilt24/registro-de-naves/issues/14) | `docker compose` no arranca: el mensaje de `DB_PASSWORD` rompe el YAML | Media | Corregido en el sprint (`9754cbd`) |
 | [#15](https://github.com/lowilt24/registro-de-naves/issues/15) | La bandeja se desborda horizontalmente con un nombre de nave largo sin espacios | Baja–media | **Abierto** (Ismael) |

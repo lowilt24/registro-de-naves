@@ -8,8 +8,8 @@ de documentos con cierre del trámite (HU-12), CSRF (SEC-05), credenciales fuera
 cada documento y apruebe una nave que queda abanderada. Y cerrar la deuda de seguridad y de
 calidad que venía de sprints anteriores.
 
-> **Borrador del 25-10-2026.** Falta la decisión de la PO sobre el issue #12 (ver
-> "Pendiente"). Se completa al cierre.
+> **Estado al 25-10-2026.** La PO decidió pasar el issue #12 al Sprint 7 como limitación
+> conocida. Falta que acepte HU-11 y HU-12 el lunes 26.
 
 ## Cómo correrlo
 
@@ -82,7 +82,7 @@ Detalle en:
 
 | Issue | Defecto | Severidad | Estado |
 |---|---|---|---|
-| #12 | Cualquiera puede registrarse como Funcionario DGMM y aprobar trámites ajenos | Alta | **Abierto: decide la PO** |
+| #12 | Cualquiera puede registrarse como Funcionario DGMM y aprobar trámites ajenos | Alta | **Abierto: pasa al Sprint 7** (decisión de la PO, 25-10) |
 | #13 | 500 con nombres que crecen al pasar a mayúsculas (`ß` → `SS`) | Media | Corregido (`78ae4c8`) |
 | #14 | `docker compose` no arrancaba tras SEC-03 | Media | Corregido (`9754cbd`) |
 | #15 | La bandeja se desborda con un nombre de nave largo sin espacios | Baja–media | Abierto; se propone pasarlo al Sprint 7 |
@@ -121,13 +121,13 @@ o el trámite se ejecuta al primer clic, sin confirmación, y no se puede deshac
 ## Pendiente
 
 - **PO (Madeleine):**
-  - **#12:** corregirlo en este sprint (dos líneas; recomendado) o aceptarlo como limitación
-    conocida y pasarlo al Sprint 7. *[Completar con la decisión y la fecha.]*
+  - ~~**#12**~~: decidido el 25-10. Pasa al Sprint 7 como limitación conocida. Con eso, la DoD
+    se cumple salvo en "0 defectos abiertos de severidad alta", por decisión explícita de la PO.
   - Confirmar D5 en Desistida: la nave queda `REGISTRADA`.
   - Aprobar que el #15 pase al Sprint 7.
   - Responder si una aprobación debería poder deshacerse (observación de usabilidad).
   - Aceptar HU-11 y HU-12, y entregar el backlog de los Sprints 7 a 9 (D8).
-- **Ismael:** #15, y el #12 si la PO decide corregirlo ahora.
+- **Ismael:** #12 y #15, en el Sprint 7.
 - **Abdiel:**
   - revisar la corrida de Wfuzz;
   - SEC-09 (`/error` pública);
@@ -135,6 +135,6 @@ o el trámite se ejecuta al primer clic, sin confirmación, y no se puede deshac
     sigue con la de los sprints 1 a 5.
 - **Sprint 7 (propuesto):**
   - HU-13 (ITC y SMC condicionales, con la regla D6);
-  - alta de funcionarios DGMM, si el #12 se corrige ahora;
+  - #12, con su historia de alta de funcionarios DGMM (quién crea esas cuentas);
   - el #15;
   - confirmación antes de aprobar.
