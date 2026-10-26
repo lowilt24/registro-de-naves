@@ -117,16 +117,111 @@ En verde dentro de las 253.
 | Issue | Severidad | Estado | Nota |
 |---|---|---|---|
 | #12 | Alta | **Abierto** | Cualquiera puede registrarse como `FUNCIONARIO_DGMM` y aprobar trámites ajenos. Decide la PO. Con este abierto no se cumple la DoD |
-| #13 | Media | Corregido en `78ae4c8` (falta cerrar el issue) | 500 con nombres que crecen al pasar a mayúsculas |
+| #13 | Media | Cerrado el 24-10, corregido en `78ae4c8` | 500 con nombres que crecen al pasar a mayúsculas |
+| #14 | Media | **Abierto** (Ismael) | `docker compose` no arranca desde `d2664d7` (SEC-03): el `": "` del mensaje de `DB_PASSWORD` rompe el YAML. El CI no lo detecta porque no usa `docker compose` |
+| #15 | Baja–media | **Abierto** (Ismael) | La bandeja se desborda horizontalmente con un nombre de nave largo sin espacios (sección 8, A4) |
 
-## 8. Pendiente
+## 8. Revisión manual de la bandeja (HU-11)
 
+25-10-2026, sobre `0c67c58`, en escritorio (Chrome). La hizo Louis con la guía
+`revision-manual/GUIA.md`, sección A. Antes se tomaron los valores esperados de la API
+(`GET /api/tramites` y `/api/tramites/conteo-por-estado`) para comparar con la pantalla.
+
+| Paso | Rol | Qué se revisó | Resultado |
+|---|---|---|---|
+| A1 | DGMM | Al iniciar sesión va a `/bandeja.html` | ✅ |
+| A2 | DGMM | Sin filtro: solo Solicitud presentada y En revisión, del más antiguo al más nuevo | ✅ 349 filas (312 + 37); la primera es "Estrella del Istmo" (36 días) |
+| A3 | DGMM | Filtros con los 6 estados y su cantidad; cada filtro muestra solo su estado | ✅ 312, 37, 1, 30, 19 y 68 (467 en total), iguales a la API |
+| A4 | DGMM | Columnas y enlace al expediente | ❌ **#15**: hay que desplazarse horizontalmente para ver las columnas. Columnas, orden y enlace "Abrir" correctos |
+| A5 | DGMM | 375 px: filas como tarjetas, sin desplazamiento horizontal | ✅ |
+| A6 | Auditor | Va a `/bandeja.html` y ve la misma bandeja, sin acciones | ✅ Mismos conteos y filas |
+| A7 | Agente | Va a `/naves.html`; en `/bandeja.html` ve el aviso y ningún dato | ✅ La API responde 403 |
+
+**Resultado: 6 de 7 pasos pasan. A4 falla por el #15.**
+
+- **Causa del #15:** la nave 1374 se llama `aaaa…a`, con 120 caracteres sin espacios. Es un
+  nombre válido, porque 120 es el máximo. El navegador no puede cortarlo, así que la columna
+  Nave se estira y empuja las otras cinco fuera de la vista, en todas las filas.
+- **Corrección propuesta:** `overflow-wrap: anywhere` en `th, td` (`app.css:502`).
+
+Comprobado por la API, además de la pantalla:
+
+- un filtro inválido (`?estado=XX`) da 400, no 500;
+- el auditor recibe 200 en el conteo y el agente 403.
+
+El mensaje de bandeja vacía no se puede ver aquí, porque ningún estado tiene 0 trámites en la
+base de desarrollo. Lo cubre TC-42.
+
+No se guardaron capturas: la evidencia de la revisión manual es esta tabla.
+
+## 9. Revisión manual de la cámara 5 (HU-12)
+
+25-10-2026, sobre `0c67c58`, en escritorio (Chrome). La hizo Louis con la guía
+`revision-manual/GUIA.md`, sección B. B2 a B4 se hicieron en la nave **1788** en vez de la
+1800 (ver la observación de usabilidad, abajo).
+
+| Paso | Rol | Nave | Qué se revisó | Resultado |
+|---|---|---|---|---|
+| B1 | DGMM | 1801 | Solicitud presentada: sin carga ni botones de revisión, con la nota del estado; tras Admitir aparecen los botones sin recargar | ✅ |
+| B2 | DGMM | 1788 | Aprobar 3 documentos; Observar el SMC (foco, error si está vacío, Cancelar, guardar); aprobar el trámite da 409 por el SMC; descarga | ✅ |
+| B3 | Agente | 1788 | Ve la observación y el revisor, sin botones de revisión; carga el SMC v2 en `PENDIENTE` y la v1 conserva su observación | ✅ |
+| B4 | DGMM | 1788 | Aprobar el SMC v2 y el trámite: Aprobada, nave `ABANDERADA` sin recargar, sin botones | ✅ |
+| B5 | DGMM y agente | 1799 | Rechazar con observación: nave `RECHAZADA` en rojo, también en "Mis naves" | ✅ |
+| B6 | Auditor | 1800 | Ve documentos y observaciones, descarga, sin botones ni carga, aviso "Vista de consulta" | ✅ |
+| B7 | DGMM | 1788 | Dos pestañas: la segunda aprobación da *"El documento ya fue revisado."* y la lista se actualiza | ✅ |
+| B8 | DGMM | — | Tab llega a Aprobar y Observar, el foco se ve, Enter funciona | ✅ |
+
+**Resultado: 8 de 8 pasos pasan.** Hay una observación de usabilidad, que no cuenta como
+defecto.
+
+Comprobado en la base al terminar:
+
+| Nave | Trámite | Nave (`nave.estado`) | Documentos |
+|---|---|---|---|
+| 1801 | En revisión (Admitir de B1) | `REGISTRADA` | 4 en `PENDIENTE` |
+| 1788 | **Aprobada** | **`ABANDERADA`** (D5) | 4 vigentes en `APROBADO`; SMC v1 `OBSERVADO`, no vigente, con "Falta la firma del inspector" |
+| 1799 | **Rechazada** | **`RECHAZADA`** (D5) | — |
+| 1800 | En revisión | `REGISTRADA` | 4 en `APROBADO` (el SMC por accidente) |
+
+- El historial de los trámites registra, en orden, PRESENTAR, ADMITIR y APROBAR o RECHAZAR.
+- Revisar documentos no movió ningún trámite (D3).
+
+No se guardaron capturas: la evidencia de la revisión manual es esta tabla.
+
+### Observación de usabilidad: aprobar no pide confirmación y no se puede deshacer
+
+**No se registra como defecto ni cuenta en las métricas.** Es una observación de QA para
+comentarla con el equipo y la PO.
+
+- **Qué pasó (B2, DGMM, nave 1800):** Louis aprobó el SMC por accidente, cuando quería
+  observarlo. Ya no se pudo observar.
+  - El documento queda en `APROBADO`, y la revisión solo se permite sobre la versión vigente
+    en `PENDIENTE`, así que la DGMM no tiene cómo corregirlo.
+  - La única salida sería que el agente cargue una versión nueva, pero no tiene motivo para
+    hacerlo: no recibe ninguna observación.
+- **Causa:** el botón Aprobar envía la decisión al primer clic, sin confirmación
+  (`static/js/documentos.js:255`).
+- **Lo mismo en la cámara 6:** Aprobar el trámite también se ejecuta al primer clic
+  (`static/js/tramite.js:113`), y deja el trámite en Aprobada, que es un estado final. Rechazar
+  al menos exige escribir la observación antes.
+- **Propuesta de Louis:** un mensaje de confirmación antes de aprobar un documento o
+  el trámite. Por ejemplo, *"¿Aprobar Gestión de la seguridad (SMC)? Esta decisión no se puede
+  cambiar."*, con los botones Aprobar y Cancelar.
+- **Pregunta para la PO:** ¿basta con confirmar, o la DGMM también debería poder deshacer una
+  aprobación (por ejemplo, reabrir un documento aprobado)? Lo segundo cambia la regla de HU-12.
+- **Efecto en la revisión:** la nave 1800 quedó con los 4 documentos en `APROBADO`. Los pasos de
+  observar y corregir (resto de B2, B3 y B4) se repiten en la nave **1788** (En revisión, con
+  los 4 documentos en `PENDIENTE`).
+
+## 10. Pendiente
+
+- **Ismael:** #14 (`docker-compose.yml`) y #15 (desborde de la bandeja).
 - **Madeleine:** decidir el #12 y confirmar que al desistir la nave queda en `REGISTRADA`
   (observación 7 de la revisión de la V7).
 - **Abdiel:** Wfuzz del Sprint 6 adaptado a CSRF y aclarar el 401 frente al 403 de un POST
   anónimo sin token.
 - **Louis:**
-  - revisión manual de la bandeja y de la cámara 5 (DGMM, agente y auditor);
+  - revisión manual hecha (secciones 8 y 9);
   - LOC/ELOC con `cloc` y la línea base `qa/metricas/base-sprint-6.md`.
 - **QA (opcional):** dos pruebas más en el endpoint de revisión: un agente que no es el
   dueño, y el ADMINISTRADOR.
