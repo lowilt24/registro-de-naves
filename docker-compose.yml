@@ -4,8 +4,10 @@ services:
     container_name: amp-db
     environment:
       # SEC-03: la contrasena sale de .env (docker compose lo lee solo).
+      # Issue #14: la linea de la contrasena va entre comillas porque su
+      # mensaje lleva ": ", y sin comillas YAML la lee como un mapa.
       - POSTGRES_USER=${DB_USER:-registro}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:?Falta DB_PASSWORD: copie .env.example a .env}
+      - "POSTGRES_PASSWORD=${DB_PASSWORD:?Falta DB_PASSWORD: copie .env.example a .env}"
       - POSTGRES_DB=registro_naves
     ports: ["5432:5432"]
     volumes: ["amp-data:/var/lib/postgresql/data"]
