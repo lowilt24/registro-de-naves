@@ -218,10 +218,13 @@ comentarla con el equipo y la PO.
 - **Ismael:** #14 (`docker-compose.yml`) y #15 (desborde de la bandeja).
 - **Madeleine:** decidir el #12 y confirmar que al desistir la nave queda en `REGISTRADA`
   (observación 7 de la revisión de la V7).
-- **Abdiel:** Wfuzz del Sprint 6 adaptado a CSRF y aclarar el 401 frente al 403 de un POST
-  anónimo sin token.
+- **Abdiel:** revisar la corrida de Wfuzz del Sprint 6. La hicieron Louis y Claude el 25-10
+  (`seguridad/evidencia-sprint6.md`): 0 respuestas 500. También queda respondida la duda: un
+  POST anónimo sin token da 401 en el servidor real (SEC-09, informativo). Corrección
+  sugerida: `"/error"` en `permitAll()`.
 - **Louis:**
   - revisión manual hecha (secciones 8 y 9);
-  - LOC/ELOC con `cloc` y la línea base `qa/metricas/base-sprint-6.md`.
+  - ~~LOC/ELOC y línea base~~: hechos el 25-10 en `qa/metricas/base-sprint-6.md` (LOC 8,146 y
+    ELOC 5,685).
 - **QA (opcional):** dos pruebas más en el endpoint de revisión: un agente que no es el
   dueño, y el ADMINISTRADOR.

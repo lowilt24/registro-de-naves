@@ -1,0 +1,20 @@
+RECHAZAR
+ADMITIR
+PENDIENTE
+APROBADO
+OBSERVADO
+VOLAR
+aprobar
+ Aprobar
+APROBAR\u0000
+' OR '1'='1
+'; DROP TABLE documentos;--
+<script>alert(1)</script>
+${jndi:ldap://127.0.0.1/x}
+{{7*7}}
+","decision":"APROBAR
+\"
+\\
+null
+0
+-1
