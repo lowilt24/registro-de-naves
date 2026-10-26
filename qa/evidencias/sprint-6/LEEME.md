@@ -26,6 +26,7 @@ La revisión previa del diseño está en `revision-diseno-v7.md`. La V7 se aplic
 ## 2. Pruebas Maven (JUnit)
 
 `./mvnw verify` → **253/253 en verde**, `BUILD SUCCESS` (24-10-2026, sobre `78ae4c8`).
+El 25-10, con las 2 pruebas de QA de HU-12 (sección 10): **255/255**.
 
 | Clase | Pruebas | Novedad del Sprint 6 |
 |---|---|---|
@@ -226,5 +227,8 @@ comentarla con el equipo y la PO.
   - revisión manual hecha (secciones 8 y 9);
   - ~~LOC/ELOC y línea base~~: hechos el 25-10 en `qa/metricas/base-sprint-6.md` (LOC 8,146 y
     ELOC 5,685).
-- **QA (opcional):** dos pruebas más en el endpoint de revisión: un agente que no es el
-  dueño, y el ADMINISTRADOR.
+- ~~**QA:** dos pruebas más en el endpoint de revisión~~: hechas el 25-10 en
+  `DocumentoRevisionIntegrationTest` (`unAgenteQueNoEsElDuenoNoRevisa` y
+  `elAdministradorNoRevisaNiLeeLosDocumentos`). Maven: 255 de 255. El ADMINISTRADOR recibe 403
+  también al listar documentos (`puedeLeer` → `false`), aunque `documentos.js` lo pone en modo
+  lectura.

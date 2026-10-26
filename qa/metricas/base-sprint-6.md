@@ -19,11 +19,12 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
 | Cobertura de líneas (JaCoCo) | **93.3 %** (1,124 de 1,205 líneas) | 91.1 % |
 | Cobertura de ramas (JaCoCo), adicional | **87.2 %** (293 de 336 ramas) | 81.2 % |
 | Casos de prueba pasados: Katalon (TS01–TS06) | **53 de 53** (100 %); TS06: 10 de 10 | 15 de 15 (TS05) |
-| Casos de prueba pasados: Maven (JUnit) | **253 de 253** (100 %) | 205 de 205 |
+| Casos de prueba pasados: Maven (JUnit) | **255 de 255** (100 %) | 205 de 205 |
 | Defectos encontrados | **4** (#12, #13, #14, #15) | 2 |
 | Defectos abiertos | **2** (#12, #15) | 0 |
 | Densidad de defectos (encontrados) | **0.70** por KELOC (4 ÷ 5.685) | 0.40 |
 | Densidad de defectos (abiertos) | **0.35** por KELOC (2 ÷ 5.685) | 0.00 |
+| Productividad (sobre las 50 h planificadas) | **0.16** puntos/h (8 ÷ 50); **13.8** ELOC/h (692 ÷ 50) | — (no se midió) |
 | Vulnerabilidades encontradas (Wfuzz) | **0** nuevas (1 informativa, SEC-09); corregidas SEC-03 y SEC-05; **0** respuestas 500 | 1 (SEC-08), corregida |
 
 **Cómo se obtuvo cada cifra**
@@ -32,14 +33,18 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
   code; ELOC = solo `code`. Es el mismo método del Sprint 5.
 - **Cobertura:** JaCoCo con `./mvnw verify`, solo sobre el Java de producción (72 clases). El
   build ahora falla por debajo de 70 % de instrucciones (T4); hoy está en 93.6 %.
-- **Casos de Maven:** `./mvnw verify` del 25-10 sobre `0c67c58`: 253 pruebas, 0 fallos, 0
-  errores y 0 saltadas. El código de producción es el mismo que en `449a15d`.
+- **Casos de Maven:** `./mvnw verify` del 25-10: 255 pruebas, 0 fallos y 0 errores. Son las
+  253 de `0c67c58` más 2 de QA en `DocumentoRevisionIntegrationTest`: un agente que no es el
+  dueño y el ADMINISTRADOR. La cobertura no cambió.
 - **Katalon:** Louis corrió TS01 a TS06 en Katalon Studio el 24-10, dos veces, con el mismo
   resultado. Desde entonces el código de producción solo cambió en `d2664d7` (SEC-03), que no
   toca la API.
 - **Defectos:** issues `bug` + `sprint-6`.
 - **Vulnerabilidades:** Wfuzz con `seguridad/correr-wfuzz-sprint6.sh`, dos corridas el 25-10
   con el mismo resultado. Detalle en `seguridad/evidencia-sprint6.md`.
+- **Productividad:** puntos terminados y ELOC agregados (5,685 − 4,993) entre la capacidad
+  planificada del sprint (50 h, `PLAN-SPRINT6.md`). No hay registro de horas reales, así que
+  es una cota. Los 8 puntos están pendientes de que la PO los acepte.
 - **Densidad de defectos** = defectos ÷ (ELOC / 1000), con las dos definiciones de siempre:
   **encontrados** (la de la profesora) y **abiertos** al momento de medir.
 

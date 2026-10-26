@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
+import pa.amp.registro_naves.usuario.Rol;
+import pa.amp.registro_naves.usuario.Usuario;
 import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 import java.time.OffsetDateTime;
@@ -214,6 +216,37 @@ class DocumentoRevisionIntegrationTest {
            .andExpect(status().isConflict());
     }
 
+    /** Observacion de QA del 24-10: un agente que no es el dueno tampoco revisa (nave ajena). */
+    @Test
+    void unAgenteQueNoEsElDuenoNoRevisa() throws Exception {
+        String otro = usuario("otro.agente.revision@navesitas.pa", Rol.AGENTE_NAVIERO);
+        Long itc = vigente(nave, "ITC");
+
+        revisar(nave, itc, otro, "APROBAR", null).andExpect(status().isForbidden());
+        revisar(nave, itc, otro, "OBSERVAR", "Intento ajeno").andExpect(status().isForbidden());
+
+        assertThat(estados(nave).values()).containsOnly("PENDIENTE");
+    }
+
+    /**
+     * Observacion de QA del 24-10: el ADMINISTRADOR no revisa ni lee los
+     * documentos de una nave (AutorizacionTramite.puedeLeer). documentos.js
+     * lo pone en modo lectura, pero el servidor le responde 403 tambien al
+     * listar. No hay usuario de demo con ese rol: se crea aqui y
+     * @Transactional lo deshace.
+     */
+    @Test
+    void elAdministradorNoRevisaNiLeeLosDocumentos() throws Exception {
+        String admin = usuario("admin.revision@navesitas.pa", Rol.ADMINISTRADOR);
+        Long itc = vigente(nave, "ITC");
+
+        revisar(nave, itc, admin, "APROBAR", null).andExpect(status().isForbidden());
+        mvc.perform(get("/api/naves/" + nave + "/documentos").with(user(admin)))
+           .andExpect(status().isForbidden());
+
+        assertThat(estados(nave).values()).containsOnly("PENDIENTE");
+    }
+
     // ------------------------------------------------------------------
     // TC-47 — D2: solo con el tramite En revision
     // ------------------------------------------------------------------
@@ -379,6 +412,20 @@ class DocumentoRevisionIntegrationTest {
                 : "{\"accion\":\"" + accion + "\",\"observacion\":\"" + observacion + "\"}";
         return mvc.perform(post("/api/naves/" + naveId + "/tramite/estado").with(user(quien))
                 .contentType(MediaType.APPLICATION_JSON).content(json));
+    }
+
+    /** Usuario validado con el rol indicado; lo deshace @Transactional. */
+    private String usuario(String correo, Rol rol) {
+        if (!usuarios.existsByCorreoIgnoreCase(correo)) {
+            Usuario u = new Usuario();
+            u.setCorreo(correo);
+            u.setPasswordHash("!solo-pruebas");
+            u.setNombreCompleto("Usuario de prueba " + rol);
+            u.setRol(rol);
+            u.setCorreoValidado(true);
+            usuarios.save(u);
+        }
+        return correo;
     }
 
     private void estadoTramite(Long naveId, String esperado) throws Exception {

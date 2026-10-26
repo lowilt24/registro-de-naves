@@ -54,3 +54,6 @@ almacen/
 
 # SEC-03: credenciales locales. Se sube solo .env.example.
 .env
+
+### Sprint 6: cache que crea Katalon Studio al abrir el proyecto. ###
+qa/registro-naves-qa/.cache/
