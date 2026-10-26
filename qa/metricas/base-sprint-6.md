@@ -2,7 +2,8 @@
 
 Medición sobre la rama `sprint-6` el 25-10-2026, en `449a15d`, con HU-11 y HU-12 completas,
 SEC-03 y SEC-05 corregidos y la regla `check` de JaCoCo en el build. El código de producción
-es el de `d2664d7`: los commits posteriores solo tocan `qa/`.
+es el de `d2664d7`: los commits posteriores solo tocan `qa/`, `seguridad/` y
+`docker-compose.yml` (#14, `9754cbd`). El tamaño no cambia con ellos.
 
 **Es la medición previa al cierre (26-10).** Si antes del cierre se corrigen los issues
 abiertos, hay que actualizar las filas de defectos y volver a medir el tamaño.
@@ -20,9 +21,9 @@ Tabla en el formato que pidió la profesora, más la cobertura de rama como fila
 | Casos de prueba pasados: Katalon (TS01–TS06) | **53 de 53** (100 %); TS06: 10 de 10 | 15 de 15 (TS05) |
 | Casos de prueba pasados: Maven (JUnit) | **253 de 253** (100 %) | 205 de 205 |
 | Defectos encontrados | **4** (#12, #13, #14, #15) | 2 |
-| Defectos abiertos | **3** (#12, #14, #15) | 0 |
+| Defectos abiertos | **2** (#12, #15) | 0 |
 | Densidad de defectos (encontrados) | **0.70** por KELOC (4 ÷ 5.685) | 0.40 |
-| Densidad de defectos (abiertos) | **0.53** por KELOC (3 ÷ 5.685) | 0.00 |
+| Densidad de defectos (abiertos) | **0.35** por KELOC (2 ÷ 5.685) | 0.00 |
 | Vulnerabilidades encontradas (Wfuzz) | **0** nuevas (1 informativa, SEC-09); corregidas SEC-03 y SEC-05; **0** respuestas 500 | 1 (SEC-08), corregida |
 
 **Cómo se obtuvo cada cifra**
@@ -66,7 +67,7 @@ No entra en la fila de casos pasados: está en el mismo LEEME, secciones 8 y 9.
 |---|---|---|---|
 | [#12](https://github.com/lowilt24/registro-de-naves/issues/12) | Cualquiera puede registrarse como Funcionario DGMM y aprobar trámites ajenos | Alta | **Abierto**: decide la PO. Con este abierto no se cumple la DoD |
 | [#13](https://github.com/lowilt24/registro-de-naves/issues/13) | `POST /api/naves` da 500 si el nombre en mayúsculas pasa de 120 caracteres | Media | Corregido en el sprint (`78ae4c8`) |
-| [#14](https://github.com/lowilt24/registro-de-naves/issues/14) | `docker compose` no arranca: el mensaje de `DB_PASSWORD` rompe el YAML | Media | **Abierto** (Ismael) |
+| [#14](https://github.com/lowilt24/registro-de-naves/issues/14) | `docker compose` no arranca: el mensaje de `DB_PASSWORD` rompe el YAML | Media | Corregido en el sprint (`9754cbd`) |
 | [#15](https://github.com/lowilt24/registro-de-naves/issues/15) | La bandeja se desborda horizontalmente con un nombre de nave largo sin espacios | Baja–media | **Abierto** (Ismael) |
 
 No se cuentan como defectos:

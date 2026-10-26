@@ -118,7 +118,7 @@ En verde dentro de las 253.
 |---|---|---|---|
 | #12 | Alta | **Abierto** | Cualquiera puede registrarse como `FUNCIONARIO_DGMM` y aprobar trámites ajenos. Decide la PO. Con este abierto no se cumple la DoD |
 | #13 | Media | Cerrado el 24-10, corregido en `78ae4c8` | 500 con nombres que crecen al pasar a mayúsculas |
-| #14 | Media | **Abierto** (Ismael) | `docker compose` no arranca desde `d2664d7` (SEC-03): el `": "` del mensaje de `DB_PASSWORD` rompe el YAML. El CI no lo detecta porque no usa `docker compose` |
+| #14 | Media | Cerrado el 25-10, corregido en `9754cbd` | `docker compose` no arranca desde `d2664d7` (SEC-03): el `": "` del mensaje de `DB_PASSWORD` rompe el YAML. El CI no lo detecta porque no usa `docker compose` |
 | #15 | Baja–media | **Abierto** (Ismael) | La bandeja se desborda horizontalmente con un nombre de nave largo sin espacios (sección 8, A4) |
 
 ## 8. Revisión manual de la bandeja (HU-11)
@@ -215,7 +215,7 @@ comentarla con el equipo y la PO.
 
 ## 10. Pendiente
 
-- **Ismael:** #14 (`docker-compose.yml`) y #15 (desborde de la bandeja).
+- **Ismael:** #15 (desborde de la bandeja). El #14 lo corrigió Claude en `9754cbd`.
 - **Madeleine:** decidir el #12 y confirmar que al desistir la nave queda en `REGISTRADA`
   (observación 7 de la revisión de la V7).
 - **Abdiel:** revisar la corrida de Wfuzz del Sprint 6. La hicieron Louis y Claude el 25-10
