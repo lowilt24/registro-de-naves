@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.common.AccesoDenegadoException;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 import pa.amp.registro_naves.common.ReglaDeNegocioException;
+import pa.amp.registro_naves.common.ValidacionCampoException;
 import pa.amp.registro_naves.tramite.EstadoTramite;
 import pa.amp.registro_naves.tramite.Tramite;
 import pa.amp.registro_naves.tramite.TramiteService;
@@ -18,6 +19,9 @@ import java.util.Map;
 
 @Service
 public class NaveService {
+
+    /** Largo de nave.nombre y nave.nombre_normalizado (V2). */
+    static final int LARGO_NOMBRE = 120;
 
     private final NaveRepository naves;
     private final UsuarioRepository usuarios;
@@ -78,6 +82,16 @@ public class NaveService {
 
         if (usuario.getRol() != Rol.AGENTE_NAVIERO) {
             throw new AccesoDenegadoException("Solo un agente naviero puede registrar naves.");
+        }
+
+        // Issue #13: algunas letras crecen al pasar a mayusculas (ß -> SS).
+        // Un nombre de 120 caracteres puede quedar mas largo que la columna
+        // nombre_normalizado (VARCHAR(120)) y el INSERT fallaba con 500.
+        // Se valida el largo ya normalizado y se responde 400 en "nombre".
+        if (Nave.normalizar(peticion.nombre()).length() > LARGO_NOMBRE) {
+            throw new ValidacionCampoException("nombre",
+                    "El nombre es demasiado largo: escrito en mayúsculas pasa de "
+                    + LARGO_NOMBRE + " caracteres.");
         }
 
         if (naves.existsByNombreNormalizado(Nave.normalizar(peticion.nombre()))) {
@@ -160,21 +174,13 @@ public class NaveService {
      *
      * Sprint 5: la DGMM actua sobre cualquier tramite (D1) y abre el
      * expediente por el ID de la nave mientras no exista su bandeja (P7);
-     * el AUDITOR lee (P8). Los dos ven la ficha de cualquier nave. Las
-     * demas camaras (propietarios, agente, documentos) siguen siendo solo
-     * del agente que la registro.
+     * el AUDITOR lee (P8). Los dos ven la ficha de cualquier nave.
+     * Sprint 6: la regla vive en AccesoNave#exigirLectura, que tambien usan
+     * los documentos (HU-12).
      */
     @Transactional(readOnly = true)
     public NaveResponse obtener(Long id, String correoUsuario) {
-        Rol rol = usuarios.findByCorreoIgnoreCase(correoUsuario)
-                .map(Usuario::getRol)
-                .orElse(null);
-
-        Nave nave = (rol == Rol.FUNCIONARIO_DGMM || rol == Rol.AUDITOR)
-                ? naves.findById(id).orElseThrow(() ->
-                        new RecursoNoEncontradoException("La nave indicada no existe."))
-                : accesoNave.exigirPropia(id, correoUsuario);
-
+        Nave nave = accesoNave.exigirLectura(id, correoUsuario);
         return NaveResponse.de(nave, tramites.estadosDe(List.of(nave.getId())).get(nave.getId()));
     }
 }

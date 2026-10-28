@@ -1,0 +1,7 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS01_Sprint1,Firefox 158.0.1,,,24-10-2026 12:48:27,24-10-2026 12:48:40,12.867s,PASSED
+Test Cases/TC_INFRA_01_Health_Check,Firefox 158.0.1,,,24-10-2026 12:48:27,24-10-2026 12:48:38,11.121s,PASSED
+Test Cases/TC_HU01_01_Registro_Usuario_Exitoso,Firefox 158.0.1,,,24-10-2026 12:48:38,24-10-2026 12:48:39,1.068s,PASSED
+Test Cases/TC_HU01_02_Registro_Datos_Invalidos,Firefox 158.0.1,,,24-10-2026 12:48:39,24-10-2026 12:48:39,0.094s,PASSED
+Test Cases/TC_HU02_01_Login_Correcto,Firefox 158.0.1,,,24-10-2026 12:48:39,24-10-2026 12:48:39,0.263s,PASSED
+Test Cases/TC_HU02_02_Login_Incorrecto,Firefox 158.0.1,,,24-10-2026 12:48:39,24-10-2026 12:48:40,0.227s,PASSED

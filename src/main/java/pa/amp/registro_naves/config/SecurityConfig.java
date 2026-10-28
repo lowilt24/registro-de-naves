@@ -10,7 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @Configuration
 public class SecurityConfig {
 
@@ -32,12 +34,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             /*
-             * CSRF sigue apagado sobre /api/**. Queda como pendiente abierto
-             * (hallazgo SEC-05 del informe del Sprint 2): activarlo exige que
-             * las pantallas envien el token en cada peticion, y ese cambio va
-             * junto con la actualizacion del frontend.
+             * Sprint 6 — Remediación del hallazgo SEC-05 (CSRF).
+             * Emite una cookie XSRF-TOKEN sin la bandera HttpOnly para que el
+             * frontend pueda leerla y devolverla en el header X-XSRF-TOKEN.
              */
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+            )
+            // SEC-05: sin esto la cookie XSRF-TOKEN nunca se escribe (el token
+            // es perezoso) y ningun POST pasa, ni el login. Ver CsrfCookieFilter.
+            .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
 
             .authorizeHttpRequests(auth -> auth
                 // Publico: entrar, crear cuenta y el chequeo de salud.
@@ -70,7 +77,14 @@ public class SecurityConfig {
                 .loginProcessingUrl("/api/auth/login")
                 .usernameParameter("correo")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/naves.html", true)
+                // Sprint 6 (HU-11): la DGMM y el auditor entran a la bandeja
+                // de tramites; el agente, a sus naves, como siempre.
+                .successHandler((peticion, respuesta, autenticacion) -> respuesta.sendRedirect(
+                        autenticacion.getAuthorities().stream().anyMatch(a ->
+                                "ROLE_FUNCIONARIO_DGMM".equals(a.getAuthority())
+                                || "ROLE_AUDITOR".equals(a.getAuthority()))
+                                ? "/bandeja.html"
+                                : "/naves.html"))
                 // Sprint 4: una cuenta sin correo validado llega aqui como
                 // DisabledException; se le dice que confirme el correo en vez
                 // de "contrasena incorrecta", que la mandaria a reintentar.

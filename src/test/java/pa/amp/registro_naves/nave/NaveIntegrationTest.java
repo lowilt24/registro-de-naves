@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +47,26 @@ class NaveIntegrationTest {
         return base + " " + System.nanoTime();
     }
 
+    /**
+     * Issue #13: 61 "ß" son 61 caracteres (pasa @Size(max = 120)), pero en
+     * mayusculas son 122 ("SS"): no caben en nombre_normalizado. Antes era
+     * 500; ahora 400 en el campo nombre. Un nombre de 120 "a" sigue pasando.
+     */
+    @Test
+    void unNombreQueCreceAlPasarAMayusculasEs400NoUn500() throws Exception {
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida("ß".repeat(61))))
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.campos.nombre").exists());
+
+        String justo = "a".repeat(108) + System.nanoTime() % 1_000_000_000_000L;
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida(justo.substring(0, Math.min(120, justo.length())))))
+           .andExpect(status().isCreated());
+    }
+
     private String naveValida(String nombre) {
         return """
                {
@@ -69,7 +90,7 @@ class NaveIntegrationTest {
     /** TC-01 (HU-03, positivo): una nave con todos los campos queda REGISTRADA. */
     @Test
     void registraNaveConDatosCompletos() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida(nombreUnico("Vientos de Chiriqui"))))
            .andExpect(status().isCreated())
@@ -80,7 +101,7 @@ class NaveIntegrationTest {
     /** TC-02 (HU-03, negativo): faltan campos obligatorios. */
     @Test
     void rechazaNaveSinCamposObligatorios() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nombre\":\"Nave Incompleta\"}"))
            .andExpect(status().isBadRequest())
@@ -95,7 +116,7 @@ class NaveIntegrationTest {
                 .replace("\"tonelajeBruto\": 12000.00", "\"tonelajeBruto\": -5")
                 .replace("\"anioConstruccion\": 2020", "\"anioConstruccion\": 1500");
 
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalida))
            .andExpect(status().isBadRequest())
@@ -124,7 +145,7 @@ class NaveIntegrationTest {
     /** TC-06 (HU-04, negativo): el bloqueo aplica tambien al guardar. */
     @Test
     void bloqueaRegistroConNombreDuplicado() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("Estrella del Istmo")))
            .andExpect(status().isConflict())
@@ -155,7 +176,7 @@ class NaveIntegrationTest {
      */
     @Test
     void rechazaNombreConSecuenciaDeComentarioSql() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("admin'--")))
            .andExpect(status().isBadRequest())
@@ -168,7 +189,7 @@ class NaveIntegrationTest {
      */
     @Test
     void cuerpoMalFormadoDevuelve400() throws Exception {
-        mvc.perform(post("/api/naves").with(user(AGENTE))
+        mvc.perform(post("/api/naves").with(user(AGENTE)).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nombre\":\"Prueba\",\"tonelajeBruto\":abc}"))
            .andExpect(status().isBadRequest());
@@ -177,9 +198,59 @@ class NaveIntegrationTest {
     /** Remediacion de SEC-04: sin sesion no se entra. */
     @Test
     void sinSesionElRegistroEsRechazado() throws Exception {
-        mvc.perform(post("/api/naves")
+        mvc.perform(post("/api/naves").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naveValida("Nave Sin Sesion")))
            .andExpect(status().isUnauthorized());
+    }
+
+    // ------------------------------------------------------------------
+    // QA Sprint 6 (T5): ramas de HU-03 sin prueba en Maven
+    // ------------------------------------------------------------------
+
+    static final String DGMM = "revisor@navesitas.pa";
+    static final String AUDITOR = "auditor@navesitas.pa";
+
+    private String conTonelaje(String nombre, String bruto, String neto) {
+        return naveValida(nombre)
+                .replace("\"tonelajeBruto\": 12000.00", "\"tonelajeBruto\": " + bruto)
+                .replace("\"tonelajeNeto\": 6400.00", "\"tonelajeNeto\": " + neto);
+    }
+
+    /** Criterio de HU-03: el tonelaje neto no puede superar al bruto (409); igual si se puede. */
+    @Test
+    void tonelajeNetoMayorQueBrutoEsRechazado() throws Exception {
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(conTonelaje(nombreUnico("Neto Mayor"), "5000.00", "5000.01")))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.mensaje").value("El tonelaje neto no puede ser mayor que el tonelaje bruto."));
+
+        // Limite: neto igual al bruto es valido.
+        mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(conTonelaje(nombreUnico("Neto Igual"), "5000.00", "5000.00")))
+           .andExpect(status().isCreated());
+    }
+
+    /** Decision de la PO (13-10-2026): la DGMM y el auditor ven la ficha de cualquier nave; si no existe, 404. */
+    @Test
+    void laDgmmYElAuditorVenLaFichaDeCualquierNave() throws Exception {
+        String cuerpo = mvc.perform(post("/api/naves").with(user(AGENTE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(naveValida(nombreUnico("Ficha Ajena"))))
+           .andExpect(status().isCreated())
+           .andReturn().getResponse().getContentAsString();
+        Number id = com.jayway.jsonpath.JsonPath.read(cuerpo, "$.id");
+
+        for (String quien : new String[] {DGMM, AUDITOR}) {
+            mvc.perform(get("/api/naves/" + id).with(user(quien)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(id.intValue()))
+               .andExpect(jsonPath("$.estadoTramite").value("SOLICITUD_PRESENTADA"));
+            mvc.perform(get("/api/naves/999999999").with(user(quien)))
+               .andExpect(status().isNotFound())
+               .andExpect(jsonPath("$.mensaje").exists());
+        }
     }
 }

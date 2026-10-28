@@ -6,6 +6,7 @@ import com.kms.katalon.core.testobject.FormDataBodyParameter
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
 import com.kms.katalon.core.testobject.impl.HttpFormDataBodyContent
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.model.FailureHandling
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
@@ -25,8 +26,8 @@ def iniciarSesion = { String correo ->
     ])
     login.setBodyContent(new HttpTextBodyContent(
         'correo=' + correo + '&password=Navesitas2026*'))
-    ResponseObject r = WS.sendRequest(login)
-    return r.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+    ResponseObject r = Http.enviar(login)
+    return Http.sesion(r)
 }
 
 /** GET con la cookie de sesion (o sin ella si es null). */
@@ -37,7 +38,7 @@ def consultar = { String cookie, String ruta ->
     List<TestObjectProperty> cabeceras = []
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
     get.setHttpHeaderProperties(cabeceras)
-    return WS.sendRequest(get)
+    return Http.enviar(get)
 }
 
 /** POST con cuerpo JSON y la cookie de sesion (o sin ella si es null). */
@@ -51,10 +52,24 @@ def postJson = { String cookie, String ruta, String cuerpo ->
     if (cookie) cabeceras << new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
     p.setHttpHeaderProperties(cabeceras)
     p.setBodyContent(new HttpTextBodyContent(cuerpo))
-    return WS.sendRequest(p)
+    return Http.enviar(p)
 }
 
 def json = { ResponseObject r -> new JsonSlurper().parseText(r.getResponseBodyContent()) }
+
+/**
+ * Sprint 6 (HU-12, D4): aprobar el tramite exige los cuatro obligatorios
+ * vigentes en APROBADO. La DGMM los aprueba uno por uno (trámite En revision).
+ */
+def aprobarDocumentos = { String cookie, def naveId ->
+    def vigentes = json(consultar(cookie, '/api/naves/' + naveId + '/documentos'))
+    assert vigentes.size() == 4 : 'Se esperaban 4 documentos vigentes y hay ' + vigentes.size()
+    vigentes.each { d ->
+        ResponseObject r = postJson(cookie, '/api/naves/' + naveId + '/documentos/' + d.id + '/revision',
+            '{"decision":"APROBAR"}')
+        WS.verifyResponseStatusCode(r, 200)
+    }
+}
 
 /** HU-09: POST /api/naves/{id}/tramite/estado con la accion y, si hay, la observacion. */
 def accion = { String cookie, def naveId, String nombre, String observacion = null ->
@@ -113,13 +128,15 @@ WS.verifyEqual(json(consultar(agente, '/api/naves/' + naveId + '/tramite')).acci
 
 WS.verifyResponseStatusCode(accion(agente, naveId, 'SUBSANAR', 'Se cargo el ITC vigente.'), 200)
 
+aprobarDocumentos(dgmm, naveId)   // Sprint 6 (HU-12, D4)
+
 ResponseObject rAprobar = accion(dgmm, naveId, 'APROBAR')
 WS.verifyResponseStatusCode(rAprobar, 200)
 WS.verifyEqual(json(rAprobar).estado, 'APROBADA')
 WS.verifyEqual(json(rAprobar).esFinal, true)
 
-// P6: aprobar el tramite no cambia el estado de la nave.
-WS.verifyEqual(json(consultar(agente, '/api/naves/' + naveId)).estado, 'REGISTRADA')
+// Sprint 6 (HU-12, D5): aprobar el tramite abandera la nave (antes P6: no la tocaba).
+WS.verifyEqual(json(consultar(agente, '/api/naves/' + naveId)).estado, 'ABANDERADA')
 
 def h = json(consultar(agente, '/api/naves/' + naveId + '/tramite/historial'))
 println('Historial: ' + h)

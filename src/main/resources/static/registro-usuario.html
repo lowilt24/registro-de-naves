@@ -48,6 +48,12 @@
 </main>
 
 <script>
+  /** SEC-05: token CSRF de la cookie XSRF-TOKEN (esta pagina no carga comun.js). */
+  function tokenCsrf() {
+    const m = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
 document.getElementById('form-registro').addEventListener('submit', async (e) => {
   e.preventDefault();
   document.querySelectorAll('[data-error]').forEach(s => s.textContent = '');
@@ -63,7 +69,7 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   try {
     const r = await fetch('/api/auth/registro', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': tokenCsrf() },
       body: JSON.stringify(cuerpo)
     });
     const datos = await r.json();

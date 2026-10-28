@@ -16,8 +16,21 @@ public class DocumentosFaltantesException extends RuntimeException {
     private final List<TipoDocumento> faltantes;
 
     public DocumentosFaltantesException(List<TipoDocumento> faltantes) {
-        super("Faltan documentos obligatorios: "
-                + faltantes.stream().map(Enum::name).collect(Collectors.joining(", ")));
+        this("Faltan documentos obligatorios: ", faltantes);
+    }
+
+    /**
+     * Sprint 6 (HU-12, D4): al aprobar el tramite el documento puede
+     * existir y estar pendiente u observado; el texto dice "sin aprobar"
+     * (observacion 9 de QA). La lista va igual en "faltantes".
+     */
+    public static DocumentosFaltantesException sinAprobar(List<TipoDocumento> sinAprobar) {
+        return new DocumentosFaltantesException(
+                "Para aprobar el trámite faltan documentos obligatorios sin aprobar: ", sinAprobar);
+    }
+
+    private DocumentosFaltantesException(String prefijo, List<TipoDocumento> faltantes) {
+        super(prefijo + faltantes.stream().map(Enum::name).collect(Collectors.joining(", ")));
         this.faltantes = List.copyOf(faltantes);
     }
 

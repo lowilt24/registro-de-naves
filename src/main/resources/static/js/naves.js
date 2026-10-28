@@ -236,7 +236,7 @@ async function cargarNaves() {
         <td>${escapar(n.nombre)}</td>
         <td>${escapar(n.tipo)}</td>
         <td class="cifra">${n.tonelajeBruto}</td>
-        <td><span class="estado-etiqueta">${escapar(n.estado)}</span></td>
+        <td><span class="estado-etiqueta" data-estado="${escapar(n.estado)}">${escapar(n.estado)}</span></td>
         <td>${etiquetaTramite(n.estadoTramite)}</td>
         <td><a class="enlace-fila" href="/expediente.html?naveId=${n.id}">Abrir</a></td>
       </tr>`).join('');

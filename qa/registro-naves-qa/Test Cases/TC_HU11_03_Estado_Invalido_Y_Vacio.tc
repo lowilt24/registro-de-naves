@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-42 HU-11: un estado que no existe da 400 con mensaje, nunca 500; un estado sin tramites devuelve [] con 200.</description>
+   <name>TC_HU11_03_Estado_Invalido_Y_Vacio</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>9a651967-61fa-429f-a26b-feac59740061</testCaseGuid>
+</TestCaseEntity>

@@ -1,6 +1,7 @@
 import com.kms.katalon.core.testobject.RequestObject
 import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import navesitas.Http
 import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.impl.HttpTextBodyContent
@@ -26,8 +27,8 @@ login.setHttpHeaderProperties([
 login.setBodyContent(new HttpTextBodyContent(
     'correo=agente@navesitas.pa&password=Navesitas2026*'))
 
-ResponseObject rLogin = WS.sendRequest(login)
-String cookie = rLogin.getHeaderFields()['Set-Cookie']?.get(0)?.split(';')?.getAt(0)
+ResponseObject rLogin = Http.enviar(login)
+String cookie = Http.sesion(rLogin)
 
 String sufijo = System.currentTimeMillis()
 String identificacion = "RUC-DUP-${sufijo}"
@@ -57,7 +58,7 @@ crearNave.setHttpHeaderProperties([
 ])
 crearNave.setBodyContent(new HttpTextBodyContent(cuerpoNave))
 
-ResponseObject rNave = WS.sendRequest(crearNave)
+ResponseObject rNave = Http.enviar(crearNave)
 WS.verifyResponseStatusCode(rNave, 201)
 def naveId = new JsonSlurper().parseText(rNave.getResponseBodyContent()).id
 
@@ -82,7 +83,7 @@ crear1.setHttpHeaderProperties([
 ])
 crear1.setBodyContent(new HttpTextBodyContent(primero))
 
-ResponseObject r1 = WS.sendRequest(crear1)
+ResponseObject r1 = Http.enviar(crear1)
 println('Primero status: ' + r1.getStatusCode())
 WS.verifyResponseStatusCode(r1, 201)
 
@@ -107,7 +108,7 @@ crear2.setHttpHeaderProperties([
 ])
 crear2.setBodyContent(new HttpTextBodyContent(segundo))
 
-ResponseObject r2 = WS.sendRequest(crear2)
+ResponseObject r2 = Http.enviar(crear2)
 println('Segundo status: ' + r2.getStatusCode())
 println('Respuesta: ' + r2.getResponseBodyContent())
 
@@ -122,6 +123,6 @@ listar.setHttpHeaderProperties([
     new TestObjectProperty('Cookie', ConditionType.EQUALS, cookie)
 ])
 
-ResponseObject rLista = WS.sendRequest(listar)
+ResponseObject rLista = Http.enviar(listar)
 WS.verifyResponseStatusCode(rLista, 200)
 WS.verifyEqual(new JsonSlurper().parseText(rLista.getResponseBodyContent()).size(), 1)

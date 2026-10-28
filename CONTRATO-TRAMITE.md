@@ -1,4 +1,4 @@
-# Contrato de la API — trámite (HU-09) y naves por estado (HU-10)
+# Contrato de la API — trámite (HU-09), naves por estado (HU-10) y bandeja de la DGMM (HU-11)
 
 Sprint 5. Todos los endpoints exigen sesión (cookie `JSESSIONID` de
 `POST /api/auth/login`). Los errores siempre traen `{ "mensaje": "..." }` y,
@@ -135,6 +135,86 @@ que registró la nave (403 para los demás).
   `POST /api/naves/{id}/agente-residente` responden 409 "El trámite ya terminó (Aprobada); el
   expediente es de solo lectura." El orden de los errores es 404 → 403 → 409, así que a quien no
   es dueño se le sigue respondiendo 403.
+
+## Bandeja de la DGMM (HU-11, Sprint 6)
+
+Decisión D1 de la PO (aceptada): la DGMM ve los trámites de todas las naves,
+el auditor solo lee y el agente recibe 403. Por defecto se muestran
+Solicitud presentada y En revisión, el más antiguo primero. Se filtra por la
+tabla `tramites`, nunca por `nave.estado`.
+
+### `GET /api/tramites?estado=EN_REVISION`
+
+`estado` es opcional. Sin él, devuelve `SOLICITUD_PRESENTADA` y
+`EN_REVISION`. Con él, solo ese estado. Siempre ordenado por `ultimaAccion`,
+de la más vieja a la más nueva.
+
+```json
+[
+  {
+    "naveId": 7,
+    "nave": "Brisa del Pacífico",
+    "agente": "Agente Naviero de Prueba",
+    "estado": "SOLICITUD_PRESENTADA",
+    "ultimaAccion": "2026-10-13T17:57:02.123-05:00",
+    "diasEnEspera": 5
+  }
+]
+```
+
+| Campo | Qué es |
+|---|---|
+| `naveId` | ID de la nave; el botón **Abrir** lleva a `expediente.html?naveId=N` |
+| `nave` | Nombre de la nave |
+| `agente` | Nombre del usuario que registró la nave |
+| `estado` | Estado del trámite |
+| `ultimaAccion` | Hora del último cambio de estado (`tramites.actualizado_en`) |
+| `diasEnEspera` | Días de calendario, en hora de Panamá, desde `ultimaAccion`. 0 = hoy |
+
+Sin trámites devuelve `[]` con 200.
+
+### `GET /api/tramites/conteo-por-estado`
+
+Igual que el de HU-10, pero sobre **todas** las naves:
+
+```json
+{ "estados": { "SOLICITUD_PRESENTADA": 3, "EN_REVISION": 1, "OBSERVADA": 0,
+               "APROBADA": 0, "RECHAZADA": 0, "DESISTIDA": 0 },
+  "total": 4 }
+```
+
+### Quién la ve
+
+| Petición | Sin sesión | AGENTE_NAVIERO | AUDITOR | FUNCIONARIO_DGMM |
+|---|---|---|---|---|
+| `GET /api/tramites` | 401 | 403 | 200 | 200 |
+| `GET /api/tramites?estado=EN_REVISION` | 401 | 403 | 200 | 200 |
+| `GET /api/tramites/conteo-por-estado` | 401 | 403 | 200 | 200 |
+| `GET /api/tramites?estado=VOLANDO` | 401 | **400** | 400 | 400 |
+
+Decisión de la fila marcada: con un estado que no existe, el agente recibe
+**400** y no 403. Sigue el orden del equipo (401 → 400 → 404 → 403 → 409):
+el parámetro se valida antes que el rol. También dan 400 `en_revision`
+(minúsculas), `REGISTRADA` (es un estado de la nave, no del trámite) y
+cualquier texto con inyección.
+
+El 403 trae `{ "mensaje": "La bandeja de trámites es de la DGMM. Sus naves están en «Mis naves»." }`.
+El administrador también recibe 403 (D1 no lo incluye).
+
+### Entrada después del login
+
+`POST /api/auth/login` redirige según el rol:
+
+| Rol | Va a |
+|---|---|
+| FUNCIONARIO_DGMM | `/bandeja.html` |
+| AUDITOR | `/bandeja.html` |
+| AGENTE_NAVIERO, ADMINISTRADOR | `/naves.html` (como antes) |
+
+### Para Wfuzz (Sprint 6)
+
+- `?estado=FUZZ` sobre `/api/tramites`: se espera 400 o 200, nunca 500.
+- La bandeja con sesión de agente: se espera 403.
 
 ## Para Wfuzz
 

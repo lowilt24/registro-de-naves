@@ -1,6 +1,7 @@
 /* Navesitas — camara 5 del expediente: documentos de la nave.
    HU-07: carga de documentos.
    HU-08: consulta del estado de los documentos.
+   HU-12 (Sprint 6): la DGMM aprueba u observa cada documento.
 
    Se carga antes que expediente.js. Aqui solo se definen funciones y se
    enganchan los eventos de la camara 5; expediente.js las llama al
@@ -27,6 +28,17 @@ const NOMBRE_ESTADO = {
 const LIMITE_BYTES = 10 * 1024 * 1024;
 
 let tieneAgente = false;     // lo actualiza expediente.js al cargar el agente
+
+/**
+ * HU-12: quien mira la camara 5.
+ *   'agente'   carga documentos (HU-07) y ve las observaciones.
+ *   'revision' la DGMM: lee, descarga y aprueba u observa.
+ *   'lectura'  el auditor: lee y descarga.
+ * Lo fija expediente.js con configurarModoDocumentos(rol).
+ */
+let modoDocumentos = 'agente';
+let estadoTramiteDocs = null;  // lo avisa tramite.js; D2: se revisa solo En revision
+let documentoEnRevision = null; // { id, nombre } mientras el formulario de observar esta abierto
 let versionesVigentes = {};  // tipo -> version vigente, para avisar del reemplazo
 let consultaEnCurso = 0;     // descarta respuestas viejas si se cambian filtros rapido
 
@@ -147,8 +159,8 @@ function filaDocumento(d) {
       <td><div class="archivo">${escapar(d.nombreArchivo)}<span class="pista cifra">${tamanoLegible(d.tamanoBytes)}</span></div></td>
       <td><span class="cifra">${version}</span></td>
       <td><span class="cifra fecha">${fechaHora(d.creadoEn)}</span></td>
-      <td>${etiquetaEstado(d.estado)}</td>
-      <td><a class="enlace-fila" href="${descarga}" download>Descargar</a></td>
+      <td><div>${etiquetaEstado(d.estado)}${detalleRevision(d)}</div></td>
+      <td><div><a class="enlace-fila" href="${descarga}" download>Descargar</a>${botonesRevision(d)}</div></td>
     </tr>`;
 }
 
@@ -160,8 +172,156 @@ function filaFaltante(t) {
       <td>—</td>
       <td>—</td>
       <td>${etiquetaEstado('FALTANTE')}</td>
-      <td><a class="enlace-fila" href="#form-documento" data-cargar="${t.valor}">Cargar</a></td>
+      <td>${modoDocumentos === 'agente'
+            ? '<a class="enlace-fila" href="#form-documento" data-cargar="' + t.valor + '">Cargar</a>'
+            : '—'}</td>
     </tr>`;
+}
+
+// ---------------------------------------------------------------
+// HU-12 — revision de la DGMM
+// ---------------------------------------------------------------
+
+/** Lo llama expediente.js al arrancar, con el rol de la sesion. */
+function configurarModoDocumentos(rol) {
+  modoDocumentos = rol === 'FUNCIONARIO_DGMM' ? 'revision'
+                 : rol === 'AGENTE_NAVIERO'   ? 'agente'
+                 : 'lectura';
+  // Cargar documentos (HU-07) es solo del agente que registro la nave.
+  $('form-documento').classList.toggle('oculto', modoDocumentos !== 'agente');
+}
+
+/**
+ * Lo llama tramite.js cada vez que pinta el tramite. Los botones de
+ * revision dependen del estado (D2), asi que si cambia se repinta.
+ */
+function actualizarEstadoTramiteDocs(estado) {
+  const antes = estadoTramiteDocs;
+  estadoTramiteDocs = estado;
+  pintarNotaRevision();
+  if (antes !== null && antes !== estado && modoDocumentos === 'revision') {
+    cargarDocumentos();
+  }
+}
+
+function pintarNotaRevision() {
+  const nota = $('nota-revision');
+  if (modoDocumentos !== 'revision') {
+    nota.classList.add('oculto');
+    return;
+  }
+  nota.textContent = estadoTramiteDocs === 'EN_REVISION'
+    ? 'Revise cada documento pendiente con Aprobar u Observar. Para aprobar el trámite, '
+      + 'los cuatro tienen que estar aprobados.'
+    : 'Los documentos se revisan con el trámite En revisión. Ahora está en '
+      + (NOMBRE_ESTADO_TRAMITE[estadoTramiteDocs] || '—') + '.';
+  nota.classList.remove('oculto');
+}
+
+/** Debajo del estado: la observacion de la DGMM y quien reviso. */
+function detalleRevision(d) {
+  let html = '';
+  if (d.observacion) {
+    html += '<span class="doc-observacion">' + escapar(d.observacion) + '</span>';
+  }
+  if (d.revisadoPor) {
+    html += '<span class="pista doc-revisado">' + escapar(d.revisadoPor)
+          + ' · <span class="cifra">' + fechaHora(d.revisadoEn) + '</span></span>';
+  }
+  return html;
+}
+
+function puedeRevisar(d) {
+  return modoDocumentos === 'revision'
+      && estadoTramiteDocs === 'EN_REVISION'
+      && d.vigente !== false
+      && d.estado === 'PENDIENTE';
+}
+
+function botonesRevision(d) {
+  if (!puedeRevisar(d)) return '';
+  const nombre = escapar(nombreTipo(d.tipo) + ' v' + d.version);
+  return `
+    <div class="acciones-fila">
+      <button type="button" data-revisar="APROBAR" data-doc="${d.id}" data-nombre="${nombre}">Aprobar</button>
+      <button type="button" class="secundario" data-revisar="OBSERVAR" data-doc="${d.id}" data-nombre="${nombre}">Observar</button>
+    </div>`;
+}
+
+$('lista-documentos').addEventListener('click', (e) => {
+  const boton = e.target.closest('button[data-revisar]');
+  if (!boton) return;
+  ocultar($('aviso-revision'));
+  if (boton.dataset.revisar === 'APROBAR') {
+    enviarRevision(Number(boton.dataset.doc), boton.dataset.nombre, 'APROBAR', null, boton);
+  } else {
+    abrirObservar(Number(boton.dataset.doc), boton.dataset.nombre);
+  }
+});
+
+function abrirObservar(id, nombre) {
+  documentoEnRevision = { id, nombre };
+  const form = $('form-revision');
+  limpiarErrores(form);
+  $('leyenda-revision').textContent = 'Observar: ' + nombre;
+  $('r-observacion').value = '';
+  form.classList.remove('oculto');
+  $('r-observacion').focus();
+}
+
+function cerrarObservar() {
+  documentoEnRevision = null;
+  $('form-revision').classList.add('oculto');
+}
+
+$('btn-cancelar-revision').addEventListener('click', cerrarObservar);
+
+$('form-revision').addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!documentoEnRevision) return;
+  const form = $('form-revision');
+  limpiarErrores(form);
+  const observacion = $('r-observacion').value.trim();
+  if (!observacion) {
+    // Mismo criterio que el servidor (400), sin hacer el viaje.
+    form.querySelector('[data-error="observacion"]').textContent =
+      'Escriba qué debe corregir el agente.';
+    return;
+  }
+  enviarRevision(documentoEnRevision.id, documentoEnRevision.nombre, 'OBSERVAR', observacion,
+    $('btn-revision'));
+});
+
+async function enviarRevision(id, nombre, decision, observacion, boton) {
+  if (boton) boton.disabled = true;
+  try {
+    const { ok, estado, datos } = await api(
+      '/api/naves/' + naveId + '/documentos/' + id + '/revision',
+      { metodo: 'POST', cuerpo: { decision, observacion } });
+
+    if (ok) {
+      cerrarObservar();
+      mostrar($('aviso-revision'), 'libre',
+        nombre + (decision === 'APROBAR' ? ' aprobado.' : ' observado. El agente debe cargar una versión nueva.'));
+      await cargarDocumentos();
+      return;
+    }
+
+    pintarErrores(datos, $('form-revision'));
+    mostrar($('aviso-revision'), 'ocupado',
+      (datos && datos.mensaje) || 'No se pudo guardar la revisión.');
+    // 409: el documento o el tramite cambiaron; se muestra lo actual.
+    if (estado === 409) {
+      cerrarObservar();
+      await cargarDocumentos();
+    }
+  } catch (err) {
+    if (err.message !== 'sin sesion') {
+      mostrar($('aviso-revision'), 'ocupado', 'No se pudo contactar el servidor.');
+    }
+  } finally {
+    if (boton) boton.disabled = false;
+  }
 }
 
 /**
@@ -196,7 +356,9 @@ function pintarResumen(vigentes) {
         ? 'Hay 1 documento observado: '
         : 'Hay ' + observados.length + ' documentos observados: ')
       + observados.map(d => nombreTipo(d.tipo)).join(', ')
-      + '. Cárguelo de nuevo con las correcciones.';
+      + (modoDocumentos === 'agente'
+          ? '. Cárguelo de nuevo con las correcciones.'
+          : '. El agente debe cargar una versión nueva.');
     mostrar(aviso, 'ocupado', textoObservados + (textoFaltan ? ' ' + textoFaltan : ''));
   } else if (faltan.length) {
     mostrar(aviso, 'neutro', textoFaltan);

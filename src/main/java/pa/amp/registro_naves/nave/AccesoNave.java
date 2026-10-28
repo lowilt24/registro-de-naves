@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.common.AccesoDenegadoException;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
+import pa.amp.registro_naves.usuario.Rol;
+import pa.amp.registro_naves.usuario.UsuarioRepository;
 
 /**
  * Punto unico donde se decide si un usuario puede operar sobre una nave.
@@ -17,9 +19,32 @@ import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 public class AccesoNave {
 
     private final NaveRepository naves;
+    private final UsuarioRepository usuarios;
 
-    public AccesoNave(NaveRepository naves) {
+    public AccesoNave(NaveRepository naves, UsuarioRepository usuarios) {
         this.naves = naves;
+        this.usuarios = usuarios;
+    }
+
+    /**
+     * Para LEER el expediente (ficha y documentos).
+     *
+     * Sprint 5: la DGMM y el auditor ven la ficha de cualquier nave.
+     * Sprint 6 (HU-12, observacion 2 de QA): tambien listan y descargan sus
+     * documentos, porque la DGMM no puede revisar lo que no puede abrir.
+     * El agente sigue viendo solo las suyas. Escribir sigue pidiendo
+     * exigirPropia.
+     */
+    @Transactional(readOnly = true)
+    public Nave exigirLectura(Long naveId, String correoUsuario) {
+        Rol rol = usuarios.findByCorreoIgnoreCase(correoUsuario)
+                .map(u -> u.getRol())
+                .orElse(null);
+        if (rol == Rol.FUNCIONARIO_DGMM || rol == Rol.AUDITOR) {
+            return naves.findById(naveId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("La nave indicada no existe."));
+        }
+        return exigirPropia(naveId, correoUsuario);
     }
 
     /**

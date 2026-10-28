@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC-40 HU-11: la bandeja de la DGMM lista los tramites de todas las naves; con ?estado=X solo ese estado; sin filtro, Solicitud presentada y En revision, el mas antiguo primero. El auditor ve lo mismo.</description>
+   <name>TC_HU11_01_Filtro_Por_Estado</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>601cd450-9654-4f1e-b449-e784b64333a0</testCaseGuid>
+</TestCaseEntity>

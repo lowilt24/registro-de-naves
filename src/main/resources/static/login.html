@@ -50,6 +50,25 @@
 </main>
 
 <script>
+  /** SEC-05: token CSRF de la cookie XSRF-TOKEN (esta pagina no carga comun.js). */
+  function tokenCsrf() {
+    const m = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // SEC-05: el formulario de entrada es un POST normal, asi que el token va
+  // como campo oculto _csrf. Se pone al enviar, con el valor de la cookie.
+  document.getElementById('form-login').addEventListener('submit', (e) => {
+    let campo = e.target.querySelector('input[name="_csrf"]');
+    if (!campo) {
+      campo = document.createElement('input');
+      campo.type = 'hidden';
+      campo.name = '_csrf';
+      e.target.appendChild(campo);
+    }
+    campo.value = tokenCsrf();
+  });
+
   const parametros = new URLSearchParams(location.search);
   const aviso = document.getElementById('aviso-login');
 
@@ -102,7 +121,7 @@
     try {
       const r = await fetch('/api/auth/reenviar-validacion', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': tokenCsrf() },
         body: JSON.stringify({ correo })
       });
       const datos = await r.json().catch(() => ({}));

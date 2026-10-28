@@ -13,7 +13,12 @@ public record DocumentoResponse(
         Integer version,
         boolean vigente,
         String estado,
-        OffsetDateTime creadoEn
+        OffsetDateTime creadoEn,
+        /** Sprint 6 (HU-12): obligatoria si esta OBSERVADO; nota opcional si APROBADO. */
+        String observacion,
+        /** Nombre del funcionario, no su correo (observacion 6 de QA). */
+        String revisadoPor,
+        OffsetDateTime revisadoEn
 ) {
     public static DocumentoResponse de(Documento d) {
         return new DocumentoResponse(
@@ -26,6 +31,9 @@ public record DocumentoResponse(
                 d.getVersion(),
                 d.isVigente(),
                 d.getEstado().name(),
-                d.getCreadoEn());
+                d.getCreadoEn(),
+                d.getObservacion(),
+                d.getRevisadoPor() == null ? null : d.getRevisadoPor().getNombreCompleto(),
+                d.getRevisadoEn());
     }
 }

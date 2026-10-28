@@ -76,4 +76,18 @@ public final class TramiteDtos {
      */
     public record ConteoPorEstadoResponse(Map<EstadoTramite, Long> estados, long total) {
     }
+
+    /**
+     * Una fila de GET /api/tramites (HU-11). "ultimaAccion" es la hora del
+     * ultimo cambio de estado; "diasEnEspera", los dias de calendario (hora
+     * de Panama) desde entonces.
+     */
+    public record BandejaItem(
+            Long naveId,
+            String nave,
+            String agente,
+            EstadoTramite estado,
+            OffsetDateTime ultimaAccion,
+            long diasEnEspera) {
+    }
 }

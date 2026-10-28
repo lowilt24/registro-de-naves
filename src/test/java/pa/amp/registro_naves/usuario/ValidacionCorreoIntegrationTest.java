@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +43,7 @@ class ValidacionCorreoIntegrationTest {
 
     private String registrar(String correo, String rol) throws Exception {
         mvc.perform(post("/api/auth/registro")
+                        .with(csrf()) // <-- AQUI INYECTAMOS EL TOKEN CSRF
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                {"correo":"%s","password":"%s","nombreCompleto":"Persona de Prueba","rol":"%s"}
@@ -124,6 +126,7 @@ class ValidacionCorreoIntegrationTest {
         String primero = registrar("reenvio@prueba.pa", "AGENTE_NAVIERO");
 
         mvc.perform(post("/api/auth/reenviar-validacion")
+                        .with(csrf()) // <-- AQUI INYECTAMOS EL TOKEN CSRF
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"correo\":\"reenvio@prueba.pa\"}"))
            .andExpect(status().isAccepted());
@@ -142,6 +145,7 @@ class ValidacionCorreoIntegrationTest {
     @Test
     void reenvioACorreoInexistente() throws Exception {
         mvc.perform(post("/api/auth/reenviar-validacion")
+                        .with(csrf()) // <-- AQUI INYECTAMOS EL TOKEN CSRF
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"correo\":\"nadie@prueba.pa\"}"))
            .andExpect(status().isAccepted());
@@ -158,7 +162,8 @@ class ValidacionCorreoIntegrationTest {
         mvc.perform(formLogin("/api/auth/login")
                         .userParameter("correo").passwordParam("password")
                         .user("auditor@navesitas.pa").password("Navesitas2026*"))
-           .andExpect(redirectedUrl("/naves.html"));
+           // Sprint 6 (HU-11): el auditor entra a la bandeja de tramites.
+           .andExpect(redirectedUrl("/bandeja.html"));
     }
 
     /** Nadie se registra solo como auditor o administrador. */
@@ -166,6 +171,7 @@ class ValidacionCorreoIntegrationTest {
     void rolesNoAutoasignables() throws Exception {
         for (String rol : new String[] {"AUDITOR", "ADMINISTRADOR"}) {
             mvc.perform(post("/api/auth/registro")
+                            .with(csrf()) // <-- AQUI INYECTAMOS EL TOKEN CSRF
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("""
                                    {"correo":"%s@prueba.pa","password":"%s","nombreCompleto":"X","rol":"%s"}

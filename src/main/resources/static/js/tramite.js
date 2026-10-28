@@ -62,6 +62,9 @@ async function cargarTramite() {
 }
 
 function pintarTramite(t) {
+  // HU-12: la camara 5 muestra los botones de revision solo En revision (D2).
+  if (typeof actualizarEstadoTramiteDocs === 'function') actualizarEstadoTramiteDocs(t.estado);
+
   const seccion = $('seccion-tramite');
   seccion.dataset.final = t.esFinal ? 'si' : 'no';
 
@@ -138,6 +141,11 @@ async function ejecutarAccion(accion) {
       mostrar($('aviso-tramite'), 'libre',
         'Listo. El trámite quedó en ' + (NOMBRE_ESTADO_TRAMITE[datos.estado] || datos.estado) + '.');
       await cargarLineaDeTiempo();
+      // HU-12 (D5): aprobar o rechazar cambia el estado de la nave en la ficha.
+      if ((datos.estado === 'APROBADA' || datos.estado === 'RECHAZADA')
+          && typeof cargarNave === 'function') {
+        await cargarNave();
+      }
       return;
     }
 
@@ -169,6 +177,11 @@ function mensajeDeError(datos) {
   if (datos && Array.isArray(datos.faltantes) && datos.faltantes.length) {
     const nombres = datos.faltantes.map(t =>
       (TIPOS_DOCUMENTO.find(d => d.valor === t) || { nombre: t }).nombre);
+    // Sprint 6 (HU-12, D4): al aprobar, el documento existe pero falta aprobarlo.
+    if (datos.mensaje && datos.mensaje.includes('sin aprobar')) {
+      return 'Para aprobar el trámite faltan documentos sin aprobar: ' + nombres.join(', ')
+           + '. Revíselos en la sección Documentos (paso 5).';
+    }
     return 'Faltan documentos obligatorios: ' + nombres.join(', ')
          + '. Cárguelos en la sección Documentos antes de continuar.';
   }
