@@ -10,8 +10,10 @@ HU-11 (bandeja de trámites de la DGMM) y HU-12 (revisión de documentos), sobre
 - **QA (Louis y Claude):** `b93ebab`, `bbccc68`, `340f374` y `c68ea55`, más los ajustes de
   este commit.
 
-**Estado: parcial (24-10-2026).** Maven, cobertura y Katalon están completos. Faltan Wfuzz
-del Sprint 6 (Abdiel), la revisión manual de las pantallas, LOC/ELOC y el #12 (sección 7).
+**Estado: completo (cierre del sprint, 26-10-2026).** Maven 255/255, cobertura, Katalon 53/53,
+revisión manual (secciones 8 y 9), Wfuzz (`seguridad/evidencia-sprint6.md`) y línea base
+(`qa/metricas/base-sprint-6.md`). Quedan abiertos el #12, que pasa al Sprint 7 por decisión de
+la PO, y el #15 (sección 7).
 
 ## 1. Migración V7 (24-10-2026, base de desarrollo de Louis)
 
@@ -117,7 +119,7 @@ En verde dentro de las 253.
 
 | Issue | Severidad | Estado | Nota |
 |---|---|---|---|
-| #12 | Alta | **Abierto** | Cualquiera puede registrarse como `FUNCIONARIO_DGMM` y aprobar trámites ajenos. Decide la PO. Con este abierto no se cumple la DoD |
+| #12 | Alta | **Abierto**, pasa al Sprint 7 | Cualquiera puede registrarse como `FUNCIONARIO_DGMM` y aprobar trámites ajenos. El 25-10 la PO lo pasó al Sprint 7 como limitación conocida: la DoD se cumple salvo en este punto, por decisión explícita de la PO |
 | #13 | Media | Cerrado el 24-10, corregido en `78ae4c8` | 500 con nombres que crecen al pasar a mayúsculas |
 | #14 | Media | Cerrado el 25-10, corregido en `9754cbd` | `docker compose` no arranca desde `d2664d7` (SEC-03): el `": "` del mensaje de `DB_PASSWORD` rompe el YAML. El CI no lo detecta porque no usa `docker compose` |
 | #15 | Baja–media | **Abierto** (Ismael) | La bandeja se desborda horizontalmente con un nombre de nave largo sin espacios (sección 8, A4) |
@@ -216,15 +218,17 @@ comentarla con el equipo y la PO.
 
 ## 10. Pendiente
 
-- **Ismael:** #15 (desborde de la bandeja). El #14 lo corrigió Claude en `9754cbd`.
-- **Madeleine:** decidir el #12 y confirmar que al desistir la nave queda en `REGISTRADA`
-  (observación 7 de la revisión de la V7).
+- **Ismael (Sprint 7):** #12 y #15 (desborde de la bandeja). El #14 lo corrigió Claude en
+  `9754cbd`.
+- **Madeleine:** ~~decidir el #12~~ (25-10: pasa al Sprint 7). Falta confirmar que al desistir
+  la nave queda en `REGISTRADA` (observación 7 de la revisión de la V7) y responder la pregunta
+  de usabilidad de la sección 9.
 - **Abdiel:** revisar la corrida de Wfuzz del Sprint 6. La hicieron Louis y Claude el 25-10
   (`seguridad/evidencia-sprint6.md`): 0 respuestas 500. También queda respondida la duda: un
   POST anónimo sin token da 401 en el servidor real (SEC-09, informativo). Corrección
   sugerida: `"/error"` en `permitAll()`.
 - **Louis:**
-  - revisión manual hecha (secciones 8 y 9);
+  - ~~revisión manual~~: hecha el 25-10 (secciones 8 y 9);
   - ~~LOC/ELOC y línea base~~: hechos el 25-10 en `qa/metricas/base-sprint-6.md` (LOC 8,146 y
     ELOC 5,685).
 - ~~**QA:** dos pruebas más en el endpoint de revisión~~: hechas el 25-10 en
