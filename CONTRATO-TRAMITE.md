@@ -226,3 +226,9 @@ Superficie nueva:
 - `accion` y `observacion` en el cuerpo del `POST`.
 
 Lo esperado es 400, 403, 404 o 409 según la tabla de arriba, y 0 respuestas 500.
+
+## Actualización Sprint 7 — requisitos condicionales HU-13
+
+Admitir, Subsanar y Aprobar consultan `RequisitosDocumentoService`, la misma evaluación que devuelve `GET /api/naves/{id}/documentos/requisitos`. Se conserva el orden de permisos y transición; antes de avanzar se exige que no haya REQUIERE_REVISION (409 con mensaje que identifica certificados y motivo). No existe resolución manual aprobada para las excepciones.
+
+Solo se comprueban los documentos OBLIGATORIO: vigentes PENDIENTE/APROBADO en Admitir y Subsanar; vigentes APROBADO en Aprobar. Un NO_APLICA ausente no bloquea. `faltantes` mantiene el orden oficial, filtrado por aplicabilidad. Ver D6 en `DISENO-V7.md`; propiedad y poder no cambian.

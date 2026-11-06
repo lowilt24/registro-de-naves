@@ -9,6 +9,7 @@ import pa.amp.registro_naves.documento.Documento;
 import pa.amp.registro_naves.documento.DocumentoRepository;
 import pa.amp.registro_naves.documento.EstadoDocumento;
 import pa.amp.registro_naves.documento.TipoDocumento;
+import pa.amp.registro_naves.documento.RequisitosDocumentoService;
 import pa.amp.registro_naves.nave.EstadoNave;
 import pa.amp.registro_naves.nave.Nave;
 import pa.amp.registro_naves.nave.NaveRepository;
@@ -55,6 +56,7 @@ public class TramiteService {
     private final UsuarioRepository usuarios;
     private final AutorizacionTramite autorizacion;
     private final DocumentoRepository documentos;
+    private final RequisitosDocumentoService requisitos;
 
     /** PO: un documento vigente cuenta si esta pendiente de revision o aprobado. */
     private static final Set<EstadoDocumento> DOCUMENTO_PRESENTE =
@@ -65,13 +67,14 @@ public class TramiteService {
                           NaveRepository naves,
                           UsuarioRepository usuarios,
                           AutorizacionTramite autorizacion,
-                          DocumentoRepository documentos) {
+                          DocumentoRepository documentos, RequisitosDocumentoService requisitos) {
         this.tramites = tramites;
         this.historial = historial;
         this.naves = naves;
         this.usuarios = usuarios;
         this.autorizacion = autorizacion;
         this.documentos = documentos;
+        this.requisitos = requisitos;
     }
 
     /**
@@ -125,7 +128,7 @@ public class TramiteService {
         if (nuevo == EstadoTramite.EN_REVISION) {
             exigirDocumentosObligatorios(nave.getId());           // 409
         }
-        // Sprint 6 (HU-12, D4): aprobar exige los cuatro obligatorios
+        // Sprint 6 (HU-12, D4): aprobar exige los documentos aplicables
         // vigentes en APROBADO.
         if (nuevo == EstadoTramite.APROBADA) {
             exigirDocumentosAprobados(nave.getId());              // 409
@@ -253,8 +256,8 @@ public class TramiteService {
     }
 
     /**
-     * PO (13-10-2026): no se pasa a "En revision" mientras falte alguno de
-     * TipoDocumento.OBLIGATORIOS. Cuenta un documento vigente en PENDIENTE
+     * HU-13: no se pasa a "En revision" mientras falte un obligatorio de
+     * la evaluación central de HU-13. Cuenta un documento vigente en PENDIENTE
      * o APROBADO; uno OBSERVADO (o cualquier estado futuro) es faltante:
      * si no, se podria subsanar sin corregir justo lo observado.
      */
@@ -263,7 +266,7 @@ public class TramiteService {
                 .filter(d -> DOCUMENTO_PRESENTE.contains(d.getEstado()))
                 .map(Documento::getTipo)
                 .collect(Collectors.toSet());
-        List<TipoDocumento> faltantes = TipoDocumento.OBLIGATORIOS.stream()
+        List<TipoDocumento> faltantes = requisitos.obligatoriosConfirmados(nave(naveId)).stream()
                 .filter(t -> !presentes.contains(t))
                 .toList();
         if (!faltantes.isEmpty()) {
@@ -272,16 +275,16 @@ public class TramiteService {
     }
 
     /**
-     * Sprint 6 (HU-12, D4): para aprobar, los cuatro obligatorios vigentes
+     * Sprint 6 (HU-12, D4): para aprobar, los obligatorios aplicables vigentes
      * tienen que estar APROBADOS. Uno pendiente u observado cuenta como
-     * "sin aprobar". La lista sale en el orden de TipoDocumento.OBLIGATORIOS.
+     * "sin aprobar". La lista sale en el orden de la evaluación central de HU-13.
      */
     public void exigirDocumentosAprobados(Long naveId) {
         Set<TipoDocumento> aprobados = documentos.findByNaveIdAndVigenteTrue(naveId).stream()
                 .filter(d -> d.getEstado() == EstadoDocumento.APROBADO)
                 .map(Documento::getTipo)
                 .collect(Collectors.toSet());
-        List<TipoDocumento> sinAprobar = TipoDocumento.OBLIGATORIOS.stream()
+        List<TipoDocumento> sinAprobar = requisitos.obligatoriosConfirmados(nave(naveId)).stream()
                 .filter(t -> !aprobados.contains(t))
                 .toList();
         if (!sinAprobar.isEmpty()) {

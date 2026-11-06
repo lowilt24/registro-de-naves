@@ -645,7 +645,7 @@ table .enlace-fila { font-weight: 700; }
    Documentos (HU-07, HU-08): camara 5
    ===================================================================== */
 
-/* La camara 5 se cruza cuando estan los cuatro documentos. */
+/* La camara 5 se cruza cuando estan los obligatorios aplicables y no hay requisitos pendientes. */
 #seccion-documentos[data-completo="si"] .placa {
   background: var(--agua);
   border-color: var(--agua);

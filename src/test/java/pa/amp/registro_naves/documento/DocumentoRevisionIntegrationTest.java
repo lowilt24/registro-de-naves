@@ -454,7 +454,7 @@ class DocumentoRevisionIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                  {
-                                   "nombre": "%s", "tipo": "CARGA", "servicio": "CABOTAJE",
+                                   "nombre": "%s", "tipo": "CARGA", "servicio": "INTERNACIONAL",
                                    "tonelajeBruto": 5000.00, "tonelajeNeto": 2500.00,
                                    "eslora": 90.00, "manga": 14.00, "puntal": 8.00,
                                    "anioConstruccion": 2022, "lugarConstruccion": "Astillero de prueba",
@@ -480,7 +480,7 @@ class DocumentoRevisionIntegrationTest {
                                 "telefono": "+507 200-1234", "correo": "revision@bufete.com.pa"}
                                """))
            .andExpect(status().isCreated());
-        for (TipoDocumento tipo : TipoDocumento.OBLIGATORIOS) {
+        for (TipoDocumento tipo : TipoDocumento.values()) {
             cargarDocumento(id, AGENTE, tipo.name()).andExpect(status().isCreated());
         }
         return id;

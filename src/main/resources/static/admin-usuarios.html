@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alta de usuarios internos — Navesitas</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="barra">
+  <h1>Navesitas</h1>
+  <span>Administración de usuarios</span><div id="sesion"></div>
+</header>
+
+<main class="estrecho">
+  <h2>Crear usuario interno</h2>
+  <p class="sumario">
+    Registre un funcionario DGMM o un auditor.
+    La persona deberá confirmar su correo para iniciar sesión.
+  </p>
+
+  <form class="tarjeta" id="form-alta" novalidate>
+    <div class="campo">
+      <label for="nombreCompleto">Nombre completo</label>
+      <input type="text" id="nombreCompleto"
+             name="nombreCompleto" maxlength="150" required>
+      <span class="error-campo" data-error="nombreCompleto"></span>
+    </div>
+
+    <div class="campo">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" name="correo"
+             maxlength="120" autocomplete="off" required>
+      <span class="error-campo" data-error="correo"></span>
+    </div>
+
+    <div class="campo">
+      <label for="password">
+        Contraseña inicial
+        <span class="pista">(mínimo 8 caracteres)</span>
+      </label>
+      <input type="password" id="password" name="password"
+             minlength="8" maxlength="72"
+             autocomplete="new-password" required>
+      <span class="error-campo" data-error="password"></span>
+    </div>
+
+    <div class="campo">
+      <label for="rol">Rol</label>
+      <select id="rol" name="rol" required>
+        <option value="">Seleccione un rol</option>
+        <option value="FUNCIONARIO_DGMM">Funcionario DGMM</option>
+        <option value="AUDITOR">Auditor</option>
+      </select>
+      <span class="error-campo" data-error="rol"></span>
+    </div>
+
+    <div class="acciones">
+      <button type="submit" id="btn-crear">Crear usuario</button>
+
+    </div>
+
+    <p class="veredicto" id="aviso-alta"
+       role="status" aria-live="polite"></p>
+  </form>
+</main>
+
+<script src="/js/comun.js"></script><script>
+  pintarSesion();
+  function tokenCsrf() {
+    const coincidencia = document.cookie.match(
+      /(?:^|; )XSRF-TOKEN=([^;]+)/
+    );
+    return coincidencia ? decodeURIComponent(coincidencia[1]) : '';
+  }
+
+  const formulario = document.getElementById('form-alta');
+  const boton = document.getElementById('btn-crear');
+  const aviso = document.getElementById('aviso-alta');
+
+  formulario.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+
+    if (boton.disabled) return;
+
+    document.querySelectorAll('[data-error]').forEach(elemento => {
+      elemento.textContent = '';
+    });
+    aviso.textContent = '';
+    delete aviso.dataset.estado;
+
+    if (!formulario.reportValidity()) return;
+
+    const cuerpo = {
+      nombreCompleto: document.getElementById('nombreCompleto').value.trim(),
+      correo: document.getElementById('correo').value.trim(),
+      password: document.getElementById('password').value,
+      rol: document.getElementById('rol').value
+    };
+
+    boton.disabled = true;
+
+    try {
+      const respuesta = await fetch('/api/admin/usuarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': tokenCsrf()
+        },
+        body: JSON.stringify(cuerpo)
+      });
+
+      if (respuesta.status === 401) {
+        aviso.textContent = 'Su sesión terminó. Inicie sesión nuevamente.';
+        return;
+      }
+
+      if (respuesta.status === 403) {
+        aviso.textContent =
+          'La solicitud fue rechazada. Compruebe que ingresó como administrador y recargue la página antes de reintentar.';
+        return;
+      }
+
+      const datos = await respuesta.json();
+
+      if (respuesta.status === 201) {
+        formulario.reset();
+        aviso.textContent =
+          'Usuario creado: ' + datos.correo +
+          '. Debe confirmar su correo antes de iniciar sesión.';
+        return;
+      }
+
+      if (datos.campos) {
+        Object.entries(datos.campos).forEach(([campo, mensaje]) => {
+          const destino = document.querySelector(
+            '[data-error="' + campo + '"]'
+          );
+          if (destino) destino.textContent = mensaje;
+        });
+      }
+
+      aviso.textContent = datos.mensaje || 'No se pudo crear el usuario.';
+    } catch (error) {
+      aviso.textContent =
+        'No se pudo confirmar la creación. Compruebe la conexión antes de reintentar.';
+    } finally {
+      boton.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
