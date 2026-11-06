@@ -1,4 +1,4 @@
-# Contrato de API — documentos de la nave (HU-07, HU-08 y HU-12)
+# Contrato de API — documentos de la nave (HU-07, HU-08, HU-12 y HU-13)
 
 Lo que la pantalla de documentos (cámara 5) y los casos de Katalon TC-17 a
 TC-24 esperan del backend. Si algo de esto cambia, hay que cambiar también
@@ -33,7 +33,7 @@ Lista cerrada. El backend rechaza cualquier otro valor con 400.
 `PENDIENTE` (al cargar), `APROBADO`, `OBSERVADO`.
 
 `FALTANTE` **no** es un estado de la base: lo calcula la pantalla para los
-tipos que no tienen ningún documento.
+tipos obligatorios aplicables que no tienen documento; los certificados no aplicables o pendientes de evaluación no se rotulan como faltantes.
 
 ---
 
@@ -232,7 +232,7 @@ recibe **409**, no 400.
 ### Cambios en el trámite (D4 y D5)
 
 - **Aprobar el trámite** (`POST /api/naves/{id}/tramite/estado` con
-  `APROBAR`) exige los cuatro obligatorios vigentes en `APROBADO`. Si no, 409:
+  `APROBAR`) exige los obligatorios aplicables vigentes en `APROBADO`, con evaluación confirmada (HU-13). Si no, 409:
   ```json
   { "mensaje": "Para aprobar el trámite faltan documentos obligatorios sin aprobar: SMC",
     "faltantes": ["SMC"] }
@@ -250,3 +250,20 @@ Observación de la profesora: la ficha de la nave muestra fecha **y hora**.
 La pantalla lee `creadoEn` de `GET /api/naves/{id}` y, si no viene, cae a
 `fechaRegistro`. Cuando la V5 agregue `creado_en`, basta con exponerlo en
 `NaveResponse` como `creadoEn` (ISO 8601 con zona).
+
+## 5. Requisitos documentales — HU-13 (Sprint 7, D6)
+
+`GET /api/naves/{naveId}/documentos/requisitos` exige la misma lectura del expediente: 401 sin sesión, 404 inexistente, 403 nave ajena al agente; DGMM y auditor leen cualquier nave. Responde 200 con cuatro objetos ordenados por propiedad, poder, ITC y SMC:
+
+```json
+[
+  {"tipo":"CERTIFICADO_PROPIEDAD","estado":"OBLIGATORIO","explicacion":"El expediente exige certificado de propiedad."},
+  {"tipo":"PODER_NOTARIAL","estado":"OBLIGATORIO","explicacion":"El expediente exige poder notarial."},
+  {"tipo":"ITC","estado":"OBLIGATORIO","explicacion":"Navegación internacional: alcanza el umbral de 24 m de eslora."},
+  {"tipo":"SMC","estado":"NO_APLICA","explicacion":"Navegación internacional: no alcanza el umbral de 500 GT de arqueo bruto."}
+]
+```
+
+La respuesta de ejemplo corresponde a CARGA/INTERNACIONAL, eslora >=24 m y GT <500. Los estados son aplicabilidad, separados de los estados de revisión de cada documento. La cámara 5 consume este resultado y no reimplementa los umbrales.
+
+D6 y sus casos pendientes están en `DISENO-V7.md` y `LEEME-SPRINT7.md`. REQUIERE_REVISION produce 409 en las tres operaciones que confirman requisitos (Admitir, Subsanar, Aprobar), con `mensaje` claro y sin sustituir pendientes por exenciones. NO_APLICA no se incluye en `faltantes`. La evaluación no escribe ni elimina documentos; se conservan versiones, revisiones, descarga y límites de carga.

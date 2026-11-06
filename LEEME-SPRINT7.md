@@ -1,4 +1,4 @@
-# Sprint 7 — HU-14: alta administrativa de usuarios internos
+# Sprint 7 — HU-14 y HU-13: usuarios internos y requisitos documentales
 
 Verificado el 2026-11-06 en `sprint-7`, sobre `50611de` (correccion #12).
 
@@ -70,3 +70,111 @@ Rutas relativas a la raiz del repositorio. Lista revisada sin modificar el area 
 Excluidos del commit: `src/main/resources/application.properties` (configuracion local conservada) y `.env` (ignorado por Git; sin leer ni mostrar secretos). No usar `git add .` para preparar este commit.
 
 Revision del diff: no se identificaron bloqueos funcionales adicionales para HU-14; SecurityConfig y UsuarioService incluyen tambien cambios previos de formato y comentarios que se conservaron. `git diff --check` sin errores en archivos rastreados. La evidencia automatizada corresponde a la verificacion anterior de 272/272; esta actualizacion documental no requirio repetir Maven. Pendiente operativo: entrega SMTP real.
+
+## HU-13 — ITC y SMC solo cuando apliquen (D6)
+
+**Estado al pausar (2026-11-06): implementada, pendiente de validación. No se declara aceptada ni cerrada.**
+
+Implementada en Sprint 7 por priorización y aprobación de Madeleine Velásquez (PO), según las instrucciones recibidas el 2026-11-06. HU-14 y su evidencia anterior se conservan.
+
+### Decisión y alcance
+
+| Navegación / servicio | Tipo confirmado | ITC | SMC |
+|---|---|---|---|
+| INTERNACIONAL | CARGA | Obligatorio con eslora >= 24 m; no aplica por debajo | Obligatorio con arqueo bruto >= 500 GT; no aplica por debajo |
+| INTERNACIONAL | PASAJEROS | Obligatorio con eslora >= 24 m; no aplica por debajo | Obligatorio, independientemente del GT |
+| Cualquier otro servicio o sin dato | Cualquiera | Requiere revisión | Requiere revisión |
+| INTERNACIONAL | MIXTA, TANQUERO, REMOLCADOR, PESQUERA o tipo ausente | Requiere revisión | Requiere revisión |
+
+Los umbrales son inclusivos. Los datos necesarios ausentes o no válidos dejan pendiente solo la regla que los necesita: SMC de pasajeros no depende del GT ni de la eslora; ITC no depende del GT. Certificado de propiedad y poder notarial siguen siendo obligatorios.
+
+Se reutilizan `Nave.tipo`, `Nave.servicio`, `Nave.eslora` y `Nave.tonelajeBruto` (arqueo bruto, GT, no peso). El catálogo actual de servicio es INTERNACIONAL/CABOTAJE/MIXTO: solo INTERNACIONAL habilita las reglas aprobadas. No se inventan alias para NACIONAL ni equivalencias de TANQUERO con CARGA. Los servicios no internacionales quedan pendientes, sin resolver sus requisitos normativos.
+
+**Migraciones necesarias: ninguna.** Los cuatro datos ya existen con validaciones; no se agrega un campo duplicado ni se cambian los registros históricos a INTERNACIONAL. Las ausencias/valores inválidos en altas siguen produciendo 400, incluidos los enums ajenos al catálogo. Los casos incompletos en el evaluador quedan REQUIERE_REVISION.
+
+### Backend y cámara 5
+
+- `RequisitosDocumentoService`: tabla inmutable con umbrales y condiciones; evaluación única OBLIGATORIO/NO_APLICA/REQUIERE_REVISION y explicación por documento.
+- `GET /api/naves/{naveId}/documentos/requisitos`: misma autorización de lectura que el expediente (agente propietario, DGMM y auditor); sin exposición a otros agentes.
+- Admitir y Subsanar requieren los obligatorios vigentes PENDIENTE o APROBADO. Aprobar exige esos mismos obligatorios en APROBADO. Se retiró la lista fija `TipoDocumento.OBLIGATORIOS`.
+- Cualquier requisito pendiente bloquea las tres operaciones con HTTP 409 y un mensaje que incluye REQUIERE_REVISION. Cargar los cuatro PDF no resuelve la excepción.
+- No existe mecanismo aprobado para resolver manualmente los casos pendientes; no se agregó uno. Para esas naves el flujo permanece bloqueado hasta definirlo con la PO.
+- Cámara 5 consume las decisiones del backend, muestra estados y explicaciones, cuenta solo obligatorios y no ofrece la carga de certificados no aplicables. Si falla la evaluación, no muestra el expediente como completo.
+- Los documentos no aplicables ya cargados conservan versiones, estado, historial y descarga; la evaluación no los borra ni modifica. Tampoco cambia los permisos de revisión, la firma PDF, el máximo de 10 MB, CSRF o las validaciones existentes.
+
+### Verificación HU-13
+
+- Maven: `mvnw.cmd -Dlogging.level.root=WARN verify` — **308 pruebas, 0 fallos, 0 errores, 0 omitidas; BUILD SUCCESS**. Incluye las 272 anteriores y 36 nuevas (19 de evaluación, 17 de integración).
+- Casos nuevos: 23.99/24/24.01 m; carga 499/500/501 GT; pasajeros <500 GT y sin GT; servicios no cubiertos; tipos mixtos/no clasificados; datos ausentes; certificados obligatorios y exentos en la misma nave; pendientes con cuatro documentos; consistencia de Admitir/Subsanar/Aprobar; conservación de documentos; permisos y datos inválidos 400.
+- JaCoCo: instrucciones **94.11 %**, ramas **88.71 %**, líneas **93.56 %**. Umbral del 70 % aprobado.
+- `node --test src/test/js/documentos.test.cjs` — **6/6 aprobadas**: renderizado de decisiones recibidas, no aplicables ausentes, pendientes, conservación de versiones/descargas y fallo de evaluación sin falso completo. Son pruebas de JavaScript con DOM simulado, no una revisión visual en navegador.
+- Los fixtures de cuatro suites de regresión que esperaban avanzar con cuatro certificados ahora declaran explícitamente servicio INTERNACIONAL; sus demás comprobaciones se conservan.
+- TS07_Sprint7: tres casos nuevos de Katalon (matriz de umbrales/pendientes, flujo condicional y permisos/datos inválidos), con auxiliar `Keywords/navesitas/Hu13.groovy`. **Pendientes de ejecución**: Katalon y Groovy no están disponibles en PATH ni se encontró instalación en las ubicaciones habituales revisadas. Validar XML no equivale a ejecutar estos casos.
+- `seguridad/probar-seguridad-sprint7.ps1`: cookies y CSRF reales; permisos, IDOR si hay nave ajena, IDs inválidos y POST rechazados. No crea ni modifica datos; reporte local ignorado en `seguridad/reportes/s7-seguridad.json`. Resultado HTTP final en 8081: **13 correctas, 0 fallidas**; IDOR sin nave ajena disponible queda pendiente en HTTP y está cubierto en integración. Detalles en `seguridad/evidencia-sprint7.md`. Se detuvo solo la instancia temporal; el proceso existente en 8080 se conservó.
+
+### Prueba manual de cámara 5 y flujo completo
+
+1. Arrancar PostgreSQL y la aplicación con la configuración local habitual. No hace falta migración nueva. El pendiente SMTP de HU-14 se conserva.
+2. Como agente demo, registrar CARGA / INTERNACIONAL, arqueo bruto 499 GT (neto menor o igual al bruto), eslora 24 m y los demás datos válidos; vincular propietario y designar agente residente.
+3. Abrir cámara 5: propiedad, poder e ITC deben aparecer Obligatorio; SMC, No aplica. Su ausencia no debe aparecer como Faltante. Cargar solo los tres obligatorios en PDF.
+4. Como DGMM, admitir el trámite. Si se intenta antes de cargar ITC debe responder 409 con ITC en faltantes, sin SMC.
+5. Como DGMM, observar el trámite; como agente, subsanarlo. Volver como DGMM, aprobar los tres documentos y aprobar el trámite. Debe quedar APROBADA y la nave ABANDERADA sin exigir SMC.
+6. Repetir con 23.99 m y 499 GT: ITC y SMC No aplica; bastan propiedad y poder. Repetir con 24.01 m/500 GT: ambos certificados obligatorios. En PASAJEROS internacional de 100 GT el SMC es obligatorio.
+7. Crear otra nave con CABOTAJE o tipo MIXTA: cámara 5 muestra Requiere revisión y la explicación. Admitir debe dar 409 incluso con cuatro PDF. El bloqueo por evaluación pendiente es el mismo para Subsanar y Aprobar; esos estados se cubren en pruebas de integración, sin agregar un atajo manual a la aplicación.
+8. Verificar que la descarga y el historial de certificados previamente cargados siguen disponibles aunque su resultado sea No aplica. No existe edición de ficha en el alcance; la prueba de cambio de aplicabilidad se realiza en integración transaccional.
+
+La revisión visual manual de HU-13 queda pendiente. Se autoriza guardar únicamente los 32 archivos de HU-13 en un commit y publicarlo en origin/sprint-7, sin merge a main. `application.properties`, `.env`, secretos y archivos ajenos quedan excluidos. El resultado del push y de GitHub Actions se informa al finalizar; no se anticipa su aprobación en este documento.
+
+### Punto de pausa y pendientes para retomar
+
+| Verificación | Estado real al pausar |
+|---|---|
+| Maven completo y JaCoCo | Ejecutados: 308/308 pruebas y umbral aprobado; no se repitieron por esta actualización documental |
+| JavaScript de cámara 5 | Ejecutado: 6/6, con DOM simulado |
+| Seguridad por HTTP mediante PowerShell | Ejecutada: 13 correctas, 0 fallidas; no equivale a Wfuzz |
+| IDOR entre agentes en Maven | Ejecutado y aprobado en integración transaccional |
+| IDOR entre agentes por HTTP | PENDIENTE: no había una nave ajena disponible en la bandeja; no se declara aprobado |
+| Katalon TS07_Sprint7 | NO EJECUTADO: tres casos creados, XML/referencias comprobados; falta ejecutable disponible |
+| Wfuzz Sprint 7 | NO EJECUTADO: pendiente preparar/ejecutar el escaneo y conservar evidencia; no se declara aprobado |
+| Revisión visual y recorrido manual de HU-13 | PENDIENTE: cámara 5, mensajes, estados y flujo completo en navegador |
+| Validación final de la historia por la PO | PENDIENTE: la aprobación de D6 no equivale a aceptación de la implementación |
+| SMTP real de HU-14 | Pendiente anterior conservado; no fue validado con HU-13 |
+
+Al retomar: ejecutar TS07 en Katalon; preparar/ejecutar Wfuzz para la superficie HU-13; repetir IDOR por HTTP con dos agentes y una nave ajena conocida; realizar el recorrido visual descrito en la sección de prueba manual y registrar resultados; finalmente solicitar validación de la PO. Los casos normativos no cubiertos siguen en REQUIERE_REVISION hasta que la PO defina su resolución; no se ha agregado un mecanismo manual.
+
+Revisión previa al commit: cambios de HU-13 revisados, configuración local con hash inicial conservado, sin referencias activas a la lista fija OBLIGATORIOS, sin migración adicional. La evidencia ejecutada se conserva sin transformar los pendientes en aprobaciones.
+
+### Inventario de archivos HU-13
+
+- `qa/registro-naves-qa/Keywords/navesitas/Hu13.groovy`
+- `qa/registro-naves-qa/Scripts/TC_HU13_01_Umbrales_Y_Pendientes/Script1790000007101.groovy`
+- `qa/registro-naves-qa/Scripts/TC_HU13_02_Flujo_Condicional/Script1790000007102.groovy`
+- `qa/registro-naves-qa/Scripts/TC_HU13_03_Permisos_Y_Datos_Invalidos/Script1790000007103.groovy`
+- `qa/registro-naves-qa/Test Cases/TC_HU13_01_Umbrales_Y_Pendientes.tc`
+- `qa/registro-naves-qa/Test Cases/TC_HU13_02_Flujo_Condicional.tc`
+- `qa/registro-naves-qa/Test Cases/TC_HU13_03_Permisos_Y_Datos_Invalidos.tc`
+- `qa/registro-naves-qa/Test Suites/TS07_Sprint7.groovy`
+- `qa/registro-naves-qa/Test Suites/TS07_Sprint7.ts`
+- `seguridad/evidencia-sprint7.md`
+- `seguridad/probar-seguridad-sprint7.ps1`
+- `src/main/java/pa/amp/registro_naves/documento/RequisitosDocumentoController.java`
+- `src/main/java/pa/amp/registro_naves/documento/RequisitosDocumentoService.java`
+- `src/test/java/pa/amp/registro_naves/documento/RequisitosDocumentoServiceTest.java`
+- `src/test/java/pa/amp/registro_naves/tramite/RequisitosDocumentoIntegrationTest.java`
+- `src/test/js/documentos.test.cjs`
+- `CONTRATO-DOCUMENTOS.md`
+- `CONTRATO-TRAMITE.md`
+- `DISENO-V7.md`
+- `LEEME-SPRINT7.md`
+- `src/main/java/pa/amp/registro_naves/documento/TipoDocumento.java`
+- `src/main/java/pa/amp/registro_naves/tramite/DocumentosFaltantesException.java`
+- `src/main/java/pa/amp/registro_naves/tramite/TramiteService.java`
+- `src/main/resources/static/css/app.css`
+- `src/main/resources/static/expediente.html`
+- `src/main/resources/static/js/documentos.js`
+- `src/main/resources/static/js/expediente.js`
+- `src/main/resources/static/naves.html`
+- `src/test/java/pa/amp/registro_naves/documento/DocumentoRevisionIntegrationTest.java`
+- `src/test/java/pa/amp/registro_naves/tramite/BandejaIntegrationTest.java`
+- `src/test/java/pa/amp/registro_naves/tramite/TramiteIntegrationTest.java`
+- `src/test/java/pa/amp/registro_naves/tramite/TramiteInvariantesIntegrationTest.java`

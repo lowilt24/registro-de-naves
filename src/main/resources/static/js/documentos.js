@@ -40,6 +40,7 @@ let modoDocumentos = 'agente';
 let estadoTramiteDocs = null;  // lo avisa tramite.js; D2: se revisa solo En revision
 let documentoEnRevision = null; // { id, nombre } mientras el formulario de observar esta abierto
 let versionesVigentes = {};  // tipo -> version vigente, para avisar del reemplazo
+let requisitosDocumentales = []; // Decisiones del backend HU-13; sin reglas en JavaScript.
 let consultaEnCurso = 0;     // descarta respuestas viejas si se cambian filtros rapido
 
 function nombreTipo(valor) {
@@ -104,21 +105,35 @@ async function cargarDocumentos() {
   const ruta = '/api/naves/' + naveId + '/documentos'
              + (parametros.toString() ? '?' + parametros : '');
 
-  const { ok, datos } = await api(ruta);
+  const [consulta, evaluacion] = await Promise.all([
+    api(ruta).catch(() => ({ ok: false })),
+    api('/api/naves/' + naveId + '/documentos/requisitos').catch(() => ({ ok: false }))
+  ]);
+  const { ok, datos } = consulta;
   if (turno !== consultaEnCurso) return;
-  if (!ok || !Array.isArray(datos)) {
+  const evaluacionValida = evaluacion.ok && Array.isArray(evaluacion.datos)
+    && evaluacion.datos.length === TIPOS_DOCUMENTO.length
+    && TIPOS_DOCUMENTO.every(t => evaluacion.datos.some(r => r.tipo === t.valor
+      && Object.hasOwn(NOMBRE_APLICABILIDAD, r.estado)));
+  if (!ok || !Array.isArray(datos) || !evaluacionValida) {
     cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">No se pudieron cargar los documentos.</td></tr>';
+    requisitosDocumentales = [];
+    $('requisitos-documentales').textContent = 'No se pudieron evaluar los requisitos. No se puede confirmar que el expediente está completo.';
+    $('contador-documentos').textContent = 'Sin evaluación';
+    $('seccion-documentos').dataset.completo = 'no';
     ocultar($('resumen-documentos'));
     return;
   }
 
-  // El resumen de faltantes siempre se calcula sobre el expediente
+  // El resumen usa requisitos del backend y documentos del expediente
   // completo, no sobre lo filtrado: si no, filtrar por ITC haria creer
   // que solo falta el ITC.
   const completo = (tipo || estado || historial)
     ? await consultarVigentes()
     : datos;
   if (turno !== consultaEnCurso) return;
+  requisitosDocumentales = evaluacion.datos;
+  pintarRequisitos();
   pintarResumen(completo);
 
   const filas = [];
@@ -133,7 +148,9 @@ async function cargarDocumentos() {
         delTipo.forEach(d => filas.push(filaDocumento(d)));
       }
       const falta = !completo.some(d => d.tipo === t.valor);
-      if (falta && !tiposConDocumento.has(t.valor) && (!estado || estado === 'FALTANTE')) {
+      const requerido = requisitoDe(t.valor);
+      if (falta && !tiposConDocumento.has(t.valor) && (!estado ||
+          (estado === 'FALTANTE' && requerido?.estado === 'OBLIGATORIO'))) {
         filas.push(filaFaltante(t));
       }
     });
@@ -155,7 +172,7 @@ function filaDocumento(d) {
   const descarga = '/api/naves/' + naveId + '/documentos/' + d.id + '/archivo';
   return `
     <tr${d.vigente === false ? ' class="fila-anterior"' : ''}>
-      <td>${escapar(nombreTipo(d.tipo))}</td>
+      <td>${escapar(nombreTipo(d.tipo))}${detalleAplicabilidad(d.tipo)}</td>
       <td><div class="archivo">${escapar(d.nombreArchivo)}<span class="pista cifra">${tamanoLegible(d.tamanoBytes)}</span></div></td>
       <td><span class="cifra">${version}</span></td>
       <td><span class="cifra fecha">${fechaHora(d.creadoEn)}</span></td>
@@ -166,13 +183,13 @@ function filaDocumento(d) {
 
 function filaFaltante(t) {
   return `
-    <tr class="fila-faltante">
-      <td>${escapar(t.nombre)}</td>
+    <tr${requisitoDe(t.valor)?.estado === 'OBLIGATORIO' ? ' class="fila-faltante"' : ''}>
+      <td>${escapar(t.nombre)}${detalleAplicabilidad(t.valor)}</td>
       <td>—</td>
       <td>—</td>
       <td>—</td>
-      <td>${etiquetaEstado('FALTANTE')}</td>
-      <td>${modoDocumentos === 'agente'
+      <td>${requisitoDe(t.valor)?.estado === 'OBLIGATORIO' ? etiquetaEstado('FALTANTE') : escapar(NOMBRE_APLICABILIDAD[requisitoDe(t.valor)?.estado] || 'Sin evaluación')}</td>
+      <td>${modoDocumentos === 'agente' && requisitoDe(t.valor)?.estado === 'OBLIGATORIO'
             ? '<a class="enlace-fila" href="#form-documento" data-cargar="' + t.valor + '">Cargar</a>'
             : '—'}</td>
     </tr>`;
@@ -212,7 +229,7 @@ function pintarNotaRevision() {
   }
   nota.textContent = estadoTramiteDocs === 'EN_REVISION'
     ? 'Revise cada documento pendiente con Aprobar u Observar. Para aprobar el trámite, '
-      + 'los cuatro tienen que estar aprobados.'
+      + 'los documentos obligatorios aplicables tienen que estar aprobados y no debe haber requisitos pendientes de confirmar.'
     : 'Los documentos se revisan con el trámite En revisión. Ahora está en '
       + (NOMBRE_ESTADO_TRAMITE[estadoTramiteDocs] || '—') + '.';
   nota.classList.remove('oculto');
@@ -325,47 +342,53 @@ async function enviarRevision(id, nombre, decision, observacion, boton) {
 }
 
 /**
- * El "para saber que falta" de HU-08. Tres casos, cada uno con su icono
- * y su texto: faltan documentos (neutro), hay observados (alto), o el
- * expediente documental esta completo (siga).
+ * HU-13: presenta la decisión del backend y resume solo documentos aplicables.
  */
+const NOMBRE_APLICABILIDAD = {
+  OBLIGATORIO: 'Obligatorio', NO_APLICA: 'No aplica', REQUIERE_REVISION: 'Requiere revisión'
+};
+
+function requisitoDe(tipo) {
+  return requisitosDocumentales.find(r => r.tipo === tipo);
+}
+
+function detalleAplicabilidad(tipo) {
+  const r = requisitoDe(tipo);
+  return r ? '<span class="pista">' + escapar(NOMBRE_APLICABILIDAD[r.estado] || r.estado)
+    + ': ' + escapar(r.explicacion) + '</span>' : '';
+}
+
+function pintarRequisitos() {
+  $('requisitos-documentales').innerHTML = '<ul>' + requisitosDocumentales.map(r =>
+    '<li><strong>' + escapar(nombreTipo(r.tipo)) + ': '
+    + escapar(NOMBRE_APLICABILIDAD[r.estado] || r.estado) + '</strong>. '
+    + escapar(r.explicacion) + '</li>').join('') + '</ul>';
+  for (const opcion of $('d-tipo').options) {
+    const r = requisitoDe(opcion.value);
+    opcion.disabled = r?.estado === 'NO_APLICA';
+    if (opcion.disabled && opcion.selected) $('d-tipo').value = '';
+  }
+}
+
 function pintarResumen(vigentes) {
   const aviso = $('resumen-documentos');
-  const cargados = new Set(vigentes.map(d => d.tipo));
-  const faltan = TIPOS_DOCUMENTO.filter(t => !cargados.has(t.valor));
-  const observados = vigentes.filter(d => d.estado === 'OBSERVADO');
-
+  const obligatorios = requisitosDocumentales.filter(r => r.estado === 'OBLIGATORIO');
+  const pendientes = requisitosDocumentales.filter(r => r.estado === 'REQUIERE_REVISION');
+  const presentes = new Set(vigentes.filter(d => d.estado !== 'OBSERVADO').map(d => d.tipo));
+  const faltan = obligatorios.filter(r => !presentes.has(r.tipo));
   versionesVigentes = {};
   vigentes.forEach(d => { versionesVigentes[d.tipo] = d.version; });
-
-  $('contador-documentos').textContent =
-    (TIPOS_DOCUMENTO.length - faltan.length) + ' de ' + TIPOS_DOCUMENTO.length + ' cargados';
-
-  // La placa pasa a azul (camara cruzada) cuando no falta ninguno.
-  $('seccion-documentos').dataset.completo = faltan.length === 0 ? 'si' : 'no';
-
-  const textoFaltan = faltan.length
-    ? (faltan.length === 1 ? 'Falta 1' : 'Faltan ' + faltan.length)
-      + ' de ' + TIPOS_DOCUMENTO.length + ' documentos: '
-      + faltan.map(t => t.nombre).join(', ') + '.'
-    : '';
-
-  if (observados.length) {
-    // Lo observado manda (alto), pero sin esconder lo que falta.
-    const textoObservados = (observados.length === 1
-        ? 'Hay 1 documento observado: '
-        : 'Hay ' + observados.length + ' documentos observados: ')
-      + observados.map(d => nombreTipo(d.tipo)).join(', ')
-      + (modoDocumentos === 'agente'
-          ? '. Cárguelo de nuevo con las correcciones.'
-          : '. El agente debe cargar una versión nueva.');
-    mostrar(aviso, 'ocupado', textoObservados + (textoFaltan ? ' ' + textoFaltan : ''));
-  } else if (faltan.length) {
-    mostrar(aviso, 'neutro', textoFaltan);
-  } else {
-    mostrar(aviso, 'libre', 'Los cuatro documentos del expediente están cargados.');
-  }
-
+  $('contador-documentos').textContent = (obligatorios.length - faltan.length)
+    + ' de ' + obligatorios.length + ' obligatorios presentados';
+  $('seccion-documentos').dataset.completo = !faltan.length && !pendientes.length ? 'si' : 'no';
+  const mensajes = [];
+  if (pendientes.length) mensajes.push('Requiere revisión: '
+    + pendientes.map(r => nombreTipo(r.tipo)).join(', ')
+    + '. No se puede admitir, subsanar ni aprobar hasta confirmar los requisitos. La resolución manual de excepciones aún no está definida.');
+  if (faltan.length) mensajes.push('Faltan documentos obligatorios vigentes sin observaciones: '
+    + faltan.map(r => nombreTipo(r.tipo)).join(', ') + '.');
+  mostrar(aviso, pendientes.length ? 'ocupado' : faltan.length ? 'neutro' : 'libre',
+    mensajes.join(' ') || 'Los documentos obligatorios aplicables están presentados. Para aprobar el trámite deben estar aprobados.');
   avisarVersion();
 }
 

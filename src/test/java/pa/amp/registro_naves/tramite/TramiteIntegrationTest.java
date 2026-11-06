@@ -598,7 +598,7 @@ class TramiteIntegrationTest {
                 {
                   "nombre": "%s",
                   "tipo": "CARGA",
-                  "servicio": "CABOTAJE",
+                  "servicio": "INTERNACIONAL",
                   "tonelajeBruto": 5000.00,
                   "tonelajeNeto": 2500.00,
                   "eslora": 90.00,
@@ -633,7 +633,7 @@ class TramiteIntegrationTest {
                                  "telefono": "+507 200-1234", "correo": "tramite@bufete.com.pa"}
                                 """))
            .andExpect(status().isCreated());
-        for (TipoDocumento tipo : TipoDocumento.OBLIGATORIOS) {
+        for (TipoDocumento tipo : TipoDocumento.values()) {
             cargarDocumento(naveId, usuario, tipo.name()).andExpect(status().isCreated());
         }
     }

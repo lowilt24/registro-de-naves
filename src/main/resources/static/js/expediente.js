@@ -39,8 +39,8 @@ async function cargarNave() {
   $('ficha-nave').innerHTML = `
     <div><span>Registro</span><b class="cifra">${datos.id}</b></div>
     <div><span>Tipo</span><b>${datos.tipo}</b></div>
-    <div><span>Servicio</span><b>${datos.servicio}</b></div>
-    <div><span>Tonelaje bruto</span><b class="cifra">${datos.tonelajeBruto}</b></div>
+    <div><span>Navegación / servicio</span><b>${datos.servicio}</b></div>
+    <div><span>Arqueo bruto (GT)</span><b class="cifra">${datos.tonelajeBruto}</b></div>
     <div><span>Eslora</span><b class="cifra">${datos.eslora} m</b></div>
     <div><span>Estado de la nave</span><b><span class="estado-etiqueta" data-estado="${escapar(datos.estado)}">${escapar(datos.estado)}</span></b></div>
     <div><span>Estado del trámite</span><b id="ficha-estado-tramite">${etiquetaTramite(datos.estadoTramite)}</b></div>

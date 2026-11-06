@@ -297,7 +297,7 @@ class TramiteInvariantesIntegrationTest {
                                  {
                                    "nombre": "%s",
                                    "tipo": "CARGA",
-                                   "servicio": "CABOTAJE",
+                                   "servicio": "INTERNACIONAL",
                                    "tonelajeBruto": 5000.00,
                                    "tonelajeNeto": 2500.00,
                                    "eslora": 90.00,

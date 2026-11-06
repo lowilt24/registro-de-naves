@@ -139,3 +139,21 @@ Cámara 5 del expediente:
 Los campos son los que esperan TC_HU12_01 a 06 (`decision`, `observacion`,
 `revisadoPor`, `revisadoEn` y `faltantes`), así que se pueden activar sin
 cambios.
+
+## Actualización D6 — HU-13, Sprint 7 (2026-11-06)
+
+Madeleine Velásquez aprobó y priorizó HU-13 para Sprint 7. Esta decisión sustituye la obligación fija de cuatro certificados en las validaciones documentales descritas anteriormente; no altera la revisión individual de HU-12.
+
+La tabla única de `RequisitosDocumentoService` aplica D6 a servicio INTERNACIONAL y tipos confirmados CARGA/PASAJEROS: ITC con eslora >=24 m; SMC para pasajeros sin umbral de GT y carga con arqueo bruto >=500 GT. En los tipos cubiertos, estar por debajo del umbral produce NO_APLICA. Propiedad y poder siguen obligatorios.
+
+Navegación nacional, servicios CABOTAJE/MIXTO, tipo MIXTA y demás tipos no clasificados quedan pendientes (REQUIERE_REVISION); no se infieren equivalencias. Los datos necesarios incompletos dejan pendiente solo el certificado afectado. La evaluación pendiente bloquea Admitir, Subsanar y Aprobar con 409. No se ha definido ni implementado resolución manual de excepciones.
+
+Se reutiliza el campo `servicio` de la nave como dato de navegación existente, sin duplicarlo ni asignar INTERNACIONAL a históricos. No requiere migración. GT es arqueo bruto, no peso. No se emiten certificados ni se implementa NTC.
+
+Referencias consultadas como contexto de las reglas aprobadas por la PO:
+
+- [AMP, MMC-67, alcance 3.1 y definiciones de arqueo](https://www.panamashipregistry.com/wp-content/uploads/2023/01/MMC-67-ITC69-21-de-julio-2023.pdf): viajes internacionales y frontera de 24 m; el texto contiene además procedimientos y excepciones fuera del alcance de esta historia.
+- [IMO, Código ISM y vínculo con SOLAS IX](https://www.imo.org/en/ourwork/humanelement/pages/ismcode.aspx).
+- [Transport Canada, aplicación del ISM](https://tc.canada.ca/en/marine-transportation/marine-safety/international-safety-management-ism-code): referencia oficial sobre pasajeros y carga de 500 GT en viajes internacionales.
+
+Estas referencias no amplían D6 a tipos ni navegación sin decisión de la PO. No se verificó el contenido de la Res. 106-061-DGMM y no se le atribuyen los umbrales.
