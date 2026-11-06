@@ -3,8 +3,8 @@ package pa.amp.registro_naves.usuario;
 /**
  * Rol del usuario. La base lo acota con ck_usuario_rol (V5).
  *
- * Sprint 4: se agrega AUDITOR, que pidio la profesora. Solo los dos
- * primeros se pueden elegir al crear una cuenta; ver UsuarioService.
+ * Sprint 7: solo AGENTE_NAVIERO se puede elegir
+ * en el registro publico.
  */
 public enum Rol {
     AGENTE_NAVIERO,
@@ -12,8 +12,8 @@ public enum Rol {
     AUDITOR,
     ADMINISTRADOR;
 
-    /** Roles que alguien puede asignarse a si mismo en el formulario de registro. */
+    /** Roles permitidos en el registro publico. */
     public boolean esAutoasignable() {
-        return this == AGENTE_NAVIERO || this == FUNCIONARIO_DGMM;
+        return this == AGENTE_NAVIERO;
     }
 }

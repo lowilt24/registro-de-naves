@@ -105,6 +105,31 @@ class RegistroUsuarioIntegrationTest {
            .andExpect(jsonPath("$.rol").value("AGENTE_NAVIERO"));
     }
 
+
+        /** Sprint 7, #12: el registro publico rechaza roles restringidos. */
+    @Test
+    void registroPublicoRechazaRolesRestringidos() throws Exception {
+        for (Rol rol : new Rol[]{
+                Rol.FUNCIONARIO_DGMM,
+                Rol.AUDITOR,
+                Rol.ADMINISTRADOR
+        }) {
+            String correo = "rechazado."
+                    + rol.name().toLowerCase(java.util.Locale.ROOT)
+                    + "@prueba.pa";
+
+            registrar(correo, "Registro No Permitido", rol.name())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.campos.rol").exists());
+
+            assertThat(usuarios.findByCorreoIgnoreCase(correo)).isEmpty();
+        }
+
+        verify(notificador, times(0))
+                .enviarValidacion(anyString(), anyString(), anyString());
+    }
+
+
     // ------------------------------------------------------------------
     // HU-02 — sesion
     // ------------------------------------------------------------------
