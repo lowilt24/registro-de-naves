@@ -3,24 +3,22 @@ package pa.amp.registro_naves.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
 @Configuration
 public class SecurityConfig {
 
     /**
-     * Identifica las llamadas a la API. En Spring Security 7 se elimino
-     * AntPathRequestMatcher; RequestMatcher es una interfaz funcional, asi
-     * que una lambda cumple el mismo papel sin depender de clases que
-     * cambian entre versiones.
+     * Identifica las llamadas a la API.
      */
     private static final RequestMatcher ES_API =
             request -> request.getRequestURI().startsWith("/api/");
@@ -34,78 +32,97 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             /*
-             * Sprint 6 — Remediación del hallazgo SEC-05 (CSRF).
-             * Emite una cookie XSRF-TOKEN sin la bandera HttpOnly para que el
-             * frontend pueda leerla y devolverla en el header X-XSRF-TOKEN.
+             * SEC-05: el frontend lee la cookie XSRF-TOKEN y devuelve
+             * su valor en el encabezado X-XSRF-TOKEN.
              */
             .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                .csrfTokenRepository(
+                    CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(
+                    new CsrfTokenRequestAttributeHandler())
             )
-            // SEC-05: sin esto la cookie XSRF-TOKEN nunca se escribe (el token
-            // es perezoso) y ningun POST pasa, ni el login. Ver CsrfCookieFilter.
             .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
 
             .authorizeHttpRequests(auth -> auth
-                // Publico: entrar, crear cuenta y el chequeo de salud.
-                .requestMatchers("/", "/index.html", "/login.html",
-                                 "/registro-usuario.html",
-                                 "/css/**", "/js/**", "/favicon.ico",
-                                 "/actuator/health").permitAll()
-                .requestMatchers("/api/auth/registro", "/api/auth/sesion").permitAll()
-                // Sprint 4: el enlace del correo se abre sin sesion, por definicion.
-                .requestMatchers("/api/auth/validar", "/api/auth/reenviar-validacion").permitAll()
+                // Paginas y recursos publicos.
+                .requestMatchers(
+                    "/",
+                    "/index.html",
+                    "/login.html",
+                    "/registro-usuario.html",
+                    "/css/**",
+                    "/js/**",
+                    "/favicon.ico",
+                    "/actuator/health"
+                ).permitAll()
 
-                /*
-                 * Sprint 3 — remediacion del hallazgo SEC-04.
-                 *
-                 * Todo lo demas exige sesion. HU-05 y HU-06 lo requieren
-                 * explicitamente, y el filtro por dueno de la nave se aplica
-                 * ademas en AccesoNave.
-                 */
-                .anyRequest().authenticated())
+                // Registro publico y consulta de sesion.
+                .requestMatchers(
+                    "/api/auth/registro",
+                    "/api/auth/sesion"
+                ).permitAll()
 
-            /*
-             * Sprint 3 — remediacion del hallazgo SEC-07.
-             * Se retiraron la ruta publica de /h2-console y la relajacion de
-             * frameOptions, que existian solo para la consola de H2 y
-             * quedaron sin uso tras migrar a PostgreSQL.
-             */
+                // Validacion del correo sin sesion.
+                .requestMatchers(
+                    "/api/auth/validar",
+                    "/api/auth/reenviar-validacion"
+                ).permitAll()
+
+                // HU-14: solo el administrador puede acceder.
+                .requestMatchers(
+                    "/api/admin/**",
+                    "/admin-usuarios.html"
+                ).hasRole("ADMINISTRADOR")
+
+                // Las demas rutas requieren sesion.
+                .anyRequest().authenticated()
+            )
 
             .formLogin(form -> form
                 .loginPage("/login.html")
                 .loginProcessingUrl("/api/auth/login")
                 .usernameParameter("correo")
                 .passwordParameter("password")
-                // Sprint 6 (HU-11): la DGMM y el auditor entran a la bandeja
-                // de tramites; el agente, a sus naves, como siempre.
-                .successHandler((peticion, respuesta, autenticacion) -> respuesta.sendRedirect(
+
+                // Cada rol entra a su pantalla de trabajo.
+                .successHandler((peticion, respuesta, autenticacion) ->
+                    respuesta.sendRedirect(
                         autenticacion.getAuthorities().stream().anyMatch(a ->
-                                "ROLE_FUNCIONARIO_DGMM".equals(a.getAuthority())
-                                || "ROLE_AUDITOR".equals(a.getAuthority()))
-                                ? "/bandeja.html"
-                                : "/naves.html"))
-                // Sprint 4: una cuenta sin correo validado llega aqui como
-                // DisabledException; se le dice que confirme el correo en vez
-                // de "contrasena incorrecta", que la mandaria a reintentar.
-                .failureHandler((peticion, respuesta, error) -> respuesta.sendRedirect(
+                            "ROLE_ADMINISTRADOR".equals(a.getAuthority())
+                        ) ? "/admin-usuarios.html" :
+                        autenticacion.getAuthorities().stream().anyMatch(a ->
+                            "ROLE_FUNCIONARIO_DGMM".equals(a.getAuthority())
+                            || "ROLE_AUDITOR".equals(a.getAuthority())
+                        )
+                            ? "/bandeja.html"
+                            : "/naves.html"
+                    )
+                )
+
+                // Avisa si la cuenta esta deshabilitada.
+                .failureHandler((peticion, respuesta, error) ->
+                    respuesta.sendRedirect(
                         error instanceof DisabledException
-                                ? "/login.html?sinValidar=1"
-                                : "/login.html?error=1"))
-                .permitAll())
+                            ? "/login.html?sinValidar=1"
+                            : "/login.html?error=1"
+                    )
+                )
+                .permitAll()
+            )
 
             .logout(logout -> logout
                 .logoutUrl("/api/auth/logout")
                 .logoutSuccessUrl("/login.html?salida=1")
-                .permitAll())
+                .permitAll()
+            )
 
-            /*
-             * Criterio de HU-06: una peticion sin sesion es rechazada. Sin
-             * esto, una llamada a /api/** sin sesion devolveria el HTML del
-             * login con codigo 200 y las pruebas no podrian distinguirlo.
-             */
-            .exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor(
-                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), ES_API));
+            // Las llamadas a la API sin sesion reciben HTTP 401.
+            .exceptionHandling(ex ->
+                ex.defaultAuthenticationEntryPointFor(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                    ES_API
+                )
+            );
 
         return http.build();
     }
