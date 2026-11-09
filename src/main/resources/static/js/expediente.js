@@ -46,6 +46,8 @@ async function cargarNave() {
     <div><span>Estado del trámite</span><b id="ficha-estado-tramite">${etiquetaTramite(datos.estadoTramite)}</b></div>
     <div><span>Fecha de registro</span><b class="cifra">${fechaHora(datos.creadoEn || datos.fechaRegistro)}</b></div>`;
 
+  $('abrir-patente').href = '/patente-provisional.html?naveId=' + encodeURIComponent(naveId);
+  $('seccion-patente').classList.remove('oculto');
   return true;
 }
 

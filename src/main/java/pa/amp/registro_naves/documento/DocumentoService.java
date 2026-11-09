@@ -340,7 +340,7 @@ public class DocumentoService {
      * nombre de la descarga; aun asi se limpia: se queda con la ultima
      * parte de la ruta, sin caracteres de control ni separadores.
      */
-    static String limpiarNombre(String original) {
+    public static String limpiarNombre(String original) {
         if (original == null) {
             return "documento.pdf";
         }
