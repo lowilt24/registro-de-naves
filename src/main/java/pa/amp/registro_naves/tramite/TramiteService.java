@@ -1,6 +1,9 @@
 package pa.amp.registro_naves.tramite;
 
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
+import pa.amp.registro_naves.aviso.AvisoAlAgente;
+import pa.amp.registro_naves.usuario.Rol;
 import org.springframework.transaction.annotation.Transactional;
 import pa.amp.registro_naves.common.RecursoNoEncontradoException;
 import pa.amp.registro_naves.common.ReglaDeNegocioException;
@@ -57,6 +60,7 @@ public class TramiteService {
     private final AutorizacionTramite autorizacion;
     private final DocumentoRepository documentos;
     private final RequisitosDocumentoService requisitos;
+    private final ApplicationEventPublisher eventos;
 
     /** PO: un documento vigente cuenta si esta pendiente de revision o aprobado. */
     private static final Set<EstadoDocumento> DOCUMENTO_PRESENTE =
@@ -67,7 +71,8 @@ public class TramiteService {
                           NaveRepository naves,
                           UsuarioRepository usuarios,
                           AutorizacionTramite autorizacion,
-                          DocumentoRepository documentos, RequisitosDocumentoService requisitos) {
+                          DocumentoRepository documentos, RequisitosDocumentoService requisitos,
+                          ApplicationEventPublisher eventos) {
         this.tramites = tramites;
         this.historial = historial;
         this.naves = naves;
@@ -75,6 +80,7 @@ public class TramiteService {
         this.autorizacion = autorizacion;
         this.documentos = documentos;
         this.requisitos = requisitos;
+        this.eventos = eventos;
     }
 
     /**
@@ -150,13 +156,20 @@ public class TramiteService {
         // (observacion 7 de QA). TRAMITES sigue siendo la fuente del estado
         // del tramite; nave.estado solo se escribe aqui.
         if (nuevo == EstadoTramite.APROBADA) {
-            nave.setEstado(EstadoNave.ABANDERADA);
+            // HU-15: aprobar culmina el registro; no constituye abanderamiento.
+            nave.setEstado(EstadoNave.REGISTRADA);
             naves.save(nave);
         } else if (nuevo == EstadoTramite.RECHAZADA) {
             nave.setEstado(EstadoNave.RECHAZADA);
             naves.save(nave);
         }
-        historial.save(new HistorialEstado(tramite, usuario, accion, anterior, nuevo, observacion));
+        HistorialEstado decision = historial.save(
+                new HistorialEstado(tramite, usuario, accion, anterior, nuevo, observacion));
+        if (usuario.getRol() == Rol.FUNCIONARIO_DGMM) {
+            eventos.publishEvent(new AvisoAlAgente("tramite-" + decision.getId(), nave.getId(),
+                    nave.getNombre(), nave.getRegistradoPor().getCorreo(), accion.name(),
+                    "Estado del trámite: " + nombre(nuevo), observacion));
+        }
 
         return TramiteResponse.de(tramite,
                 autorizacion.accionesPermitidas(usuario, nave, nuevo));

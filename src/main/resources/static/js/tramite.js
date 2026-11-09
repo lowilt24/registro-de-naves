@@ -50,6 +50,7 @@ async function cargarTramite() {
   const { ok, estado, datos } = await api('/api/naves/' + encodeURIComponent(naveId) + '/tramite');
 
   if (!ok) {
+    actualizarConstancia(null);
     $('tramite-actual').innerHTML = '<p class="vacio">'
       + escapar((datos && datos.mensaje) || 'No se pudo consultar el estado del trámite.') + '</p>';
     $('form-tramite').classList.add('oculto');
@@ -62,6 +63,7 @@ async function cargarTramite() {
 }
 
 function pintarTramite(t) {
+  actualizarConstancia(t.estado);
   // HU-12: la camara 5 muestra los botones de revision solo En revision (D2).
   if (typeof actualizarEstadoTramiteDocs === 'function') actualizarEstadoTramiteDocs(t.estado);
 

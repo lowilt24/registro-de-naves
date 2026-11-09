@@ -13,6 +13,12 @@ public class NotificadorCorreoConsola implements NotificadorCorreo {
     private static final Logger log = LoggerFactory.getLogger(NotificadorCorreoConsola.class);
 
     @Override
+    public void enviarAviso(String destinatario, String asunto, String texto) {
+        // No se simula una entrega ni se escriben datos del expediente en consola.
+        throw new org.springframework.mail.MailSendException("No hay servidor SMTP configurado.");
+    }
+
+    @Override
     public void enviarValidacion(String destinatario, String nombre, String enlace) {
         log.warn("No hay servidor de correo configurado (spring.mail.host). "
                 + "Enlace de validacion para {}: {}", destinatario, enlace);

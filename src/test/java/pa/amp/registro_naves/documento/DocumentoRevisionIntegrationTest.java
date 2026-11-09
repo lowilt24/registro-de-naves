@@ -305,9 +305,9 @@ class DocumentoRevisionIntegrationTest {
         accion(nave, DGMM, "APROBAR", null)
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.estado").value("APROBADA"));
-        assertThat(estadoNave(nave)).isEqualTo("ABANDERADA");
+        assertThat(estadoNave(nave)).isEqualTo("REGISTRADA");
         mvc.perform(get("/api/naves/" + nave).with(user(AGENTE)))
-           .andExpect(jsonPath("$.estado").value("ABANDERADA"))
+           .andExpect(jsonPath("$.estado").value("REGISTRADA"))
            .andExpect(jsonPath("$.estadoTramite").value("APROBADA"));
     }
 

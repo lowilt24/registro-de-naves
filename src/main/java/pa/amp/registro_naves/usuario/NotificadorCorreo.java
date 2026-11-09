@@ -14,4 +14,7 @@ public interface NotificadorCorreo {
      * queda hecho y el usuario puede pedir el reenvio.
      */
     void enviarValidacion(String destinatario, String nombre, String enlace);
+
+    /** HU-16. Puede fallar: el listener posterior al commit registra el fallo. */
+    void enviarAviso(String destinatario, String asunto, String texto);
 }

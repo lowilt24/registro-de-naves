@@ -2,6 +2,8 @@ package pa.amp.registro_naves.documento;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
+import pa.amp.registro_naves.aviso.AvisoAlAgente;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pa.amp.registro_naves.common.ArchivoDemasiadoGrandeException;
@@ -46,6 +48,7 @@ public class DocumentoService {
     private final UsuarioRepository usuarios;
     private final TramiteService tramites;
     private final AutorizacionTramite autorizacion;
+    private final ApplicationEventPublisher eventos;
 
     /** Observacion 5 de QA: el mismo limite que historial_estados.observacion. */
     static final int LIMITE_OBSERVACION = 1000;
@@ -57,7 +60,8 @@ public class DocumentoService {
                             AgenteResidenteRepository agentes,
                             UsuarioRepository usuarios,
                             TramiteService tramites,
-                            AutorizacionTramite autorizacion) {
+                            AutorizacionTramite autorizacion,
+                            ApplicationEventPublisher eventos) {
         this.documentos = documentos;
         this.almacen = almacen;
         this.accesoNave = accesoNave;
@@ -66,6 +70,7 @@ public class DocumentoService {
         this.usuarios = usuarios;
         this.tramites = tramites;
         this.autorizacion = autorizacion;
+        this.eventos = eventos;
     }
 
     // ------------------------------------------------------------------
@@ -244,6 +249,13 @@ public class DocumentoService {
                     "Escriba la observación: es obligatoria al observar un documento.");
         }
 
+        // Capturar los datos antes del UPDATE que limpia el contexto JPA.
+        AvisoAlAgente aviso = decision == DecisionRevision.OBSERVAR
+                ? new AvisoAlAgente("documento-" + documento.getId(), nave.getId(), nave.getNombre(),
+                    nave.getRegistradoPor().getCorreo(), "OBSERVAR_DOCUMENTO",
+                    "Documento: " + documento.getTipo() + " (versión " + documento.getVersion() + ")", observacion)
+                : null;
+
         // Observacion 4 de QA: el UPDATE solo pasa si sigue vigente y
         // pendiente. Si otro funcionario lo reviso (o el agente lo
         // reemplazo) en el medio, no cambia ninguna fila.
@@ -255,6 +267,7 @@ public class DocumentoService {
         }
 
         Documento revisado = documentos.findByIdAndNaveId(documento.getId(), naveId).orElseThrow();
+        if (aviso != null) eventos.publishEvent(aviso);
         return DocumentoResponse.de(revisado);
     }
 

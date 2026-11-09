@@ -97,7 +97,7 @@ class RequisitosDocumentoIntegrationTest {
             .andExpect(jsonPath("$.faltantes", contains("CERTIFICADO_PROPIEDAD", "PODER_NOTARIAL")));
         aprobarDocumentos();
         accion("APROBAR", DGMM).andExpect(status().isOk());
-        assertThat(nave().getEstado()).isEqualTo(EstadoNave.ABANDERADA);
+        assertThat(nave().getEstado()).isEqualTo(EstadoNave.REGISTRADA);
         assertThat(documentos.findByNaveIdAndVigenteTrue(id)).hasSize(2);
     }
 
