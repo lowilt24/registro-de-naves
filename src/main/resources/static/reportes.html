@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reportes del registro — Navesitas</title>
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="barra"><h1>Navesitas</h1><span>Reportes del registro · DGMM y auditoría</span><span class="derecha" id="sesion"></span></header>
+<main>
+  <nav class="migas" aria-label="Volver"><a href="/bandeja.html">Volver a la bandeja de trámites</a></nav>
+  <h2>Reportes del registro</h2>
+  <p class="sumario">Consulte las cifras actuales del registro y descargue los resultados en CSV. Los filtros no reconstruyen estados históricos.</p>
+  <form class="tarjeta" id="form-reportes" novalidate>
+    <fieldset id="filtros-reportes">
+      <legend>Rango de fechas</legend>
+      <div class="rejilla">
+        <div><label for="desde">Desde <span class="pista">(opcional)</span></label><input type="date" id="desde" name="desde" min="0001-01-01" max="9999-12-31"></div>
+        <div><label for="hasta">Hasta <span class="pista">(opcional)</span></label><input type="date" id="hasta" name="hasta" min="0001-01-01" max="9999-12-31"></div>
+      </div>
+      <span class="error-campo" data-error="fechas"></span>
+      <p class="nota">Ambos días se incluyen, en horario de Panamá. Se filtra por registro de la nave, último cambio del trámite y carga del documento, respectivamente.</p>
+      <div class="acciones"><button type="submit">Consultar</button><button type="button" class="secundario" id="limpiar-reportes">Quitar filtros</button></div>
+    </fieldset>
+  </form>
+  <p class="veredicto" id="aviso-reportes" role="status" aria-live="polite"></p>
+  <div id="resultados-reportes" class="oculto" aria-live="polite">
+    <p class="nota" id="fecha-reporte"></p>
+    <div class="acciones"><button type="button" id="descargar-csv" disabled>Descargar reporte CSV</button></div>
+    <div class="rejilla">
+      <section class="tarjeta"><h3>Naves por tipo</h3><div class="tabla-desplazable"><table><thead><tr><th>Tipo</th><th>Cantidad</th></tr></thead><tbody id="reporte-tipos"></tbody></table></div></section>
+      <section class="tarjeta"><h3>Naves por estado</h3><div class="tabla-desplazable"><table><thead><tr><th>Estado de la nave</th><th>Cantidad</th></tr></thead><tbody id="reporte-naves"></tbody></table></div></section>
+    </div>
+    <section class="tarjeta"><h3>Trámites por estado</h3><p class="nota">La espera actual se cuenta desde el último cambio, en días de calendario. Los trámites finalizados y los grupos vacíos no tienen promedio de espera.</p><div class="tabla-desplazable"><table class="apilable"><thead><tr><th>Estado del trámite</th><th>Cantidad</th><th>Espera actual promedio (días)</th></tr></thead><tbody id="reporte-tramites"></tbody></table></div></section>
+    <section class="tarjeta"><h3>Documentos pendientes de revisión</h3><p class="nota">Solo versiones vigentes con estado Pendiente; no incluye versiones anteriores.</p><div class="tabla-desplazable"><table><thead><tr><th>Tipo de documento</th><th>Cantidad</th></tr></thead><tbody id="reporte-documentos"></tbody></table></div></section>
+  </div>
+</main>
+<script src="/js/comun.js"></script><script src="/js/reportes.js"></script>
+</body>
+</html>
