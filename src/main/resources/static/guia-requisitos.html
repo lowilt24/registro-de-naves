@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de requisitos — Navesitas</title><link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="barra"><h1>Navesitas</h1><span>Guía para el agente naviero</span><span class="derecha" id="sesion"></span></header>
+<main>
+  <nav class="migas" aria-label="Volver"><a href="/naves.html">Volver a Mis naves y al registro</a></nav>
+  <h2>Prepare el registro de su nave</h2>
+  <p class="sumario">Indique el tipo y servicio de su nave comercial para conocer los documentos y pasos que le corresponden. Esta consulta no registra la nave.</p>
+  <form class="tarjeta" id="form-guia" novalidate>
+    <fieldset id="campos-guia"><legend>Datos para orientar los requisitos</legend>
+      <div class="rejilla">
+        <div><label for="guia-tipo">Tipo de nave</label><select id="guia-tipo" required><option value="">Seleccione</option><option value="CARGA">Carga</option><option value="PASAJEROS">Pasajeros</option><option value="MIXTA">Mixta</option></select><span class="error-campo" data-error="tipo"></span></div>
+        <div><label for="guia-servicio">Navegación / servicio</label><select id="guia-servicio" required><option value="">Seleccione</option><option value="INTERNACIONAL">Internacional</option><option value="CABOTAJE">Cabotaje</option><option value="MIXTO">Mixto</option></select><span class="error-campo" data-error="servicio"></span></div>
+        <div><label for="guia-eslora">Eslora (m) <span class="pista">(opcional)</span></label><input type="number" id="guia-eslora" min="0.01" step="0.01"><span class="error-campo" data-error="eslora"></span></div>
+        <div><label for="guia-arqueo">Arqueo bruto (GT, no peso) <span class="pista">(opcional)</span></label><input type="number" id="guia-arqueo" min="0.01" step="0.01"><span class="error-campo" data-error="tonelajeBruto"></span></div>
+      </div>
+      <p class="nota">Si aún no conoce una medida, déjela vacía. El sistema indicará qué requisitos requieren revisión; no asumirá que está exento.</p>
+      <div class="acciones"><button type="submit">Consultar requisitos</button></div>
+    </fieldset>
+  </form>
+  <p class="veredicto" id="aviso-guia" role="status" aria-live="polite"></p>
+  <div id="resultado-guia" class="oculto" aria-live="polite">
+    <section class="tarjeta"><h3>Documentos para su expediente</h3><div id="documentos-guia"></div></section>
+    <section class="tarjeta"><h3>Su recorrido de registro</h3><ol class="guia-pasos" id="pasos-guia"></ol><a class="boton" href="/naves.html">Ir al registro de naves</a></section>
+  </div>
+</main>
+<script src="/js/comun.js"></script><script src="/js/guia-requisitos.js"></script>
+</body>
+</html>

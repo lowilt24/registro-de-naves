@@ -75,6 +75,8 @@ public class SecurityConfig {
                 ).hasRole("ADMINISTRADOR")
 
                 // Las demas rutas requieren sesion.
+                .requestMatchers("/reportes.html").hasAnyRole("FUNCIONARIO_DGMM", "AUDITOR")
+                .requestMatchers("/guia-requisitos.html").hasRole("AGENTE_NAVIERO")
                 .anyRequest().authenticated()
             )
 

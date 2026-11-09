@@ -868,3 +868,16 @@ main, .tarjeta, .campo, .ficha-nave > div { min-width: 0; }
 @media (max-width: 380px) {
   table.apilable td { grid-template-columns: 6rem minmax(0, 1fr); gap: var(--e2); }
 }
+
+/* Sprint 9: guia y reportes reutilizan tarjetas, tablas y estados existentes. */
+.doc-estado[data-estado="OBLIGATORIO"] { color: var(--muro); background: var(--agua-clara); border-color: var(--agua); }
+.doc-estado[data-estado="NO_APLICA"] { color: var(--tinta-suave); background: var(--hormigon-alto); border-color: var(--filete-campo); }
+.doc-estado[data-estado="REQUIERE_REVISION"] { color: var(--tinta); background: var(--neutro-fondo); border-style: dashed; }
+.guia-pasos { padding-left: var(--e4); }
+.guia-pasos li { padding-left: var(--e2); margin-bottom: var(--e3); }
+#resultados-reportes > .acciones { margin-bottom: var(--e4); }
+@media (max-width: 720px) {
+  #reporte-tramites tr { padding: 12px var(--e3); }
+  #reporte-tramites td:nth-child(2)::before { content: "Cantidad"; }
+  #reporte-tramites td:nth-child(3)::before { content: "Espera (días)"; }
+}
