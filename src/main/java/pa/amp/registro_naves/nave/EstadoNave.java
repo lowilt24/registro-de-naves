@@ -6,6 +6,7 @@ public enum EstadoNave {
     /** Estados previstos para sprints siguientes. */
     DOCUMENTOS_CARGADOS,
     EN_REVISION,
+    /** Valor legado. HU-15 mantiene REGISTRADA al aprobar el tramite. */
     ABANDERADA,
     RECHAZADA
 }

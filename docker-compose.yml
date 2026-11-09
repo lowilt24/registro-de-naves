@@ -18,6 +18,8 @@ services:
   correo:
     image: axllent/mailpit:v1.31.1
     container_name: amp-correo
+    # Evita que el DNS inverso del puente Docker retrase el saludo SMTP.
+    command: ["--smtp-disable-rdns"]
     ports: ["1025:1025", "8025:8025"]
 
 volumes:

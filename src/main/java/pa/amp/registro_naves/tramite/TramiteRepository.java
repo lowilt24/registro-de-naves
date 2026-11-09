@@ -10,6 +10,11 @@ import java.util.Optional;
 
 public interface TramiteRepository extends JpaRepository<Tramite, Long> {
 
+    /** Serializa las primeras descargas para emitir una unica constancia. */
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("select t from Tramite t where t.nave.id = :naveId")
+    Optional<Tramite> bloquearParaConstancia(@Param("naveId") Long naveId);
+
     Optional<Tramite> findByNaveId(Long naveId);
 
     boolean existsByNaveId(Long naveId);

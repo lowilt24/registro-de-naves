@@ -313,6 +313,15 @@
 
     <div id="tramite-actual" class="tramite-actual"></div>
 
+    <div id="constancia-registro" class="oculto">
+      <p class="nota">Constancia digital del trámite de registro. No constituye patente de navegación
+        ni certificación oficial. Sin firma digital.</p>
+      <div class="acciones">
+        <button type="button" id="btn-constancia">Descargar constancia de registro (PDF)</button>
+      </div>
+      <p class="veredicto" id="aviso-constancia" role="status" aria-live="polite"></p>
+    </div>
+
     <form id="form-tramite" class="subformulario oculto" novalidate>
       <fieldset id="campos-tramite">
         <legend>Acciones disponibles</legend>
@@ -345,6 +354,7 @@
 
 <script src="/js/comun.js"></script>
 <script src="/js/documentos.js"></script>
+<script src="/js/constancia.js"></script>
 <script src="/js/tramite.js"></script>
 <script src="/js/expediente.js"></script>
 </body>

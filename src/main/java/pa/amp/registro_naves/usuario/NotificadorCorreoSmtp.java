@@ -24,6 +24,17 @@ public class NotificadorCorreoSmtp implements NotificadorCorreo {
     }
 
     @Override
+    public void enviarAviso(String destinatario, String asunto, String texto) {
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setFrom(remitente);
+        mensaje.setTo(destinatario);
+        mensaje.setSubject(asunto);
+        mensaje.setText(texto);
+        // HU-16 captura este fallo despues del commit, sin revertir la decision.
+        cartero.send(mensaje);
+    }
+
+    @Override
     public void enviarValidacion(String destinatario, String nombre, String enlace) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setFrom(remitente);
