@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patentes provisionales — Navesitas</title><link rel="stylesheet" href="/css/app.css"></head>
+<body>
+<header class="barra"><h1>Navesitas</h1><span>Registro de naves comerciales · DGMM</span><span class="derecha" id="sesion"></span></header>
+<main>
+  <nav class="migas" aria-label="Navegación"><a id="volver" href="/naves.html">Volver al registro</a></nav>
+  <h2>Patentes provisionales</h2>
+  <p class="sumario">Etapa posterior al registro aprobado. Simulación académica de patente provisional — sin validez oficial.</p>
+  <p class="veredicto" id="aviso-patente" role="status" aria-live="polite"></p>
+  <section class="tarjeta oculto" id="iniciar-patente"><h3>Iniciar una solicitud</h3>
+    <p>Seleccione una nave de servicio internacional cuyo registro esté aprobado. Se permite una solicitud por nave.</p>
+    <form id="form-iniciar" class="fila"><div><label for="nave-elegida">Nave registrada</label><select id="nave-elegida" required></select></div><button>Abrir solicitud</button></form>
+    <p id="sin-naves" class="nota"></p>
+  </section>
+  <section class="tarjeta"><h3>Solicitudes</h3>
+    <label for="filtro-patente">Estado de la patente provisional</label>
+    <select id="filtro-patente"><option value="">Todos</option><option value="BORRADOR">Borrador</option><option value="EN_REVISION">En revisión</option><option value="SUBSANACION">Subsanación</option><option value="APROBADA">Aprobada</option></select>
+    <p id="patentes-vacias" class="nota oculto">No hay solicitudes con este filtro.</p>
+    <div class="tabla-desplazable"><table><thead><tr><th>Nave registrada</th><th>Estado</th><th>Número de simulación</th><th>Solicitud</th></tr></thead><tbody id="lista-patentes"></tbody></table></div>
+  </section>
+</main><script src="/js/comun.js"></script><script src="/js/patentes.js"></script>
+</body></html>

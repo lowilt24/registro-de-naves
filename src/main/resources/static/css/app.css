@@ -316,7 +316,7 @@ label {
 }
 .pista { font-weight: 400; color: var(--tinta-suave); }
 
-input, select {
+input, select, textarea {
   width: 100%;
   height: var(--alto-control);
   padding: 0 12px;
@@ -329,13 +329,14 @@ input, select {
   transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
 }
 input::placeholder { color: var(--tinta-suave); opacity: 1; }
-input:hover:not(:disabled), select:hover:not(:disabled) { border-color: var(--tinta); }
-input:focus-visible, select:focus-visible {
+textarea { min-height: 100px; height: auto; padding: 12px; resize: vertical; }
+input:hover:not(:disabled), select:hover:not(:disabled), textarea:hover:not(:disabled) { border-color: var(--tinta); }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--agua);
   outline-offset: 0;
   border-color: var(--agua);
 }
-input:disabled, select:disabled {
+input:disabled, select:disabled, textarea:disabled {
   background-color: var(--hormigon-alto);
   color: var(--tinta-suave);
   cursor: not-allowed;
@@ -871,6 +872,18 @@ main, .tarjeta, .campo, .ficha-nave > div { min-width: 0; }
 
 /* Sprint 9: guia y reportes reutilizan tarjetas, tablas y estados existentes. */
 .doc-estado[data-estado="OBLIGATORIO"] { color: var(--muro); background: var(--agua-clara); border-color: var(--agua); }
+/* Sprint 10: documentos y snapshots de la etapa de patente. */
+.pp-requisito { padding: var(--e4) 0; border-bottom: 1px solid var(--filete); }
+.pp-requisito h4 { margin-top: 0; }
+.pp-requisito form, #contenido-patente form + form { margin-top: var(--e4); }
+.pp-hash { display: block; overflow-wrap: anywhere; color: var(--tinta-suave); margin: var(--e2) 0; }
+.pp-instantanea { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; background: var(--hormigon-alto); padding: var(--e3); border-radius: var(--radio-control); }
+#contenido-patente details { padding: var(--e3) 0; }
+#contenido-patente summary { cursor: pointer; color: var(--agua-hondo); font-weight: 600; }
+.pp-checkbox { display: flex; gap: var(--e2); align-items: center; }
+.pp-checkbox input { width: 22px; min-height: 22px; flex-shrink: 0; }
+.tramite-estado[data-estado="SUBSANACION"] { color: var(--alto-tinta); background: var(--alto-fondo); border-color: var(--alto); }
+.tramite-estado[data-estado="BORRADOR"] { color: var(--tinta-suave); background: var(--hormigon-alto); border-color: var(--filete-campo); }
 .doc-estado[data-estado="NO_APLICA"] { color: var(--tinta-suave); background: var(--hormigon-alto); border-color: var(--filete-campo); }
 .doc-estado[data-estado="REQUIERE_REVISION"] { color: var(--tinta); background: var(--neutro-fondo); border-style: dashed; }
 .guia-pasos { padding-left: var(--e4); }
