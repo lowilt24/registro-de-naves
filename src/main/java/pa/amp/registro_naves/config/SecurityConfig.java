@@ -57,6 +57,8 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // Registro publico y consulta de sesion.
+                .requestMatchers(org.springframework.http.HttpMethod.GET,
+                    "/verificar-patente.html", "/api/verificacion/patentes/*").permitAll()
                 .requestMatchers(
                     "/api/auth/registro",
                     "/api/auth/sesion"
