@@ -29,7 +29,7 @@
     <div class="acciones">
       <button type="submit" id="btn-entrar">Entrar</button>
     </div>
-    <p class="veredicto" id="aviso-login" role="status"></p>
+    <p class="veredicto" id="aviso-login" role="status" aria-live="polite" aria-atomic="true"></p>
   </form>
 
   <!-- Sprint 4: pedir otro enlace de validacion. Solo aparece cuando hace falta. -->
@@ -59,6 +59,8 @@
   // SEC-05: el formulario de entrada es un POST normal, asi que el token va
   // como campo oculto _csrf. Se pone al enviar, con el valor de la cookie.
   document.getElementById('form-login').addEventListener('submit', (e) => {
+    const boton = document.getElementById('btn-entrar');
+    if (boton.disabled) { e.preventDefault(); return; }
     let campo = e.target.querySelector('input[name="_csrf"]');
     if (!campo) {
       campo = document.createElement('input');
@@ -67,6 +69,18 @@
       e.target.appendChild(campo);
     }
     campo.value = tokenCsrf();
+    boton.disabled = true;
+    boton.textContent = 'Iniciando sesión…';
+    document.getElementById('aviso-login').dataset.estado = 'neutro';
+    document.getElementById('aviso-login').textContent = 'Verificando sus datos. Espere un momento.';
+    try { sessionStorage.setItem('navesitas-login-pendiente', '1'); } catch (e) { /* Opcional. */ }
+  });
+
+  try { sessionStorage.removeItem('navesitas-login-pendiente'); } catch (e) { /* Opcional. */ }
+  window.addEventListener('pageshow', () => {
+    const boton = document.getElementById('btn-entrar');
+    boton.disabled = false;
+    boton.textContent = 'Entrar';
   });
 
   const parametros = new URLSearchParams(location.search);
@@ -81,8 +95,9 @@
   } else if (parametros.has('creado')) {
     // Sprint 4: la cuenta nace sin validar.
     aviso.dataset.estado = 'neutro';
-    aviso.textContent = 'Cuenta creada. Le enviamos un enlace a su correo: '
-      + 'ábralo para activar la cuenta y después inicie sesión aquí.';
+    aviso.textContent = 'Cuenta registrada correctamente. Revise su correo y la carpeta de spam '
+      + 'para activar la cuenta antes de iniciar sesión. Si no recibe el mensaje, solicite otro enlace abajo.';
+    mostrarReenvio();
   } else if (parametros.has('sinValidar')) {
     aviso.dataset.estado = 'ocupado';
     aviso.textContent = 'La cuenta todavía no está activa. Abra el enlace que le '
@@ -118,6 +133,12 @@
       avisoReenvio.textContent = 'Escriba el correo de la cuenta.';
       return;
     }
+    const boton = e.target.querySelector('button');
+    if (boton.disabled) return;
+    boton.disabled = true;
+    boton.textContent = 'Solicitando enlace…';
+    avisoReenvio.dataset.estado = 'neutro';
+    avisoReenvio.textContent = 'Procesando su solicitud. Espere un momento.';
     try {
       const r = await fetch('/api/auth/reenviar-validacion', {
         method: 'POST',
@@ -126,10 +147,15 @@
       });
       const datos = await r.json().catch(() => ({}));
       avisoReenvio.dataset.estado = r.ok ? 'libre' : 'ocupado';
-      avisoReenvio.textContent = datos.mensaje || 'No se pudo enviar el enlace.';
+      avisoReenvio.textContent = r.ok
+        ? 'Solicitud recibida. Si la cuenta está pendiente de validación, revise su correo y la carpeta de spam.'
+        : (datos.mensaje || 'No se pudo solicitar el enlace. Intente nuevamente.');
     } catch (err) {
       avisoReenvio.dataset.estado = 'ocupado';
       avisoReenvio.textContent = 'No se pudo contactar el servidor.';
+    } finally {
+      boton.disabled = false;
+      boton.textContent = 'Enviarme otro enlace';
     }
   });
 </script>
