@@ -24,8 +24,6 @@ import pa.amp.registro_naves.usuario.UsuarioRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -171,7 +169,7 @@ public class DocumentoService {
     }
 
     /** Lo que necesita el controlador para responder la descarga. */
-    public record Descarga(Path archivo, String nombre) {}
+    public record Descarga(org.springframework.core.io.Resource archivo, String nombre) {}
 
     /**
      * HU-08, criterio 5. Se verifica la nave (403/404) y ademas que el
@@ -185,10 +183,7 @@ public class DocumentoService {
         Documento documento = documentos.findByIdAndNaveId(documentoId, naveId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("El documento no existe."));
 
-        Path archivo = almacen.ubicar(documento.getRuta());
-        if (!Files.isReadable(archivo)) {
-            throw new RecursoNoEncontradoException("El archivo del documento no esta disponible.");
-        }
+        var archivo = almacen.recurso(documento.getRuta());
         return new Descarga(archivo, documento.getNombreArchivo());
     }
 
