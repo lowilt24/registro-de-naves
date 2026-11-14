@@ -1,9 +1,52 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=/naves.html">
-<title>Navesitas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Registra naves, organiza documentos y consulta tus trámites marítimos en Navesitas.">
+<title>Registro de Naves — Navesitas</title>
+<link rel="preload" href="/css/fuentes/atkinson-hyperlegible-next.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/portada.css">
 </head>
-<body><p><a href="/naves.html">Ir al registro de naves</a></p></body>
+<body class="portada" id="inicio">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<svg class="iconos" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<symbol id="buque" viewBox="0 0 48 48"><path d="M8 25 24 19l16 6-4 13H12L8 25ZM15 22V12h18v10M21 12V6h6v6M4 40q5-5 10 0t10 0 10 0 10 0"/></symbol>
+<symbol id="documento" viewBox="0 0 48 48"><rect x="9" y="5" width="30" height="38" rx="4"/><path d="M16 16h16M16 24h16M16 32h10"/></symbol>
+<symbol id="buscar" viewBox="0 0 48 48"><circle cx="20" cy="20" r="14"/><path d="m30 30 13 13"/></symbol>
+<symbol id="datos" viewBox="0 0 48 48"><ellipse cx="24" cy="10" rx="18" ry="7"/><path d="M6 10v27c0 10 36 10 36 0V10M6 23c0 10 36 10 36 0"/></symbol>
+<symbol id="carpeta" viewBox="0 0 48 48"><path d="M5 17V11a4 4 0 0 1 4-4h10l5 6h15a4 4 0 0 1 4 4v23H9a4 4 0 0 1-4-4V17h38"/></symbol>
+<symbol id="capas" viewBox="0 0 48 48"><path d="m3 15 21-11 21 11-21 11L3 15Zm0 10 21 11 21-11M3 35l21 11 21-11"/></symbol>
+</svg>
+<header class="portada-cabecera">
+<a class="marca" href="/" aria-label="Registro de Naves, inicio"><svg aria-hidden="true"><use href="#buque"/></svg><span><strong>Registro de Naves</strong><small>Navesitas · Gestión marítima</small></span></a>
+<nav class="portada-nav" aria-label="Navegación principal"><a href="#inicio" aria-current="page">Inicio</a><a href="#sistema">El sistema</a><a href="#servicios">Servicios</a></nav>
+<a class="portada-boton acceso" href="/login.html">Iniciar sesión</a>
+</header>
+<main id="contenido" class="portada-contenido">
+<section class="portada-hero" aria-labelledby="titulo">
+<div class="hero-texto">
+<p class="distintivo"><svg aria-hidden="true"><use href="#buque"/></svg>Plataforma de gestión marítima</p>
+<h1 id="titulo">El registro de tu nave,<br>en un solo lugar.</h1>
+<p class="hero-descripcion">Registra naves, gestiona documentos y consulta el estado de tus trámites.</p>
+<div class="hero-acciones"><a class="portada-boton principal" href="/login.html">Iniciar sesión</a><a class="portada-boton alternativa" href="/registro-usuario.html">Crear cuenta</a></div>
+</div>
+</section>
+<nav id="servicios" class="servicios" aria-label="Servicios de la plataforma">
+<a href="/naves.html"><svg aria-hidden="true"><use href="#buque"/></svg><span>Registro de naves</span></a>
+<a href="#documentos"><svg aria-hidden="true"><use href="#documento"/></svg><span>Gestión documental</span></a>
+<a href="#seguimiento"><svg aria-hidden="true"><use href="#buscar"/></svg><span>Seguimiento de trámites</span></a>
+</nav>
+<section id="sistema" class="portada-sistema" aria-labelledby="titulo-sistema">
+<h2 id="titulo-sistema">Una gestión más clara y organizada</h2>
+<div class="beneficios">
+<article class="beneficio"><svg aria-hidden="true"><use href="#datos"/></svg><div><h3>Información centralizada</h3><p>Accede a los datos de tus naves de forma simple y segura.</p></div></article>
+<article class="beneficio" id="documentos"><svg aria-hidden="true"><use href="#carpeta"/></svg><div><h3>Documentos organizados</h3><p>Administra la documentación de cada nave en un solo sitio.</p></div></article>
+<article class="beneficio" id="seguimiento"><svg aria-hidden="true"><use href="#capas"/></svg><div><h3>Trazabilidad del proceso</h3><p>Consulta el estado de tus trámites de manera clara y ordenada.</p></div></article>
+</div>
+</section>
+</main>
+<footer class="portada-pie"><span>Navesitas · Registro de naves comerciales</span><a href="https://unsplash.com/photos/qeltMhQIw3w" target="_blank" rel="noopener noreferrer">Fotografía del Canal de Panamá · Unsplash</a></footer>
+</body>
 </html>

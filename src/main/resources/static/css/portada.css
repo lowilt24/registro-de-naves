@@ -1,0 +1,74 @@
+﻿/* Exclusivo de la portada: reutiliza la tipografía y paleta de app.css. */
+.portada { background: var(--hormigon-alto); color: var(--agua-hondo); }
+.portada svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.portada .iconos { position: absolute; width: 0; height: 0; overflow: hidden; }
+.saltar { position: absolute; top: -100px; left: 16px; z-index: 10; padding: 12px 20px; background: white; }
+.saltar:focus { top: 12px; }
+.portada-cabecera { max-width: 1560px; margin: auto; padding: 24px 4.5%; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.marca { display: flex; align-items: center; gap: 20px; text-decoration: none; color: var(--agua-hondo); }
+.marca svg { width: 78px; height: 64px; color: var(--agua); padding-right: 16px; border-right: 2px solid var(--agua-hondo); }
+.marca strong { display: block; font-size: clamp(1.2rem, 2vw, 1.9rem); line-height: 1.1; }
+.marca small { display: block; color: var(--tinta-suave); font-size: 1.05rem; margin-top: 4px; }
+.portada-nav { display: flex; gap: clamp(24px, 4vw, 64px); }
+.portada-nav a { font-size: 1.15rem; font-weight: 700; text-decoration: none; color: var(--agua-hondo); padding: 12px 0; border-bottom: 3px solid transparent; }
+.portada-nav a:hover, .portada-nav a[aria-current] { border-bottom-color: var(--agua); color: var(--agua); }
+.portada .portada-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 10px 32px; border: 2px solid transparent; border-radius: 32px; text-decoration: none; font-size: 1.2rem; font-weight: 700; line-height: 1.3; }
+.portada .acceso { background: var(--agua-hondo); color: white; white-space: nowrap; }
+.portada main.portada-contenido { max-width: 1600px; padding: 0 20px; }
+.portada-hero { min-height: 510px; display: flex; align-items: center; border-radius: 44px; background-color: var(--agua-hondo); background-image: linear-gradient(90deg, rgba(10,30,49,.96), rgba(10,30,49,.83) 34%, rgba(10,30,49,.14) 76%), url('/css/imagenes/buque-canal.jpg'); background-size: cover; background-position: center 55%; padding: 56px 6% 90px; color: white; }
+.hero-texto { max-width: 720px; }
+.distintivo { display: inline-flex; gap: 12px; align-items: center; border: 1px solid #ffffff50; border-radius: 32px; padding: 7px 20px; margin: 0 0 24px; background: var(--agua); font-size: 1.1rem; }
+.portada h1 { font-size: clamp(2.4rem, 4.4vw, 4.2rem); line-height: 1.04; letter-spacing: -.025em; margin: 0 0 22px; }
+.hero-descripcion { font-size: clamp(1.2rem, 2vw, 1.75rem); line-height: 1.25; max-width: 560px; margin: 0 0 30px; }
+.hero-acciones { display: flex; flex-wrap: wrap; gap: 18px; }
+.portada .principal { background: var(--seguridad); color: var(--muro); min-width: 210px; }
+.portada .alternativa { border-color: white; color: white; min-width: 190px; }
+.portada .principal:hover { background: var(--agua-clara); }
+.portada .alternativa:hover { background: #ffffff26; }
+.portada .acceso:hover { background: var(--agua); }
+.portada-hero :focus-visible { outline-color: var(--seguridad); outline-offset: 5px; }
+.servicios { position: relative; max-width: 1160px; margin: -46px auto 0; background: white; box-shadow: 0 12px 28px #173d6e20; border-radius: 60px; display: grid; grid-template-columns: repeat(3, 1fr); padding: 24px 20px; }
+.servicios a { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 0 20px; color: var(--agua-hondo); text-decoration: none; font-size: 1.2rem; font-weight: 700; }
+.servicios a + a { border-left: 1px solid var(--filete); }
+.servicios svg { width: 44px; height: 44px; color: var(--agua); }
+.servicios a:hover span { text-decoration: underline; }
+.portada-sistema { padding: 48px 3% 34px; }
+.portada-sistema h2 { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; text-align: center; margin: 0 0 34px; }
+.portada-sistema h2::after { content: ''; display: block; width: 112px; height: 5px; border-radius: 4px; background: var(--seguridad); margin: 20px auto 0; }
+.beneficios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.beneficio { display: flex; align-items: center; gap: 24px; padding: 26px; background: white; border-radius: 24px; box-shadow: 0 8px 24px #173d6e0d; scroll-margin-top: 24px; }
+.beneficio > svg { width: 50px; height: 50px; color: var(--agua); }
+.beneficio > div { border-left: 1px solid var(--filete); padding-left: 24px; }
+.beneficio h3 { font-size: 1.3rem; line-height: 1.15; margin: 0 0 8px; }
+.beneficio p { color: var(--tinta-suave); margin: 0; line-height: 1.3; font-size: 1.05rem; }
+.portada-pie { max-width: 1480px; margin: auto; padding: 16px 4% 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: var(--tinta-suave); }
+@media (max-width: 1100px) {
+.portada-cabecera { gap: 20px; flex-wrap: wrap; }
+.portada-nav { order: 3; width: 100%; justify-content: center; }
+.beneficios { gap: 16px; }
+.beneficio { padding: 24px 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
+.beneficio > div { border: 0; padding: 0; }
+.servicios a { gap: 12px; font-size: 1.05rem; }
+}
+@media (max-width: 640px) {
+.portada-cabecera { padding: 20px; gap: 16px; }
+.marca { gap: 10px; }
+.marca svg { width: 48px; height: 48px; padding-right: 8px; }
+.marca small { font-size: .8rem; }
+.portada .acceso { padding: 10px 16px; min-height: 44px; font-size: .95rem; }
+.portada-nav { gap: 30px; }
+.portada-nav a { font-size: 1rem; padding: 4px 0; }
+.portada main.portada-contenido { padding: 0 12px; }
+.portada-hero { min-height: 580px; padding: 36px 24px 80px; border-radius: 28px; background-position: 62% center; background-image: linear-gradient(90deg, rgba(10,30,49,.94), rgba(10,30,49,.65)), url('/css/imagenes/buque-canal.jpg'); }
+.distintivo { font-size: .9rem; gap: 8px; padding: 7px 12px; }
+.distintivo svg { width: 24px; height: 24px; }
+.portada h1 { font-size: clamp(2rem, 8.5vw, 3rem); }
+.hero-acciones { flex-direction: column; gap: 12px; }
+.servicios { margin: -38px 12px 0; border-radius: 24px; padding: 10px 20px; grid-template-columns: 1fr; }
+.servicios a { justify-content: flex-start; padding: 16px 4px; gap: 18px; }
+.servicios a + a { border-left: 0; border-top: 1px solid var(--filete); }
+.servicios svg { width: 32px; height: 32px; }
+.portada-sistema { padding: 36px 8px 20px; }
+.beneficios { grid-template-columns: 1fr; }
+.beneficio { flex-direction: row; align-items: center; gap: 20px; }
+}

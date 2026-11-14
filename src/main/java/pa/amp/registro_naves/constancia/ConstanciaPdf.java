@@ -20,7 +20,7 @@ import java.util.List;
 public class ConstanciaPdf {
     private static final Color PETROLEO = new Color(16, 59, 73);
     private static final Color TURQUESA = new Color(8, 127, 140);
-    private static final float MARGEN = 48, TAMANO = 11, INTERLINEA = 17;
+    private static final float MARGEN = 36, TAMANO = 10, INTERLINEA = 13;
     private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm:ss XXX")
             .withZone(ZoneId.of("America/Panama"));
 
@@ -94,48 +94,83 @@ public class ConstanciaPdf {
             contenido.setNonStrokingColor(PETROLEO);
             contenido.addRect(0, pagina.getMediaBox().getHeight() - 96, pagina.getMediaBox().getWidth(), 96);
             contenido.fill();
-            texto("Constancia de registro de la nave", 19, MARGEN, pagina.getMediaBox().getHeight() - 43, Color.WHITE);
-            texto("Registro de Naves | Número " + naveId, 11, MARGEN, pagina.getMediaBox().getHeight() - 67, Color.WHITE);
-            texto("Constancia de registro | Sin firma digital | Página " + documento.getNumberOfPages(),
-                    9, MARGEN, 28, PETROLEO);
-            y = pagina.getMediaBox().getHeight() - 124;
+            texto("REGISTRO DE NAVES", 22, MARGEN, 805, Color.WHITE);
+            texto("Sistema de gestión marítima", 12, MARGEN, 784, Color.WHITE);
+            contenido.setNonStrokingColor(TURQUESA);
+            contenido.addRect(0, 742, 596, 5); contenido.fill();
+            texto("Documento generado por Registro de Naves | Página " + documento.getNumberOfPages(),
+                    8, MARGEN, 28, PETROLEO);
+            y = 715;
+            if (documento.getNumberOfPages() == 1) {
+                texto("Constancia de registro de nave", 24, MARGEN, y, PETROLEO); y -= 24;
+                texto("El registro se ha guardado correctamente en el sistema.", 11, MARGEN, y, PETROLEO); y -= 40;
+                contenido.setNonStrokingColor(new Color(211, 241, 235));
+                contenido.addRect(MARGEN, y - 13, 523, 35); contenido.fill();
+                texto("Registro completado", 18, MARGEN + 14, y, TURQUESA); y -= 33;
+            } else {
+                texto("Constancia de registro de nave | Número " + naveId, 14, MARGEN, y, PETROLEO); y -= 24;
+            }
         }
         void seccion(String titulo) throws IOException {
-            if (y < 112) nueva();
-            y -= 9;
-            texto(titulo, 13, MARGEN, y, TURQUESA);
-            y -= 24;
+            if (y < 125) nueva();
+            y -= 8;
+            contenido.setNonStrokingColor(PETROLEO);
+            contenido.addRect(MARGEN, y - 22, 523, 22); contenido.fill();
+            contenido.setNonStrokingColor(TURQUESA);
+            contenido.addRect(MARGEN, y - 22, 5, 22); contenido.fill();
+            texto(titulo, 12, MARGEN + 12, y - 15, Color.WHITE);
+            y -= 28;
         }
         void linea(String valor) throws IOException {
-            // Evita operadores de control; el contenido nunca se interpreta como HTML o PDF crudo.
             String limpio = valor.replaceAll("[\\p{Cntrl}\\s]+", " ").trim();
-            float ancho = PDRectangle.A4.getWidth() - 2 * MARGEN;
-            StringBuilder linea = new StringBuilder();
-            // Corte por puntos Unicode: tambien admite nombres largos sin espacios.
-            for (int i = 0; i < limpio.length();) {
-                int cp = limpio.codePointAt(i);
-                String siguiente = new String(Character.toChars(cp));
-                if (!linea.isEmpty() && fuente.getStringWidth(linea + siguiente) * TAMANO / 1000 > ancho) {
-                    escribir(linea.toString());
-                    linea.setLength(0);
+            int separador = limpio.indexOf(':');
+            String etiqueta = separador < 0 ? "Detalle" : limpio.substring(0, separador + 1);
+            String dato = separador < 0 ? limpio : limpio.substring(separador + 1).trim();
+            var etiquetas = envolver(etiqueta, 155);
+            var datos = envolver(dato, 336);
+            int total = Math.max(etiquetas.size(), datos.size()), desde = 0;
+            float altoFila = total * INTERLINEA + 10;
+            if (altoFila <= 610 && y - altoFila < 65) nueva();
+            while (desde < total) {
+                if (y < 90) nueva();
+                int cantidad = Math.min(total - desde, Math.max(1, (int)((y - 65 - 10) / INTERLINEA)));
+                float alto = cantidad * INTERLINEA + 10;
+                contenido.setNonStrokingColor(new Color(225, 240, 245));
+                contenido.addRect(MARGEN, y - alto, 171, alto); contenido.fill();
+                contenido.setStrokingColor(new Color(190, 214, 225)); contenido.setLineWidth(.5f);
+                contenido.addRect(MARGEN, y - alto, 523, alto);
+                contenido.moveTo(MARGEN + 171, y); contenido.lineTo(MARGEN + 171, y - alto); contenido.stroke();
+                for (int i = 0; i < cantidad; i++) {
+                    int indice = desde + i; float base = y - 14 - i * INTERLINEA;
+                    if (indice < etiquetas.size()) texto(etiquetas.get(indice), TAMANO, MARGEN + 8, base, PETROLEO);
+                    if (indice < datos.size()) texto(datos.get(indice), TAMANO, MARGEN + 179, base, PETROLEO);
                 }
-                if (!linea.isEmpty() || !siguiente.isBlank()) linea.append(siguiente);
+                y -= alto; desde += cantidad;
+            }
+        }
+        private java.util.List<String> envolver(String valor, float ancho) throws IOException {
+            var filas = new java.util.ArrayList<String>();
+            StringBuilder fila = new StringBuilder();
+            for (int i = 0; i < valor.length();) {
+                int cp = valor.codePointAt(i); String letra = new String(Character.toChars(cp));
+                if (!fila.isEmpty() && fuente.getStringWidth(fila + letra) * TAMANO / 1000 > ancho) {
+                    int espacio = fila.lastIndexOf(" ");
+                    if (espacio > 0) {
+                        filas.add(fila.substring(0, espacio)); fila.delete(0, espacio + 1);
+                    } else {
+                        filas.add(fila.toString()); fila.setLength(0);
+                    }
+                }
+                if (!fila.isEmpty() || !letra.isBlank()) fila.append(letra);
                 i += Character.charCount(cp);
             }
-            if (!linea.isEmpty()) escribir(linea.toString());
-        }
-        private void escribir(String valor) throws IOException {
-            if (y < 62) nueva();
-            texto(valor, TAMANO, MARGEN, y, PETROLEO);
-            y -= INTERLINEA;
+            if (!fila.isEmpty()) filas.add(fila.toString());
+            if (filas.isEmpty()) filas.add("");
+            return filas;
         }
         private void texto(String valor, float tamano, float x, float altura, Color color) throws IOException {
-            contenido.beginText();
-            contenido.setFont(fuente, tamano);
-            contenido.setNonStrokingColor(color);
-            contenido.newLineAtOffset(x, altura);
-            contenido.showText(valor);
-            contenido.endText();
+            contenido.beginText(); contenido.setFont(fuente, tamano); contenido.setNonStrokingColor(color);
+            contenido.newLineAtOffset(x, altura); contenido.showText(valor); contenido.endText();
         }
         @Override public void close() throws IOException { if (contenido != null) contenido.close(); }
     }
