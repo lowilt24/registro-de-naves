@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+target
+target-*
+almacen
+data
+qa
+seguridad
+.idea
+.vscode
+*.log

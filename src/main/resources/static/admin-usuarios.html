@@ -99,6 +99,9 @@
     };
 
     boton.disabled = true;
+    boton.textContent = 'Creando usuario…';
+    aviso.dataset.estado = 'neutro';
+    aviso.textContent = 'Registrando el usuario. Espere un momento.';
 
     try {
       const respuesta = await fetch('/api/admin/usuarios', {
@@ -111,11 +114,13 @@
       });
 
       if (respuesta.status === 401) {
+        aviso.dataset.estado = 'ocupado';
         aviso.textContent = 'Su sesión terminó. Inicie sesión nuevamente.';
         return;
       }
 
       if (respuesta.status === 403) {
+        aviso.dataset.estado = 'ocupado';
         aviso.textContent =
           'La solicitud fue rechazada. Compruebe que ingresó como administrador y recargue la página antes de reintentar.';
         return;
@@ -124,6 +129,8 @@
       const datos = await respuesta.json();
 
       if (respuesta.status === 201) {
+        aviso.dataset.estado = 'libre';
+        notificar('Usuario registrado correctamente. Debe validar su correo antes de iniciar sesión.');
         formulario.reset();
         aviso.textContent =
           'Usuario creado: ' + datos.correo +
@@ -140,12 +147,15 @@
         });
       }
 
+      aviso.dataset.estado = 'ocupado';
       aviso.textContent = datos.mensaje || 'No se pudo crear el usuario.';
     } catch (error) {
+      aviso.dataset.estado = 'ocupado';
       aviso.textContent =
         'No se pudo confirmar la creación. Compruebe la conexión antes de reintentar.';
     } finally {
       boton.disabled = false;
+      boton.textContent = 'Crear usuario';
     }
   });
 </script>

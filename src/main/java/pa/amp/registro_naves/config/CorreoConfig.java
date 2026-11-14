@@ -22,10 +22,11 @@ public class CorreoConfig {
     @Bean
     public NotificadorCorreo notificadorCorreo(
             ObjectProvider<JavaMailSender> cartero,
-            @Value("${navesitas.correo.remitente:no-responder@navesitas.pa}") String remitente) {
+            @Value("${navesitas.correo.remitente:no-responder@navesitas.pa}") String remitente,
+            @Value("${navesitas.correo.enlaces-en-log:true}") boolean enlacesEnLog) {
         JavaMailSender disponible = cartero.getIfAvailable();
         return disponible != null
-                ? new NotificadorCorreoSmtp(disponible, remitente)
+                ? new NotificadorCorreoSmtp(disponible, remitente, enlacesEnLog)
                 : new NotificadorCorreoConsola();
     }
 }

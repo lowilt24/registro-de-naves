@@ -57,6 +57,13 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   e.preventDefault();
   document.querySelectorAll('[data-error]').forEach(s => s.textContent = '');
   const aviso = document.getElementById('aviso-registro');
+  const boton = document.getElementById('btn-crear');
+  if (boton.disabled) return;
+  boton.disabled = true;
+  boton.textContent = 'Creando cuenta…';
+  aviso.dataset.estado = 'neutro';
+  aviso.textContent = 'Registrando su cuenta. Espere un momento.';
+  let creada = false;
 
   const cuerpo = {
     nombreCompleto: document.getElementById('nombreCompleto').value.trim(),
@@ -71,9 +78,12 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
       headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': tokenCsrf() },
       body: JSON.stringify(cuerpo)
     });
-    const datos = await r.json();
+    const datos = await r.json().catch(() => ({}));
 
     if (r.status === 201) {
+      creada = true;
+      aviso.dataset.estado = 'libre';
+      aviso.textContent = 'Cuenta registrada correctamente. Continúe con la validación de su correo.';
       location.href = '/login.html?creado=1';
       return;
     }
@@ -88,6 +98,11 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   } catch (err) {
     aviso.dataset.estado = 'ocupado';
     aviso.textContent = 'No se pudo contactar el servidor. Intente de nuevo.';
+  } finally {
+    if (!creada) {
+      boton.disabled = false;
+      boton.textContent = 'Crear cuenta';
+    }
   }
 });
 </script>

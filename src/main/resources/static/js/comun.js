@@ -4,6 +4,42 @@
 
 const $ = (id) => document.getElementById(id);
 
+/** Aviso visible y accesible, sin interpretar texto del servidor como HTML. */
+function notificar(mensaje, estado = 'libre') {
+  let aviso = $('aviso-global');
+  if (!aviso) {
+    aviso = document.createElement('section');
+    aviso.id = 'aviso-global';
+    aviso.className = 'aviso-global';
+    aviso.setAttribute('aria-label', 'Resultado de la operación');
+    const texto = document.createElement('span');
+    texto.id = 'aviso-global-texto';
+    const cerrar = document.createElement('button');
+    cerrar.type = 'button';
+    cerrar.textContent = 'Cerrar';
+    cerrar.setAttribute('aria-label', 'Cerrar aviso');
+    cerrar.addEventListener('click', () => { aviso.hidden = true; });
+    aviso.append(texto, cerrar);
+    document.body.appendChild(aviso);
+  }
+  aviso.hidden = false;
+  aviso.dataset.estado = estado;
+  const texto = $('aviso-global-texto');
+  texto.setAttribute('role', estado === 'ocupado' ? 'alert' : 'status');
+  texto.setAttribute('aria-live', estado === 'ocupado' ? 'assertive' : 'polite');
+  texto.textContent = mensaje;
+}
+
+function mensajeOperacion(ruta) {
+  if (/\/api\/naves$/.test(ruta)) return 'Nave registrada correctamente. Puede continuar con su expediente.';
+  if (/\/propietarios$/.test(ruta)) return 'Propietario vinculado correctamente.';
+  if (/\/agente-residente$/.test(ruta)) return 'Agente residente guardado correctamente.';
+  if (/\/revision$/.test(ruta)) return 'Revisión guardada correctamente.';
+  if (/\/documentos$/.test(ruta)) return 'Documento cargado correctamente.';
+  if (/\/tramite\/estado$/.test(ruta)) return 'Estado del trámite actualizado correctamente.';
+  return 'Operación completada correctamente.';
+}
+
 /** Escapa texto antes de meterlo en innerHTML. */
 function escapar(texto) {
   const d = document.createElement('div');
@@ -34,13 +70,17 @@ async function api(ruta, opciones = {}) {
 
   // Sprint 4: opciones.formulario lleva un FormData (carga de archivos).
   // No se fija Content-Type a mano: el navegador lo pone con el boundary.
-  const respuesta = await fetch(ruta, {
+  let respuesta;
+  try { respuesta = await fetch(ruta, {
     headers: cabeceras,
     method: metodo,
     body: opciones.formulario
       ? opciones.formulario
       : (opciones.cuerpo ? JSON.stringify(opciones.cuerpo) : undefined)
-  });
+  }); } catch (error) {
+    notificar('No se pudo conectar con el servidor. Revise su conexión e intente nuevamente.', 'ocupado');
+    throw error;
+  }
 
   if (respuesta.status === 401) {
     location.href = '/login.html?expirada=1';
@@ -54,6 +94,12 @@ async function api(ruta, opciones = {}) {
     try { datos = JSON.parse(texto); } catch (e) { datos = null; }
   }
 
+  if (metodo !== 'GET' && metodo !== 'HEAD') {
+    if (respuesta.ok) notificar(mensajeOperacion(ruta));
+    else notificar(datos?.mensaje || (respuesta.status === 403
+      ? 'No se pudo autorizar la operación. Recargue la página y compruebe sus permisos.'
+      : 'No se pudo completar la operación. Revise los datos e intente nuevamente.'), 'ocupado');
+  }
   return { ok: respuesta.ok, estado: respuesta.status, datos };
 }
 
@@ -93,6 +139,12 @@ async function pintarSesion() {
   try {
     const { datos } = await api('/api/auth/sesion');
     if (datos && datos.autenticado) {
+      try {
+        if (sessionStorage.getItem('navesitas-login-pendiente') === '1') {
+          sessionStorage.removeItem('navesitas-login-pendiente');
+          notificar('Sesión iniciada correctamente. Bienvenido/a, ' + datos.nombreCompleto + '.');
+        }
+      } catch (e) { /* El acceso sigue funcionando si el navegador bloquea el almacenamiento. */ }
       caja.innerHTML = escapar(datos.nombreCompleto)
         + ' &middot; <a href="#" id="btn-salir">Salir</a>';
       $('btn-salir').addEventListener('click', async (e) => {
