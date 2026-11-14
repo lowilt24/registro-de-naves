@@ -66,6 +66,18 @@
 
 * { box-sizing: border-box; }
 
+/* Avisos de acciones: permanecen visibles hasta que el usuario los cierre. */
+.aviso-global { position: fixed; top: 18px; right: 18px; z-index: 1000;
+  display: flex; align-items: flex-start; gap: 16px; width: min(440px, calc(100% - 36px));
+  padding: 18px; background: #e6f3eb; color: #155a33; border: 1px solid #1e7a46;
+  border-left: 5px solid #1e7a46; border-radius: 10px; box-shadow: 0 8px 28px #103b4930;
+  overflow-wrap: anywhere; }
+.aviso-global[hidden] { display: none; }
+.aviso-global[data-estado="ocupado"] { background: #fcebe9; color: #8e1c13; border-color: #b42318; }
+.aviso-global button { flex-shrink: 0; margin-left: auto; min-height: 44px;
+  padding: 4px 8px; background: transparent; border: 1px solid currentColor; color: inherit; }
+@media print { .aviso-global { display: none !important; } }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {

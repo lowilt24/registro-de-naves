@@ -17,10 +17,16 @@ public class NotificadorCorreoSmtp implements NotificadorCorreo {
 
     private final JavaMailSender cartero;
     private final String remitente;
+    private final boolean enlacesEnLog;
 
     public NotificadorCorreoSmtp(JavaMailSender cartero, String remitente) {
+        this(cartero, remitente, true);
+    }
+
+    public NotificadorCorreoSmtp(JavaMailSender cartero, String remitente, boolean enlacesEnLog) {
         this.cartero = cartero;
         this.remitente = remitente;
+        this.enlacesEnLog = enlacesEnLog;
     }
 
     @Override
@@ -56,8 +62,13 @@ public class NotificadorCorreoSmtp implements NotificadorCorreo {
         } catch (MailException e) {
             // El registro no se pierde por esto: el usuario puede pedir el
             // reenvio. El enlace queda en la consola para no trabar la demo.
-            log.warn("No se pudo enviar el correo de validacion a {} ({}). Enlace: {}",
-                    destinatario, e.getMessage(), enlace);
+            if (enlacesEnLog) {
+                log.warn("No se pudo enviar el correo de validacion a {} ({}). Enlace: {}",
+                        destinatario, e.getMessage(), enlace);
+            } else {
+                log.warn("No se pudo enviar un correo de validación por SMTP ({}). La cuenta puede solicitar reenvío.",
+                        e.getClass().getSimpleName());
+            }
         }
     }
 }
