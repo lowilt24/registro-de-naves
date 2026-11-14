@@ -35,6 +35,19 @@ public class PatenteService {
     private static final Set<String> ESTADOS = Set.of("BORRADOR", "EN_REVISION", "SUBSANACION", "APROBADA");
     private record Acceso(Nave nave, Usuario usuario) {}
     public record Archivo(String nombre, byte[] contenido, String hashSha256) {}
+    public record Verificacion(String numero, String emitidaEn, String estado,
+                               String vigencia, String alcance) {}
+
+    @Transactional(readOnly=true)
+    public Verificacion verificar(UUID identificador) {
+        var e=uno("""
+            SELECT e.numero,e.emitido_en,s.estado FROM pp_emisiones e
+            JOIN pp_solicitudes s ON s.id=e.solicitud_id WHERE e.verificacion_id=?
+            """,identificador);
+        return new Verificacion((String)e.get("numero"),e.get("emitido_en").toString(),
+            (String)e.get("estado"),"Sin vencimiento definido",
+            "Modelo académico — sin validez oficial. No habilita navegación real.");
+    }
 
     public PatenteService(JdbcTemplate db, NaveRepository naves, UsuarioRepository usuarios,
             TramiteRepository tramites, HistorialEstadoRepository historial,
@@ -237,9 +250,15 @@ public class PatenteService {
         Acceso a=acceso(naveId,correo);var s=bloquear(naveId);exigirEstado(s,"APROBADA");
         var e=uno("SELECT * FROM pp_emisiones WHERE solicitud_id=?",id(s));
         byte[] contenido=(byte[])e.get("contenido");String hash=(String)e.get("hash_sha256");
-        if(contenido==null) {
-            contenido=pdf.generar((String)e.get("numero"),(String)e.get("datos_emitidos"));hash=hash(contenido);
-            db.update("UPDATE pp_emisiones SET contenido=?,hash_sha256=? WHERE id=?",contenido,hash,id(e));
+        if(contenido!=null) integridad(contenido,hash);
+        if(contenido==null || ((Number)e.get("pdf_version")).intValue()<2) {
+            byte[] anterior=contenido;String hashAnterior=hash;
+            contenido=pdf.generar((String)e.get("numero"),(String)e.get("datos_emitidos"),
+                (UUID)e.get("verificacion_id"));hash=hash(contenido);
+            db.update("""
+                UPDATE pp_emisiones SET contenido=?,hash_sha256=?,pdf_version=2,
+                contenido_anterior=coalesce(contenido_anterior,?),hash_anterior=coalesce(hash_anterior,?) WHERE id=?
+                """,contenido,hash,anterior,hashAnterior,id(e));
         }
         integridad(contenido,hash);return new Archivo(e.get("numero")+".pdf",contenido,hash);
     }

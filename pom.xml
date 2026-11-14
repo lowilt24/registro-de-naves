@@ -30,6 +30,12 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
+        <!-- QR local: no transmite datos de la patente a servicios externos. -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.4</version>
+        </dependency>
         <!-- HU-15: PDF generado por el servidor, con texto y fuentes embebidas. -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

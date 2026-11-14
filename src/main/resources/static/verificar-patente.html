@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Verificación de patente — Registro de Naves</title>
+<link rel="stylesheet" href="css/app.css">
+<script src="js/verificar-patente.js" defer></script>
+</head>
+<body>
+<header class="barra"><h1>Registro de Naves</h1><span>Verificación de patente provisional</span></header>
+<main class="estrecho">
+<h2>Verificación de patente</h2>
+<p class="veredicto" id="verificacion-estado" role="status" aria-live="polite">Consultando el registro…</p>
+<section class="tarjeta oculto" id="verificacion-datos" aria-label="Información de autenticidad">
+<dl>
+<dt>Número de patente</dt><dd id="numero"></dd>
+<dt>Fecha de emisión</dt><dd id="emision"></dd>
+<dt>Estado de la solicitud</dt><dd id="estado"></dd>
+<dt>Vigencia</dt><dd id="vigencia"></dd>
+</dl>
+</section>
+<p><strong>Modelo académico · Sin validez oficial.</strong> Esta consulta confirma únicamente la existencia y el estado de la emisión en el sistema. No habilita navegación real.</p>
+</main>
+</body>
+</html>
