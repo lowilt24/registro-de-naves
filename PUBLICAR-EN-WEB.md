@@ -1,5 +1,9 @@
 # Publicar Registro de Naves y seguir actualizándolo
 
+**Actualización: el usuario eligió costo cero. Seguir `PUBLICAR-GRATIS.md` y el
+perfil `gratis`. La opción de pago descrita abajo queda como alternativa; no es
+necesario contratar un disco para el modo PostgreSQL de adjuntos.**
+
 Preparación para sprint-8; presentación final indicada para el 30 de noviembre de
 2026. Publicar no congela el código: se sigue trabajando en Git y se despliegan
 las versiones que se decida presentar. Esta guía no crea servicios ni contrata planes.

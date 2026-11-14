@@ -11,7 +11,6 @@ import pa.amp.registro_naves.persona.*;
 import pa.amp.registro_naves.tramite.*;
 import pa.amp.registro_naves.usuario.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.security.*;
 import java.sql.Timestamp;
 import java.time.*;
@@ -151,10 +150,7 @@ public class PatenteService {
         if(r.get("tipo_origen")==null || !Objects.equals(r.get("tipo_origen"),d.get("tipo")))
             throw new ReglaDeNegocioException("La DGMM debe autorizar el tipo de documento adecuado para este requisito.");
         try {
-            var ruta=almacen.ubicar((String)d.get("ruta"));
-            if(!Files.isRegularFile(ruta))throw new ReglaDeNegocioException("La versión original no está disponible.");
-            if(Files.size(ruta)>LIMITE)throw new ArchivoDemasiadoGrandeException("Máximo 10 MB por PDF.");
-            byte[] bytes=Files.readAllBytes(ruta);validarPdf(bytes);integridad(bytes,(String)d.get("hash_sha256"));
+            byte[] bytes=almacen.leer((String)d.get("ruta"));validarPdf(bytes);integridad(bytes,(String)d.get("hash_sha256"));
             guardarEvidencia(a,s,rid,p.documentoId(),(String)d.get("nombre_archivo"),bytes);
         } catch(IOException e) {throw new UncheckedIOException(e);}
         return detalle(a);

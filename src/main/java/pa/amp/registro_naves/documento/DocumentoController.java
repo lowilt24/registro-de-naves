@@ -1,6 +1,5 @@
 package pa.amp.registro_naves.documento;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -57,7 +56,8 @@ public class DocumentoController {
                         .filename(d.nombre(), StandardCharsets.UTF_8)
                         .build()
                         .toString())
-                .body(new FileSystemResource(d.archivo()));
+                .cacheControl(org.springframework.http.CacheControl.noStore())
+                .body(d.archivo());
     }
 
     /** HU-12 — la DGMM aprueba u observa un documento: { "decision", "observacion" }. */
